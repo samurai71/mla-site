@@ -1,0 +1,79 @@
+@font-face {
+    font-family: colors_of_autumnregular;
+    src: url(../fonts/colors_of_autumn-webfont.eot);
+    src: url(../fonts/colors_of_autumn-webfont.eot?#iefix) format('embedded-opentype'), url(../fonts/colors_of_autumn-webfont.woff2) format('woff2'), url(../fonts/colors_of_autumn-webfont.woff) format('woff'), url(../fonts/colors_of_autumn-webfont.ttf) format('truetype'), url(../fonts/colors_of_autumn-webfont.svg#colors_of_autumnregular) format('svg');
+    font-weight: 400;
+    font-style: normal
+}
+
+body {
+  padding: 0;
+  /*overflow: hidden;*/
+}
+
+.logo {
+    margin-bottom: 1em;
+}
+
+a:hover {
+    font-style: italic;
+}
+
+h1,
+h2 {
+    font-family: colors_of_autumnregular, sans-serif;
+    color: #ce171e !important;
+    padding-bottom: .5em;
+    padding-top: .5em
+}
+
+h2 {
+    margin-top: 1em;
+}
+
+p {
+    font-family: georgia, serif !important;
+}
+
+#wrapper {
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.photo {
+    margin-right: 1em
+}
+
+#socialMedia {
+    padding-bottom: 1em;
+}
+
+.socialmedia img {
+    width: 10%;
+    float: left;
+    padding-left: 15px;
+    padding-bottom: 10px
+}
+
+.footerbar p {
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 1px;
+    font-size: .8em
+}
+
+.footerbar a {
+    color: #00f
+}
+
+.fBook {
+    margin-top: 1em;
+}
+
+.twitter {
+    margin-top: 1em;
+}

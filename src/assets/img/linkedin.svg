@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/css" href="../css/icons.css"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="linkedin" class="mainIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 128 128" style="enable-background:new 0 0 128 128;" xml:space="preserve">
+
+<g id="tear">
+	<defs>
+		<path id="SVGID_1_" d="M73.6,10.8l13.7-2.1c0,0,2.1,2.1,1.5,5.2c-0.6,3.1,0.2,3.7-0.8,4.8c-1,1.2-2.5,4.2-1.2,6.7s3.7,8.7,3.7,8.7
+			l5-1.9v-4.6L94,23.7l5.8-15v4.2v4.4L98.4,20L98,23.8l0.2,4.8l1.5,3.1l5-2.9c0,0,2.7,0.2,2.7,1.5c0,1.3,0,6.7,0,6.7l4.8,4l12.5-2.9
+			l-5,4.2l-4.8,4l-4.8,3.7l3.5,10.8l6,3c0,0,2.1,4.1,0.4,7.2c-1.7,3.1-6.2,13.3-6.2,13.3l7.9,6.2l-1.3,1l-9.2-2.5l-6-1.3l-6.7,15.2
+			c0,0-1.2,2.1-2.9,1.5c-1.7-0.6-4.6-1.7-4.6-1.7l-1,4.2l-0.2,2.5l-3.8,1.2h-1.2l1,5l6.3,1.9l0.2,1.2l-4.4-1l-3.7-2.3l-1.9-2.5
+			l-4,2.5L67,113.5l-3,1.2l-10.4-2.9v2.7l3.3,4.2v1.3l-3.3-2.7l-1.9-3.3v-2.7l-7.9-0.2l-1.7-1.9v-4l-7.3-0.8c0,0-3.5,0.4-6.7-2.3
+			S22,99,22,99L18,91l2.1,0.6l2.5,5.6l1.9,1.3h1.9l-0.4-7.1L23.6,90l-1-4L18,85.6c0,0-7.3-3.7-9-6s2.3-7.9,2.3-7.9s-3.3-7.3,0.4-7.4
+			c3.7-0.1,6.2-0.3,6.2-0.3l-1-8.6l-3.1-3.5l-5.2-0.8l-3-1.7l-3.3,1.3V49l2.1-1.3l-2.9-7.3l5.8,7.7L14,50l3.7,4c0,0,2.1,2.7,5.4,1
+			s5.4-5,5.4-5v-6.5L8,29.4l22.7,5.4l-0.8-8.5l9.8,8.3c0,0,0.8,2.9,2.3,1.2c1.5-1.7-2.3-6.7-2.3-6.7l-3.7-4l1-6l4.2,5l2.9,2.7
+			l2.9-4.2l5.2-0.6v-4l3.7,3.1l1.2,2.1h3.3l1.5,2.9c0,0,3.8,1.3,6.2-1.3s4.4-9.2,4.4-9.2L73.6,10.8z"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+	</clipPath>
+	<rect id="background" class="st0" width="128" height="128"/>
+	<circle id="topofi" class="st1" cx="33.9" cy="35.1" r="8"/>
+	<rect id="bottomofi" x="25.9" y="52.7" class="st1" width="16" height="49.2"/>
+	<path id="n" class="st1" d="M53.8,52.7v48.5h17.5V71c0,0,4.2-7.1,8.3-5.8s6.9,2.3,7.1,4.6s1.2,31.3,1.2,31.3H104v-36
+		c0,0-2.7-12.7-11.9-13.5s-7.9-1.7-13.2,1c-5.3,2.7-7.4,5.2-7.4,5.2l-0.6-5.2H53.8z"/>
+	<use xlink:href="#SVGID_1_"  style="overflow:visible;fill:none;stroke:#000000;stroke-miterlimit:10;"/>
+</g>
+</svg>
