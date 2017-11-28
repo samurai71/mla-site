@@ -62,6 +62,9 @@ $(document).foundation();
 
 //Facebook 
 
+(function() {
+  "use strict";
+  //console.log("Facebook JS loaded");
 
   window.fbAsyncInit = function() {
     FB.init({
@@ -89,9 +92,15 @@ $(document).foundation();
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
+})();
+
 //End of Facebook 
 
 // Start of Weather network 
+
+(function() {
+  "use strict";
+  //console.log("Weather Javascipt Loaded");
 
 var _plm = _plm || [];
   _plm.push(['_btn', 46617]); 
@@ -107,26 +116,37 @@ var _plm = _plm || [];
   var s = d.getElementsByTagName('script')[0];
 
   var py = d.createElement('link');
-  py.rel = 'stylesheet'
-  py.href = ('https:' == d.location.protocol ? 'https:' : 'http:') + '//widget.twnmm.com/styles/btn/styles.css'
+  py.rel = 'stylesheet';
+  py.href = ('https:' == d.location.protocol ? 'https:' : 'http:') + '//widget.twnmm.com/styles/btn/styles.css';
 
   s.parentNode.insertBefore(px, s);
   s.parentNode.insertBefore(py, s);
 })(document, 'script', 'plmxbtn');
 
+})();
+
 //End of Weather netowrk 
 
 // Start of Curtain menu
+
+(function() {
+  "use strict";
+
 $('[data-curtain-menu-button]').click(function(){
   $('body').toggleClass('curtain-menu-open');
-})
+});
 
+})();
 
 //End of Curtain Menu
 
 //Start of Filter Menu 
 
 // shows and hides filtered items
+
+(function() {
+  "use strict";
+
 $(".filter-simple-button").click(function() {
   var value = $(this).attr('data-filter');
   if(value === "all") {
@@ -142,6 +162,8 @@ $('.filter-simple-button').click(function () {
   $(this).siblings().removeClass('is-active');
   $(this).addClass('is-active');
 });
+
+})();
 
 
 // End of Filter Menu
