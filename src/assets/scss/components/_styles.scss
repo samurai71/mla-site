@@ -1,14 +1,21 @@
-@font-face {
-    font-family: colors_of_autumnregular;
-    src: url(../fonts/colors_of_autumn-webfont.eot);
-    src: url(../fonts/colors_of_autumn-webfont.eot?#iefix) format('embedded-opentype'), url(../fonts/colors_of_autumn-webfont.woff2) format('woff2'), url(../fonts/colors_of_autumn-webfont.woff) format('woff'), url(../fonts/colors_of_autumn-webfont.ttf) format('truetype'), url(../fonts/colors_of_autumn-webfont.svg#colors_of_autumnregular) format('svg');
-    font-weight: 400;
-    font-style: normal
-}
+// @font-face {
+//     font-family: colors_of_autumnregular;
+//     src: url(../fonts/colors_of_autumn-webfont.eot);
+//     src: url(../fonts/colors_of_autumn-webfont.eot?#iefix) format('embedded-opentype'), url(../fonts/colors_of_autumn-webfont.woff2) format('woff2'), url(../fonts/colors_of_autumn-webfont.woff) format('woff'), url(../fonts/colors_of_autumn-webfont.ttf) format('truetype'), url(../fonts/colors_of_autumn-webfont.svg#colors_of_autumnregular) format('svg');
+//     font-weight: 400;
+//     font-style: normal
+// }
+
+@import url('https://fonts.googleapis.com/css?family=Caveat:400,700')
 
 body {
   padding: 0;
  /* overflow: hidden; */
+}
+
+.bluebackground {
+    background: #2B2D42;
+    color: #8D99AE;
 }
 
 .logo {
@@ -21,7 +28,7 @@ a:hover {
 
 h1,
 h2 {
-    font-family: colors_of_autumnregular, sans-serif;
+    font-family: 'Caveat', cursive;
     color: #ce171e !important;
     padding-bottom: .5em;
     padding-top: .5em
@@ -48,7 +55,12 @@ p {
     margin-right: 1em
 }
 
+.hidden {
+    display: none;
+}
+
 #socialMedia {
+    padding-top: 1em;
     padding-bottom: 1em;
 }
 
