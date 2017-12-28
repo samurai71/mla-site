@@ -6,7 +6,7 @@
 //     font-style: normal
 // }
 
-@import url('https://fonts.googleapis.com/css?family=Caveat:400,700')
+@import url('https://fonts.googleapis.com/css?family=Caveat:400,700');
 
 body {
   padding: 0;
@@ -31,7 +31,7 @@ h2 {
     font-family: 'Caveat', cursive;
     color: #ce171e !important;
     padding-bottom: .5em;
-    padding-top: .5em
+    padding-top: .5em;
 }
 
 h2 {
@@ -49,6 +49,10 @@ p {
 
 .bold {
 	font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
 }
 
 .photo {
