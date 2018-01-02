@@ -6,7 +6,7 @@
 
 @include foundation-global-styles;
 //@include foundation-grid;
-//@include foundation-flex-grid;
+@include foundation-flex-grid;
 //
 @include foundation-xy-grid-classes;
 @include foundation-typography;
@@ -55,6 +55,6 @@
 
 @import 'components/styles';
 @import 'components/socialmediaicons';
-@import 'components/curtainmenu';
+
 @import 'components/filtermenu';
 @import 'components/work';

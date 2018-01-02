@@ -8,6 +8,14 @@
 
 @import url('https://fonts.googleapis.com/css?family=Caveat:400,700');
 
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
   padding: 0;
  /* overflow: hidden; */
@@ -16,10 +24,16 @@ body {
 .bluebackground {
     background: #2B2D42;
     color: #8D99AE;
+    min-width: 100%;
+}
+
+.bluebackground h4 {
+    color: $white;
 }
 
 .logo {
     margin-bottom: 1em;
+    width: 100px;
 }
 
 a:hover {
@@ -29,6 +43,7 @@ a:hover {
 h1,
 h2 {
     font-family: 'Caveat', cursive;
+    font-weight: 400;
     color: #ce171e !important;
     padding-bottom: .5em;
     padding-top: .5em;
@@ -92,4 +107,24 @@ p {
 
 .twitter {
     margin-top: 1em;
+}
+
+.content-wrap {
+  max-width: 70em;
+  margin: 0 auto;
+  padding: 3.75em 3.125em;
+  overflow: hidden;
+}
+
+.content-wrap a {
+    color: $white;
+}
+
+.port-btns {
+    margin-top: 1em;
+}
+
+.home {
+    margin-right: 1em;
+    margin-left: 1em;
 }
