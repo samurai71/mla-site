@@ -36,6 +36,10 @@ body {
     width: 100px;
 }
 
+a {
+    color: $black;
+}
+
 a:hover {
     font-style: italic;
 }
@@ -51,6 +55,11 @@ h2 {
 
 h2 {
     margin-top: 1em;
+}
+
+h4 {
+    font-family: 'Caveat', cursive;
+    font-weight:400;
 }
 
 p {
@@ -116,7 +125,7 @@ p {
   overflow: hidden;
 }
 
-.content-wrap a {
+.bluebackground .content-wrap a {
     color: $white;
 }
 
