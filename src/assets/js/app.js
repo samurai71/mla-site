@@ -125,20 +125,7 @@ var _plm = _plm || [];
 
 })();
 
-//End of Weather netowrk 
-
-// Start of Curtain menu
-
-(function() {
-  "use strict";
-
-$('[data-curtain-menu-button]').click(function(){
-  $('body').toggleClass('curtain-menu-open');
-});
-
-})();
-
-//End of Curtain Menu
+//End of Weather network
 
 //Start of Filter Menu 
 
