@@ -99,17 +99,6 @@ p {
     padding-bottom: 10px
 }
 
-.footerbar p {
-    text-align: center;
-    margin-bottom: 10px;
-    margin-top: 1px;
-    font-size: .8em
-}
-
-.footerbar a {
-    color: #00f
-}
-
 .fBook {
     margin-top: 1em;
 }
@@ -125,6 +114,18 @@ p {
   overflow: hidden;
 }
 
+.content-wrap h2 {
+    text-align: left;
+}
+
+.content-wrap h4 {
+    text-align: left;
+}
+
+.content-wrap p {
+    text-align: left;
+}
+
 .bluebackground .content-wrap a {
     color: $white;
 }
@@ -137,3 +138,16 @@ p {
     margin-right: 1em;
     margin-left: 1em;
 }
+
+.footerbar p {
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 1px;
+    font-size: .8em
+}
+
+.footerbar a {
+    color: #00f
+}
+
+
