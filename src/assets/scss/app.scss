@@ -53,9 +53,9 @@
 @include motion-ui-animations;
 @import "font-awesome";
 
-// @import 'components/styles';
-@import 'components/socialmediaicons';
 
+@import 'components/socialmediaicons';
+//@import 'components/social-icon-button';
 @import 'components/filtermenu';
 @import 'components/work';
 @import 'components/lightbox';
