@@ -1,13 +1,11 @@
-// @font-face {
-//     font-family: colors_of_autumnregular;
-//     src: url(../fonts/colors_of_autumn-webfont.eot);
-//     src: url(../fonts/colors_of_autumn-webfont.eot?#iefix) format('embedded-opentype'), url(../fonts/colors_of_autumn-webfont.woff2) format('woff2'), url(../fonts/colors_of_autumn-webfont.woff) format('woff'), url(../fonts/colors_of_autumn-webfont.ttf) format('truetype'), url(../fonts/colors_of_autumn-webfont.svg#colors_of_autumnregular) format('svg');
-//     font-weight: 400;
-//     font-style: normal
-// }
+// Custom styles 
+
+//Google font Caveat 
 
 @import url('https://fonts.googleapis.com/css?family=Caveat:400,700');
 
+
+// Global Styles
 
 html {
   box-sizing: border-box;
@@ -29,11 +27,6 @@ body {
 
 .bluebackground h4 {
     color: $white;
-}
-
-.logo {
-    margin-bottom: 1em;
-    width: 100px;
 }
 
 a {
@@ -66,13 +59,8 @@ p {
     font-family: georgia, serif !important;
 }
 
-#wrapper {
-	padding-top: 2em;
-	padding-bottom: 2em;
-}
-
 .bold {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .italic {
@@ -85,26 +73,6 @@ p {
 
 .hidden {
     display: none;
-}
-
-#socialMedia {
-    padding-top: 1em;
-    padding-bottom: 1em;
-}
-
-.socialmedia img {
-    width: 10%;
-    float: left;
-    padding-left: 15px;
-    padding-bottom: 10px
-}
-
-.fBook {
-    margin-top: 1em;
-}
-
-.twitter {
-    margin-top: 1em;
 }
 
 .content-wrap {
@@ -130,14 +98,29 @@ p {
     color: $white;
 }
 
+//End of Global Styles 
+
+
+.logo {
+    margin-bottom: 1em;
+    width: 100px;
+}
+
+.fBook {
+    margin-top: 1em;
+}
+
+.twitter {
+    margin-top: 1em;
+}
+
 .port-btns {
     margin-top: 1em;
 }
 
-.home {
-    margin-right: 1em;
-    margin-left: 1em;
-}
+
+
+// Footer Styles
 
 .footerbar p {
     text-align: center;
@@ -149,5 +132,11 @@ p {
 .footerbar a {
     color: #00f
 }
+
+#copyright {
+    margin-top: 3em;
+}
+
+// End of Footer Styles
 
 
