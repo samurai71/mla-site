@@ -20,5 +20,6 @@
     <script src="js/app.js"></script>
     <script src="js/icons.js"></script>
     <script src="js/google.js"></script>
+    <script src="https://cdn.plyr.io/2.0.18/plyr.js"></script>
   </body>
 </html>

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css">
+    <link rel="stylesheet" href="https://cdn.plyr.io/2.0.18/plyr.css">
     <script src="https://use.fontawesome.com/264e791b25.js"></script>
     <link rel="icon" href="img/favicon.ico" type="image/x-icon"/>
   </head>
