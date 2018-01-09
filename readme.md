@@ -13,25 +13,11 @@ Create a directory of these files then copy this directory into the root directo
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+Using your local web server copy the files into where the local files are served in that directory make a folder then copy the files into that then go to that folder and index.php at the end. I.E. http://localhost:8888/mla/index.php 
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+Using your favourite FTP program upload the files in the master to the directory on your web server. 
 
 ## Built With
 
