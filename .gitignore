@@ -2,4 +2,10 @@ assets
 img
 videos
 html-files
+<<<<<<< HEAD
+=======
+*.png
+*.svg
+
+>>>>>>> php-site
 
