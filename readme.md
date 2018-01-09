@@ -8,8 +8,8 @@ Create a directory of these files then copy this directory into the root directo
 
 ### Prerequisites
 
-Mamp for Mac 
-Wamp for Windows 
+[Mamp for Mac](https://www.mamp.info/en/) 
+[Wamp for Windows](https://sourceforge.net/projects/wampserver/) 
 
 ### Installing
 
@@ -35,11 +35,7 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Foundation](https://foundation.zurb.com/) - The web framework used
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
