@@ -8,8 +8,8 @@ Create a directory of these files then copy this directory into the root directo
 
 ### Prerequisites
 
-[Mamp for Mac](https://www.mamp.info/en/) 
-[Wamp for Windows](https://sourceforge.net/projects/wampserver/) 
+* [Mamp for Mac](https://www.mamp.info/en/) 
+* [Wamp for Windows](https://sourceforge.net/projects/wampserver/) 
 
 ### Installing
 
