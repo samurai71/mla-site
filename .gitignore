@@ -1,19 +1,6 @@
-assets
-img
-videos
-html-files
-<<<<<<< HEAD
-=======
-*.png
-*.svg
-
->>>>>>> php-site
-
-=======
 /assets
 /img
 /videos
 /html-files
 *.png
 *.svg
->>>>>>> 69fd16cf5eb201ddeb16309e0cbf28db0af438bc
