@@ -1,0 +1,201 @@
+<batchrender>
+  <environmentinfo>
+    <machineinfo>
+      <machinename>macbookpro</machinename>
+      <username>Mark Landeryou</username>
+      <processortype>Intel</processortype>
+      <processorname>Intel Core i7-3615QM CPU </processorname>
+      <processornumber>8</processornumber>
+      <ostype>OS X 64 BIT</ostype>
+      <osversion>OS X 10.12.6</osversion>
+      <oglvendorname>NVIDIA Corporation</oglvendorname>
+      <oglrendername>NVIDIA GeForce GT 650M OpenGL Engine</oglrendername>
+      <oglversion>4.1 NVIDIA-10.17.5 355.10.05.45f01</oglversion>
+    </machineinfo>
+    <c4dinfo>
+      <c4dversion>17016</c4dversion>
+      <c4dplugins>addons advanced render alembic archigrass bitmapfilter bpexchange browser ca ca2 cineman clothilde collada14 collada15 colorchoosergui compositing dwg dwgobjects dynamics exchanges expressiontag fbx hair i_skp iges io_obj licenseserver metrics mocca model mograph motioncam motiontracker newman objects onlinehelp onlineupdater openexr python relaxuv sculpt sculptbrushes shader sketch sky sla spacemouse teamrender texturemanager thinking particles tpoperators walkthrough xpressocore xtensions </c4dplugins>
+    </c4dinfo>
+  </environmentinfo>
+  <fileinfo>
+    <filename>logo.c4d</filename>
+    <filepath>/Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo</filepath>
+    <renderdatainfo>
+      <rendersettings>My Render Setting</rendersettings>
+      <take>Main</take>
+      <camera>Camera</camera>
+      <width>1280</width>
+      <height>720</height>
+      <filmaspect>1.778</filmaspect>
+      <pixelaspect>1</pixelaspect>
+      <fps>30</fps>
+      <from>0</from>
+      <to>150</to>
+      <steps>1</steps>
+      <saveinfo>
+        <imagepath>/Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render</imagepath>
+        <imagedepth>8</imagedepth>
+        <imageformat>JPEG</imageformat>
+      </saveinfo>
+    </renderdatainfo>
+  </fileinfo>
+  <renderinfo>
+    <imageinfo frame="0">00:00:52 </imageinfo>
+    <imageinfo frame="1">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0000.jpg</imageinfo>
+    <imageinfo frame="2">00:00:53 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0001.jpg</imageinfo>
+    <imageinfo frame="3">00:00:53 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0002.jpg</imageinfo>
+    <imageinfo frame="4">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0003.jpg</imageinfo>
+    <imageinfo frame="5">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0004.jpg</imageinfo>
+    <imageinfo frame="6">00:00:57 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0005.jpg</imageinfo>
+    <imageinfo frame="7">00:00:59 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0006.jpg</imageinfo>
+    <imageinfo frame="8">00:00:58 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0007.jpg</imageinfo>
+    <imageinfo frame="9">00:00:57 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0008.jpg</imageinfo>
+    <imageinfo frame="10">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0009.jpg</imageinfo>
+    <imageinfo frame="11">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0010.jpg</imageinfo>
+    <imageinfo frame="12">00:00:57 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0011.jpg</imageinfo>
+    <imageinfo frame="13">00:00:56 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0012.jpg</imageinfo>
+    <imageinfo frame="14">00:00:56 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0013.jpg</imageinfo>
+    <imageinfo frame="15">00:00:58 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0014.jpg</imageinfo>
+    <imageinfo frame="16">00:00:56 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0015.jpg</imageinfo>
+    <imageinfo frame="17">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0016.jpg</imageinfo>
+    <imageinfo frame="18">00:00:56 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0017.jpg</imageinfo>
+    <imageinfo frame="19">00:01:01 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0018.jpg</imageinfo>
+    <imageinfo frame="20">00:00:58 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0019.jpg</imageinfo>
+    <imageinfo frame="21">00:00:56 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0020.jpg</imageinfo>
+    <imageinfo frame="22">00:00:58 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0021.jpg</imageinfo>
+    <imageinfo frame="23">00:00:57 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0022.jpg</imageinfo>
+    <imageinfo frame="24">00:00:56 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0023.jpg</imageinfo>
+    <imageinfo frame="25">00:00:57 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0024.jpg</imageinfo>
+    <imageinfo frame="26">00:00:59 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0025.jpg</imageinfo>
+    <imageinfo frame="27">00:00:57 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0026.jpg</imageinfo>
+    <imageinfo frame="28">00:00:57 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0027.jpg</imageinfo>
+    <imageinfo frame="29">00:01:02 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0028.jpg</imageinfo>
+    <imageinfo frame="30">00:01:01 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0029.jpg</imageinfo>
+    <imageinfo frame="31">00:01:00 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0030.jpg</imageinfo>
+    <imageinfo frame="32">00:00:59 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0031.jpg</imageinfo>
+    <imageinfo frame="33">00:00:59 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0032.jpg</imageinfo>
+    <imageinfo frame="34">00:01:00 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0033.jpg</imageinfo>
+    <imageinfo frame="35">00:01:00 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0034.jpg</imageinfo>
+    <imageinfo frame="36">00:01:02 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0035.jpg</imageinfo>
+    <imageinfo frame="37">00:01:01 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0036.jpg</imageinfo>
+    <imageinfo frame="38">00:01:00 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0037.jpg</imageinfo>
+    <imageinfo frame="39">00:01:02 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0038.jpg</imageinfo>
+    <imageinfo frame="40">00:01:04 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0039.jpg</imageinfo>
+    <imageinfo frame="41">00:01:04 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0040.jpg</imageinfo>
+    <imageinfo frame="42">00:01:02 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0041.jpg</imageinfo>
+    <imageinfo frame="43">00:01:03 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0042.jpg</imageinfo>
+    <imageinfo frame="44">00:01:04 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0043.jpg</imageinfo>
+    <imageinfo frame="45">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0044.jpg</imageinfo>
+    <imageinfo frame="46">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0045.jpg</imageinfo>
+    <imageinfo frame="47">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0046.jpg</imageinfo>
+    <imageinfo frame="48">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0047.jpg</imageinfo>
+    <imageinfo frame="49">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0048.jpg</imageinfo>
+    <imageinfo frame="50">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0049.jpg</imageinfo>
+    <imageinfo frame="51">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0050.jpg</imageinfo>
+    <imageinfo frame="52">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0051.jpg</imageinfo>
+    <imageinfo frame="53">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0052.jpg</imageinfo>
+    <imageinfo frame="54">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0053.jpg</imageinfo>
+    <imageinfo frame="55">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0054.jpg</imageinfo>
+    <imageinfo frame="56">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0055.jpg</imageinfo>
+    <imageinfo frame="57">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0056.jpg</imageinfo>
+    <imageinfo frame="58">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0057.jpg</imageinfo>
+    <imageinfo frame="59">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0058.jpg</imageinfo>
+    <imageinfo frame="60">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0059.jpg</imageinfo>
+    <imageinfo frame="61">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0060.jpg</imageinfo>
+    <imageinfo frame="62">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0061.jpg</imageinfo>
+    <imageinfo frame="63">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0062.jpg</imageinfo>
+    <imageinfo frame="64">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0063.jpg</imageinfo>
+    <imageinfo frame="65">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0064.jpg</imageinfo>
+    <imageinfo frame="66">00:00:50 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0065.jpg</imageinfo>
+    <imageinfo frame="67">00:00:56 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0066.jpg</imageinfo>
+    <imageinfo frame="68">00:01:00 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0067.jpg</imageinfo>
+    <imageinfo frame="69">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0068.jpg</imageinfo>
+    <imageinfo frame="70">00:00:58 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0069.jpg</imageinfo>
+    <imageinfo frame="71">00:00:59 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0070.jpg</imageinfo>
+    <imageinfo frame="72">00:00:56 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0071.jpg</imageinfo>
+    <imageinfo frame="73">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0072.jpg</imageinfo>
+    <imageinfo frame="74">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0073.jpg</imageinfo>
+    <imageinfo frame="75">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0074.jpg</imageinfo>
+    <imageinfo frame="76">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0075.jpg</imageinfo>
+    <imageinfo frame="77">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0076.jpg</imageinfo>
+    <imageinfo frame="78">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0077.jpg</imageinfo>
+    <imageinfo frame="79">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0078.jpg</imageinfo>
+    <imageinfo frame="80">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0079.jpg</imageinfo>
+    <imageinfo frame="81">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0080.jpg</imageinfo>
+    <imageinfo frame="82">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0081.jpg</imageinfo>
+    <imageinfo frame="83">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0082.jpg</imageinfo>
+    <imageinfo frame="84">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0083.jpg</imageinfo>
+    <imageinfo frame="85">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0084.jpg</imageinfo>
+    <imageinfo frame="86">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0085.jpg</imageinfo>
+    <imageinfo frame="87">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0086.jpg</imageinfo>
+    <imageinfo frame="88">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0087.jpg</imageinfo>
+    <imageinfo frame="89">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0088.jpg</imageinfo>
+    <imageinfo frame="90">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0089.jpg</imageinfo>
+    <imageinfo frame="91">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0090.jpg</imageinfo>
+    <imageinfo frame="92">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0091.jpg</imageinfo>
+    <imageinfo frame="93">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0092.jpg</imageinfo>
+    <imageinfo frame="94">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0093.jpg</imageinfo>
+    <imageinfo frame="95">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0094.jpg</imageinfo>
+    <imageinfo frame="96">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0095.jpg</imageinfo>
+    <imageinfo frame="97">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0096.jpg</imageinfo>
+    <imageinfo frame="98">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0097.jpg</imageinfo>
+    <imageinfo frame="99">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0098.jpg</imageinfo>
+    <imageinfo frame="100">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0099.jpg</imageinfo>
+    <imageinfo frame="101">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0100.jpg</imageinfo>
+    <imageinfo frame="102">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0101.jpg</imageinfo>
+    <imageinfo frame="103">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0102.jpg</imageinfo>
+    <imageinfo frame="104">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0103.jpg</imageinfo>
+    <imageinfo frame="105">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0104.jpg</imageinfo>
+    <imageinfo frame="106">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0105.jpg</imageinfo>
+    <imageinfo frame="107">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0106.jpg</imageinfo>
+    <imageinfo frame="108">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0107.jpg</imageinfo>
+    <imageinfo frame="109">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0108.jpg</imageinfo>
+    <imageinfo frame="110">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0109.jpg</imageinfo>
+    <imageinfo frame="111">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0110.jpg</imageinfo>
+    <imageinfo frame="112">00:00:55 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0111.jpg</imageinfo>
+    <imageinfo frame="113">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0112.jpg</imageinfo>
+    <imageinfo frame="114">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0113.jpg</imageinfo>
+    <imageinfo frame="115">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0114.jpg</imageinfo>
+    <imageinfo frame="116">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0115.jpg</imageinfo>
+    <imageinfo frame="117">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0116.jpg</imageinfo>
+    <imageinfo frame="118">00:00:54 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0117.jpg</imageinfo>
+    <imageinfo frame="119">00:00:53 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0118.jpg</imageinfo>
+    <imageinfo frame="120">00:00:53 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0119.jpg</imageinfo>
+    <imageinfo frame="121">00:00:53 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0120.jpg</imageinfo>
+    <imageinfo frame="122">00:00:53 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0121.jpg</imageinfo>
+    <imageinfo frame="123">00:00:53 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0122.jpg</imageinfo>
+    <imageinfo frame="124">00:00:53 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0123.jpg</imageinfo>
+    <imageinfo frame="125">00:00:53 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0124.jpg</imageinfo>
+    <imageinfo frame="126">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0125.jpg</imageinfo>
+    <imageinfo frame="127">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0126.jpg</imageinfo>
+    <imageinfo frame="128">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0127.jpg</imageinfo>
+    <imageinfo frame="129">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0128.jpg</imageinfo>
+    <imageinfo frame="130">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0129.jpg</imageinfo>
+    <imageinfo frame="131">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0130.jpg</imageinfo>
+    <imageinfo frame="132">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0131.jpg</imageinfo>
+    <imageinfo frame="133">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0132.jpg</imageinfo>
+    <imageinfo frame="134">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0133.jpg</imageinfo>
+    <imageinfo frame="135">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0134.jpg</imageinfo>
+    <imageinfo frame="136">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0135.jpg</imageinfo>
+    <imageinfo frame="137">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0136.jpg</imageinfo>
+    <imageinfo frame="138">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0137.jpg</imageinfo>
+    <imageinfo frame="139">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0138.jpg</imageinfo>
+    <imageinfo frame="140">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0139.jpg</imageinfo>
+    <imageinfo frame="141">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0140.jpg</imageinfo>
+    <imageinfo frame="142">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0141.jpg</imageinfo>
+    <imageinfo frame="143">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0142.jpg</imageinfo>
+    <imageinfo frame="144">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0143.jpg</imageinfo>
+    <imageinfo frame="145">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0144.jpg</imageinfo>
+    <imageinfo frame="146">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0145.jpg</imageinfo>
+    <imageinfo frame="147">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0146.jpg</imageinfo>
+    <imageinfo frame="148">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0147.jpg</imageinfo>
+    <imageinfo frame="149">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0148.jpg</imageinfo>
+    <imageinfo frame="150">00:00:52 /Users/marklanderyou/Desktop/Demo Reel/cinema4D/logo/logo-render/logo0149.jpg</imageinfo>
+  </renderinfo>
+  <batchinfo>
+    <added>Wednesday, December 27, 2017, 1:50:08 PM</added>
+    <started>Wednesday, December 27, 2017, 1:51:17 PM</started>
+    <rendertime>02:20:33</rendertime>
+    <result>Finished</result>
+  </batchinfo>
+</batchrender>
