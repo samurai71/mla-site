@@ -1,0 +1,140 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLA Administration</title>
+    <link rel="stylesheet" href="css/app.css">
+    <script src="https://use.fontawesome.com/264e791b25.js"></script>
+  </head>
+  <body>
+
+    <div class="app-dashboard shrink-medium">
+      <div class="row expanded app-dashboard-top-nav-bar">
+        <div class="columns medium-2">
+          <button data-toggle="app-dashboard-sidebar" class="menu-icon hide-for-medium"></button>
+          <a class="app-dashboard-logo">MLA</a>
+        </div>
+        <div class="columns show-for-medium">
+          <div class="app-dashboard-search-bar-container">
+            <input class="app-dashboard-search" type="search" placeholder="Search">
+            <i class="app-dashboard-search-icon fa fa-search"></i>
+          </div>
+        </div>
+        <div class="columns shrink app-dashboard-top-bar-actions">
+          <button href="#" class="button hollow">Logout</button>
+          <a href="#" height="30" width="30" alt=""><i class="fa fa-info-circle"></i></a>
+        </div>
+      </div>
+    
+      <div class="app-dashboard-body off-canvas-wrapper">
+        <div id="app-dashboard-sidebar" class="app-dashboard-sidebar position-left off-canvas off-canvas-absolute reveal-for-medium" data-off-canvas>
+          <div class="app-dashboard-sidebar-title-area">
+            <div class="app-dashboard-close-sidebar">
+              <h3 class="app-dashboard-sidebar-block-title">Navigation</h3>
+              <!-- Close button -->
+              <button id="close-sidebar" data-app-dashboard-toggle-shrink class="app-dashboard-sidebar-close-button show-for-medium" aria-label="Close menu" type="button">
+                <span aria-hidden="true"><a href="#"><i class="large fa fa-angle-double-left"></i></a></span>
+              </button>
+            </div>
+            <div class="app-dashboard-open-sidebar">
+              <button id="open-sidebar" data-app-dashboard-toggle-shrink class="app-dashboard-open-sidebar-button show-for-medium" aria-label="open menu" type="button">
+                <span aria-hidden="true"><a href="#"><i class="large fa fa-angle-double-right"></i></a></span>
+              </button>
+            </div>
+          </div>
+          <div class="app-dashboard-sidebar-inner">
+            <ul class="menu vertical">
+              <li><a href="index.html" class="is-active">
+                <i class="large fa fa-home"></i><span class="app-dashboard-sidebar-text">Dashboard</span>
+              </a></li>
+              <li><a>
+                <i class="large fa fa-cloud"></i><span class="app-dashboard-sidebar-text">Media</span>
+              </a></li>
+              <li><a>
+                <i class="large fa fa-cogs"></i><span class="app-dashboard-sidebar-text">Pages</span>
+              </a></li>
+              <li><a>
+                <i class="large fa fa-industry"></i><span class="app-dashboard-sidebar-text">Categories</span>
+              </a></li>
+              <li><a href="#">
+                <i class="large fa fa-paste"></i><span class="app-dashboard-sidebar-text">Posts</span>
+              </a></li>
+              <li><a href="comments.html">
+                <i class="large fa fa-comment"></i><span class="app-dashboard-sidebar-text">Comments</span>
+              </a></li>
+              <li><a href="users.html">
+                <i class="large fa fa-users"></i><span class="app-dashboard-sidebar-text">Users</span>
+              </a></li>
+              <li><a href="stats.html">
+                <i class="large fa fa-google"></i><span class="app-dashboard-sidebar-text">Google Analytics</span>
+              </a></li>
+            </ul>
+          </div>
+        </div>
+    
+        <div class="app-dashboard-body-content off-canvas-content" data-off-canvas-content>
+          <h2 class="text-center">Mark Landeryou Artisan Comments</h2>
+          <!-- comments -->
+          <div class="comment-section-container">
+            <h3>Comments (2)</h3>
+            <div class="comment-section-author">
+              <img src="https://placehold.it/50x50" alt="">
+              <div class="comment-section-name">
+                <h5><a href="">Janice Jones</a></h5>
+                <p>March 12, 2017 at 1:28pm</p>
+              </div>
+            </div>
+            <div class="comment-section-text">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Nulla vitae elit libero, a pharetra augue. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum facilis tenetur a voluptatibus quia
+                deserunt.
+              </p>
+            </div>
+            <div class="comment-section-author">
+              <img src="https://placehold.it/50x50" alt="">
+              <div class="comment-section-name">
+                <h5><a href="">Janice Jones</a></h5>
+                <p>March 12, 2017 at 1:28pm</p>
+              </div>
+            </div>
+            <div class="comment-section-text">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Nulla vitae elit libero, a pharetra augue. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum facilis tenetur a voluptatibus quia deserunt.
+              </p>
+            </div>
+          </div>
+          <!--/comments-->
+    
+          <!-- comment form -->
+          <form class="comment-section-form">
+            <div class="comment-section-box">
+              <div class="row">
+                <div class="small-12 column">
+                  <h4>Leave a Comment</h4>
+                  <label>Name
+                    <input type="text">
+                  </label>
+                  <label>Email
+                    <input type="text">
+                  </label>
+                  <label>Comment
+                    <textarea rows="10" type="text"></textarea>
+                  </label>
+                  <button class="button expanded">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <!--/comment box-->
+    
+    
+    
+        </div>
+      </div>
+    </div>
+    
+
+    <script src="js/app.js"></script>
+    <script src="assets/js/building-blocks/app-dashboard-layout.js"></script>
+  </body>
+</html>
