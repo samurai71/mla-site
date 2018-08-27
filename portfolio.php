@@ -10,7 +10,7 @@
             <div class="button-group round">
               <button class="button hollow filter-simple-button is-active" data-filter="all">All</button>
               <button class="button hollow filter-simple-button" data-filter="web">Web</button>
-              <!-- <button class="button hollow filter-simple-button" data-filter="design">Design</button> -->
+              <button class="button hollow filter-simple-button" data-filter="design">Design</button>
               <button class="button hollow filter-simple-button" data-filter="illustration">Illustration</button>
               <button class="button hollow filter-simple-button" data-filter="photoshop">Photoshop</button>
             </div>
@@ -65,6 +65,14 @@
                <a href="ldao.php"> <img src="img/thumbs/LDALC_thumb.png" alt="Learning Disabilities Assoc of Lambton County" /></a>
               </div>
 
+              <div class="cell column column-block filter-simple-item design">
+                <a href="mla.php"><img src="img/thumbs/MLA-Logo-Outlined-thumb.png" alt="Mark Landeryou Artisan Logo" /></a>
+              </div>
+
+              <div class="cell column column-block filter-simple-item design">
+                <a href="mla1.php"><img src="img/thumbs/Logo_outlined_thumb.png" alt="Mark Landeryou Artisan First Logo" /></a>
+              </div>
+
               <!-- <div class="cell column column-block filter-simple-item design">
                 <img src="https://placeimg.com/350/350/design" alt="" />
               </div>
@@ -75,16 +83,8 @@
 
               <div class="cell column column-block filter-simple-item design">
                 <img src="https://placeimg.com/350/350/design" alt="" />
-              </div>
+              </div> -->
 
-              <div class="cell column column-block filter-simple-item design">
-                <img src="https://placeimg.com/350/350/design" alt="" />
-              </div>
-
-              <div class="cell column column-block filter-simple-item design">
-                <img src="https://placeimg.com/350/350/design" alt="" />
-              </div>
-     -->
             </div>
           </section>
 
