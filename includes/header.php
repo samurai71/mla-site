@@ -8,13 +8,11 @@
     <meta name="keywords" content="<?php echo($pageKeywords); ?>">
      <meta name="author" content="Mark Landeryou">
     <title><?php echo($pageTitle); ?> | Mark Landeryou Artisan, London Ontario Canada</title>
-    <link rel="stylesheet" href="css/app.min.css">
-    <link rel="stylesheet" href="css/icons.min.css">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css"> -->
+    <link rel="stylesheet" href="css/styles.min.css">
     <link rel="stylesheet" href="https://cdn.plyr.io/2.0.18/plyr.css">
-    <link rel="stylesheet" href="css/slicknav.min.css">
+
     <script src="https://use.fontawesome.com/264e791b25.js"></script>
-    <script src="js/modernizr-custom.min.js"></script>
+    
     <link rel="icon" href="img/favicon.ico" type="image/x-icon"/>
   </head>
   <body>
