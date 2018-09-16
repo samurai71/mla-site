@@ -1,5 +1,7 @@
 <?php
     $pageTitle = "Portfolio";
+    $pageDesc = "Mark Landeryou Artisan is an web designer/developer, graphic designer and digital artist, based out of Sarnia Ontario serving Sarnia and London areas";
+    $pageKeywords = "Mark Landeryou Artisan Sarnia London Canada Graphic Designer Web Designer Web developer Digital Artist";
     include "includes/header.php";
  ?>
 <div class="grid-x grid-margin-x content-wrap">

@@ -1,5 +1,7 @@
-<?php 
+<?php
     $pageTitle = "Landtech Computer Consulting";
+    $pageDesc = "Mark Landeryou Artisan is an web designer/developer, graphic designer and digital artist, based out of Sarnia Ontario serving Sarnia and London areas";
+    $pageKeywords = "Mark Landeryou Artisan Sarnia London Canada Graphic Designer Web Designer Web developer Digital Artist";
     include "includes/header.php";
  ?>
  <div class="work-feature-block row">
@@ -11,21 +13,21 @@
         <p>Landtech Computer Consulting was a computer consulting and web design/development company, based in London Ontario, Canada. The site was done in WordPress.</p>
         <h2>Project Details</h2>
         <ul>
-          <li>WordPress</li>    
+          <li>WordPress</li>
         </ul>
       </div>
     </div>
-    
+
     <div class="port-btns row align-center">
       <a href="portfolio.php" class="button"><i class="fa fa-home" aria-hidden="true"> Back to Portfolio</i></a>
       </div>
-    
+
       <div class="lightbox-target" id="lcc">
          <img src="img/LCC1.png" alt="Landtech Computer Consulting">
          <a class="lightbox-close" href="lcc.php"></a>
       </div>
 
-      <?php 
+      <?php
         include "includes/socialmedia.php";
         include "includes/footer.php";
  ?>

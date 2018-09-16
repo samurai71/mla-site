@@ -4,10 +4,13 @@
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="<?php echo($pageDesc); ?>">
+    <meta name="keywords" content="<?php echo($pageKeywords); ?>">
+     <meta name="author" content="Mark Landeryou">
     <title><?php echo($pageTitle); ?> | Mark Landeryou Artisan, London Ontario Canada</title>
     <link rel="stylesheet" href="css/app.min.css">
     <link rel="stylesheet" href="css/icons.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css"> -->
     <link rel="stylesheet" href="https://cdn.plyr.io/2.0.18/plyr.css">
     <link rel="stylesheet" href="css/slicknav.min.css">
     <script src="https://use.fontawesome.com/264e791b25.js"></script>
@@ -15,14 +18,14 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon"/>
   </head>
   <body>
-    
+
     <header>
     <h1 class="hidden">Logo and Navigation</h1>
       <div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
         <button class="menu-icon" type="button" data-toggle="responsive-menu"></button>
         <div class="title-bar-title">Menu</div>
       </div>
-    
+
       <div class="top-bar" id="responsive-menu">
         <div class="top-bar-left">
         <a href="index.php"><img src="img/MLA-Logo-Outlined.svg" alt="Mark Landeryou Artisan Logo"  class="logo"></a>
@@ -49,4 +52,4 @@
             </ul>
           </nav>
           </div>
-    </header>   
+    </header>

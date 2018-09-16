@@ -1,14 +1,16 @@
-<?php 
+<?php
     $pageTitle = "Contact Us";
+    $pageDesc = "Mark Landeryou Artisan is an web designer/developer, graphic designer and digital artist, based out of Sarnia Ontario serving Sarnia and London areas";
+    $pageKeywords = "Mark Landeryou Artisan Sarnia London Canada Graphic Designer Web Designer Web developer Digital Artist";
     include "includes/header.php";
  ?>
 <div class="grid-x grid-margin-x content-wrap">
         <div class="large-12 cell">
           <h2>Contact</h2>
-    
+
           <!-- <p>Phone: <i class="fa fa-phone" aria-hidden="true"></i>
      <a href="tel:516145272">(519)614-5272</a> Text Message (SMS):<a href="sms://+15196145272">Send SMS</a></p> -->
-          
+
     		<section>
     		<div class="row">
     		<div class="small-12 medium-6 large-6 columns">
@@ -46,14 +48,14 @@
     		</div>
     		</div>
     		</section>
-    
-    		
-    
+
+
+
         </div>
-        
+
       </div>
 
-      <?php 
+      <?php
         include "includes/socialmedia.php";
         include "includes/footer.php";
  ?>
