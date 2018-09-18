@@ -1,12 +1,3 @@
-(function() {
-	"use strict";
-$(function(){
-    $('#menu').slicknav();
-  });
-
-})();
-// app js starts //
-
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -72,7 +63,7 @@ $(function(){
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 39);
+/******/ 	return __webpack_require__(__webpack_require__.s = 44);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -85,7 +76,7 @@ $(function(){
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*!
- * jQuery JavaScript Library v3.2.1
+ * jQuery JavaScript Library v3.3.1
  * https://jquery.com/
  *
  * Includes Sizzle.js
@@ -95,7 +86,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2017-03-20T18:59Z
+ * Date: 2018-01-20T17:24Z
  */
 (function (global, factory) {
 
@@ -155,20 +146,56 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	var support = {};
 
-	function DOMEval(code, doc) {
+	var isFunction = function isFunction(obj) {
+
+		// Support: Chrome <=57, Firefox <=52
+		// In some browsers, typeof returns "function" for HTML <object> elements
+		// (i.e., `typeof document.createElement( "object" ) === "function"`).
+		// We don't want to classify *any* DOM node as a function.
+		return typeof obj === "function" && typeof obj.nodeType !== "number";
+	};
+
+	var isWindow = function isWindow(obj) {
+		return obj != null && obj === obj.window;
+	};
+
+	var preservedScriptAttributes = {
+		type: true,
+		src: true,
+		noModule: true
+	};
+
+	function DOMEval(code, doc, node) {
 		doc = doc || document;
 
-		var script = doc.createElement("script");
+		var i,
+		    script = doc.createElement("script");
 
 		script.text = code;
+		if (node) {
+			for (i in preservedScriptAttributes) {
+				if (node[i]) {
+					script[i] = node[i];
+				}
+			}
+		}
 		doc.head.appendChild(script).parentNode.removeChild(script);
+	}
+
+	function toType(obj) {
+		if (obj == null) {
+			return obj + "";
+		}
+
+		// Support: Android <=2.3 only (functionish RegExp)
+		return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" || typeof obj === "function" ? class2type[toString.call(obj)] || "object" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
 	}
 	/* global Symbol */
 	// Defining this global in .eslintrc.json would create a danger of using the global
 	// unguarded in another place, it seems safer to define global only for this module
 
 
-	var version = "3.2.1",
+	var version = "3.3.1",
 
 
 	// Define a local copy of jQuery
@@ -182,18 +209,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	// Support: Android <=4.0 only
 	// Make sure we trim BOM and NBSP
-	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,
-
-
-	// Matches dashed string for camelizing
-	rmsPrefix = /^-ms-/,
-	    rdashAlpha = /-([a-z])/g,
-
-
-	// Used by jQuery.camelCase as callback to replace()
-	fcamelCase = function fcamelCase(all, letter) {
-		return letter.toUpperCase();
-	};
+	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
 
 	jQuery.fn = jQuery.prototype = {
 
@@ -298,7 +314,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 
 		// Handle case when target is a string or something (possible in deep copy)
-		if ((typeof target === "undefined" ? "undefined" : _typeof(target)) !== "object" && !jQuery.isFunction(target)) {
+		if ((typeof target === "undefined" ? "undefined" : _typeof(target)) !== "object" && !isFunction(target)) {
 			target = {};
 		}
 
@@ -362,28 +378,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		noop: function noop() {},
 
-		isFunction: function isFunction(obj) {
-			return jQuery.type(obj) === "function";
-		},
-
-		isWindow: function isWindow(obj) {
-			return obj != null && obj === obj.window;
-		},
-
-		isNumeric: function isNumeric(obj) {
-
-			// As of jQuery 3.0, isNumeric is limited to
-			// strings and numbers (primitives or objects)
-			// that can be coerced to finite numbers (gh-2662)
-			var type = jQuery.type(obj);
-			return (type === "number" || type === "string") &&
-
-			// parseFloat NaNs numeric-cast false positives ("")
-			// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
-			// subtraction forces infinities to NaN
-			!isNaN(obj - parseFloat(obj));
-		},
-
 		isPlainObject: function isPlainObject(obj) {
 			var proto, Ctor;
 
@@ -417,25 +411,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			return true;
 		},
 
-		type: function type(obj) {
-			if (obj == null) {
-				return obj + "";
-			}
-
-			// Support: Android <=2.3 only (functionish RegExp)
-			return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" || typeof obj === "function" ? class2type[toString.call(obj)] || "object" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
-		},
-
 		// Evaluates a script in a global context
 		globalEval: function globalEval(code) {
 			DOMEval(code);
-		},
-
-		// Convert dashed to camelCase; used by the css and data modules
-		// Support: IE <=9 - 11, Edge 12 - 13
-		// Microsoft forgot to hump their vendor prefix (#9572)
-		camelCase: function camelCase(string) {
-			return string.replace(rmsPrefix, "ms-").replace(rdashAlpha, fcamelCase);
 		},
 
 		each: function each(obj, callback) {
@@ -555,37 +533,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		// A global GUID counter for objects
 		guid: 1,
 
-		// Bind a function to a context, optionally partially applying any
-		// arguments.
-		proxy: function proxy(fn, context) {
-			var tmp, args, proxy;
-
-			if (typeof context === "string") {
-				tmp = fn[context];
-				context = fn;
-				fn = tmp;
-			}
-
-			// Quick check to determine if target is callable, in the spec
-			// this throws a TypeError, but we will just return undefined.
-			if (!jQuery.isFunction(fn)) {
-				return undefined;
-			}
-
-			// Simulated bind
-			args = _slice.call(arguments, 2);
-			proxy = function proxy() {
-				return fn.apply(context || this, args.concat(_slice.call(arguments)));
-			};
-
-			// Set the guid of unique handler to the same of original handler, so it can be removed
-			proxy.guid = fn.guid = fn.guid || jQuery.guid++;
-
-			return proxy;
-		},
-
-		now: Date.now,
-
 		// jQuery.support is not used in Core but other projects attach their
 		// properties to it so it needs to exist.
 		support: support
@@ -607,9 +554,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		// hasOwn isn't used here due to false negatives
 		// regarding Nodelist length in IE
 		var length = !!obj && "length" in obj && obj.length,
-		    type = jQuery.type(obj);
+		    type = toType(obj);
 
-		if (type === "function" || jQuery.isWindow(obj)) {
+		if (isFunction(obj) || isWindow(obj)) {
 			return false;
 		}
 
@@ -2816,11 +2763,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	};
 	var rsingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
-	var risSimple = /^.[^:#\[\.,]*$/;
-
 	// Implement the identical functionality for filter and not
 	function winnow(elements, qualifier, not) {
-		if (jQuery.isFunction(qualifier)) {
+		if (isFunction(qualifier)) {
 			return jQuery.grep(elements, function (elem, i) {
 				return !!qualifier.call(elem, i, elem) !== not;
 			});
@@ -2840,16 +2785,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			});
 		}
 
-		// Simple selector that can be filtered directly, removing non-Elements
-		if (risSimple.test(qualifier)) {
-			return jQuery.filter(qualifier, elements, not);
-		}
-
-		// Complex selector, compare the two sets, removing non-Elements
-		qualifier = jQuery.filter(qualifier, elements);
-		return jQuery.grep(elements, function (elem) {
-			return indexOf.call(qualifier, elem) > -1 !== not && elem.nodeType === 1;
-		});
+		// Filtered directly for both simple and complex selectors
+		return jQuery.filter(qualifier, elements, not);
 	}
 
 	jQuery.filter = function (expr, elems, not) {
@@ -2958,7 +2895,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 						for (match in context) {
 
 							// Properties of context are called as methods if possible
-							if (jQuery.isFunction(this[match])) {
+							if (isFunction(this[match])) {
 								this[match](context[match]);
 
 								// ...and otherwise set as attributes
@@ -3001,7 +2938,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 			// HANDLE: $(function)
 			// Shortcut for document ready
-		} else if (jQuery.isFunction(selector)) {
+		} else if (isFunction(selector)) {
 			return root.ready !== undefined ? root.ready(selector) :
 
 			// Execute immediately if ready is not present
@@ -3309,11 +3246,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 					(function add(args) {
 						jQuery.each(args, function (_, arg) {
-							if (jQuery.isFunction(arg)) {
+							if (isFunction(arg)) {
 								if (!options.unique || !self.has(arg)) {
 									list.push(arg);
 								}
-							} else if (arg && arg.length && jQuery.type(arg) !== "string") {
+							} else if (arg && arg.length && toType(arg) !== "string") {
 
 								// Inspect recursively
 								add(arg);
@@ -3425,11 +3362,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		try {
 
 			// Check for promise aspect first to privilege synchronous behavior
-			if (value && jQuery.isFunction(method = value.promise)) {
+			if (value && isFunction(method = value.promise)) {
 				method.call(value).done(resolve).fail(reject);
 
 				// Other thenables
-			} else if (value && jQuery.isFunction(method = value.then)) {
+			} else if (value && isFunction(method = value.then)) {
 				method.call(value, resolve, reject);
 
 				// Other non-thenables
@@ -3481,14 +3418,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 						jQuery.each(tuples, function (i, tuple) {
 
 							// Map tuples (progress, done, fail) to arguments (done, fail, progress)
-							var fn = jQuery.isFunction(fns[tuple[4]]) && fns[tuple[4]];
+							var fn = isFunction(fns[tuple[4]]) && fns[tuple[4]];
 
 							// deferred.progress(function() { bind to newDefer or newDefer.notify })
 							// deferred.done(function() { bind to newDefer or newDefer.resolve })
 							// deferred.fail(function() { bind to newDefer or newDefer.reject })
 							deferred[tuple[1]](function () {
 								var returned = fn && fn.apply(this, arguments);
-								if (returned && jQuery.isFunction(returned.promise)) {
+								if (returned && isFunction(returned.promise)) {
 									returned.promise().progress(newDefer.notify).done(newDefer.resolve).fail(newDefer.reject);
 								} else {
 									newDefer[tuple[0] + "With"](this, fn ? [returned] : arguments);
@@ -3534,7 +3471,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 								(typeof returned === "undefined" ? "undefined" : _typeof(returned)) === "object" || typeof returned === "function") && returned.then;
 
 								// Handle a returned thenable
-								if (jQuery.isFunction(then)) {
+								if (isFunction(then)) {
 
 									// Special processors (notify) just wait for resolution
 									if (special) {
@@ -3614,13 +3551,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					return jQuery.Deferred(function (newDefer) {
 
 						// progress_handlers.add( ... )
-						tuples[0][3].add(resolve(0, newDefer, jQuery.isFunction(onProgress) ? onProgress : Identity, newDefer.notifyWith));
+						tuples[0][3].add(resolve(0, newDefer, isFunction(onProgress) ? onProgress : Identity, newDefer.notifyWith));
 
 						// fulfilled_handlers.add( ... )
-						tuples[1][3].add(resolve(0, newDefer, jQuery.isFunction(onFulfilled) ? onFulfilled : Identity));
+						tuples[1][3].add(resolve(0, newDefer, isFunction(onFulfilled) ? onFulfilled : Identity));
 
 						// rejected_handlers.add( ... )
-						tuples[2][3].add(resolve(0, newDefer, jQuery.isFunction(onRejected) ? onRejected : Thrower));
+						tuples[2][3].add(resolve(0, newDefer, isFunction(onRejected) ? onRejected : Thrower));
 					}).promise();
 				},
 
@@ -3655,8 +3592,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					// fulfilled_callbacks.disable
 					tuples[3 - i][2].disable,
 
+					// rejected_handlers.disable
+					// fulfilled_handlers.disable
+					tuples[3 - i][3].disable,
+
 					// progress_callbacks.lock
-					tuples[0][2].lock);
+					tuples[0][2].lock,
+
+					// progress_handlers.lock
+					tuples[0][3].lock);
 				}
 
 				// progress_handlers.fire
@@ -3727,7 +3671,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				adoptValue(singleValue, master.done(updateFunc(i)).resolve, master.reject, !remaining);
 
 				// Use .then() to unwrap secondary thenables (cf. gh-3000)
-				if (master.state() === "pending" || jQuery.isFunction(resolveValues[i] && resolveValues[i].then)) {
+				if (master.state() === "pending" || isFunction(resolveValues[i] && resolveValues[i].then)) {
 
 					return master.then();
 				}
@@ -3842,7 +3786,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		    bulk = key == null;
 
 		// Sets many values
-		if (jQuery.type(key) === "object") {
+		if (toType(key) === "object") {
 			chainable = true;
 			for (i in key) {
 				access(elems, fn, i, key[i], true, emptyGet, raw);
@@ -3852,7 +3796,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		} else if (value !== undefined) {
 			chainable = true;
 
-			if (!jQuery.isFunction(value)) {
+			if (!isFunction(value)) {
 				raw = true;
 			}
 
@@ -3890,6 +3834,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		return len ? fn(elems[0], key) : emptyGet;
 	};
+
+	// Matches dashed string for camelizing
+	var rmsPrefix = /^-ms-/,
+	    rdashAlpha = /-([a-z])/g;
+
+	// Used by camelCase as callback to replace()
+	function fcamelCase(all, letter) {
+		return letter.toUpperCase();
+	}
+
+	// Convert dashed to camelCase; used by the css and data modules
+	// Support: IE <=9 - 11, Edge 12 - 15
+	// Microsoft forgot to hump their vendor prefix (#9572)
+	function camelCase(string) {
+		return string.replace(rmsPrefix, "ms-").replace(rdashAlpha, fcamelCase);
+	}
 	var acceptData = function acceptData(owner) {
 
 		// Accepts only:
@@ -3949,14 +3909,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			// Handle: [ owner, key, value ] args
 			// Always use camelCase key (gh-2257)
 			if (typeof data === "string") {
-				cache[jQuery.camelCase(data)] = value;
+				cache[camelCase(data)] = value;
 
 				// Handle: [ owner, { properties } ] args
 			} else {
 
 				// Copy the properties one-by-one to the cache object
 				for (prop in data) {
-					cache[jQuery.camelCase(prop)] = data[prop];
+					cache[camelCase(prop)] = data[prop];
 				}
 			}
 			return cache;
@@ -3965,7 +3925,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			return key === undefined ? this.cache(owner) :
 
 			// Always use camelCase key (gh-2257)
-			owner[this.expando] && owner[this.expando][jQuery.camelCase(key)];
+			owner[this.expando] && owner[this.expando][camelCase(key)];
 		},
 		access: function access(owner, key, value) {
 
@@ -4012,9 +3972,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 					// If key is an array of keys...
 					// We always set camelCase keys, so remove that.
-					key = key.map(jQuery.camelCase);
+					key = key.map(camelCase);
 				} else {
-					key = jQuery.camelCase(key);
+					key = camelCase(key);
 
 					// If a key with the spaces exists, use it.
 					// Otherwise, create an array by matching non-whitespace
@@ -4158,7 +4118,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 							if (attrs[i]) {
 								name = attrs[i].name;
 								if (name.indexOf("data-") === 0) {
-									name = jQuery.camelCase(name.slice(5));
+									name = camelCase(name.slice(5));
 									dataAttr(elem, name, data[name]);
 								}
 							}
@@ -4397,7 +4357,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	function adjustCSS(elem, prop, valueParts, tween) {
 		var adjusted,
-		    scale = 1,
+		    scale,
 		    maxIterations = 20,
 		    currentValue = tween ? function () {
 			return tween.cur();
@@ -4413,28 +4373,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		if (initialInUnit && initialInUnit[3] !== unit) {
 
+			// Support: Firefox <=54
+			// Halve the iteration target value to prevent interference from CSS upper bounds (gh-2144)
+			initial = initial / 2;
+
 			// Trust units reported by jQuery.css
 			unit = unit || initialInUnit[3];
-
-			// Make sure we update the tween properties later on
-			valueParts = valueParts || [];
 
 			// Iteratively approximate from a nonzero starting point
 			initialInUnit = +initial || 1;
 
-			do {
+			while (maxIterations--) {
 
-				// If previous iteration zeroed out, double until we get *something*.
-				// Use string for doubling so we don't accidentally see scale as unchanged below
-				scale = scale || ".5";
-
-				// Adjust and apply
-				initialInUnit = initialInUnit / scale;
+				// Evaluate and update our best guess (doubling guesses that zero out).
+				// Finish if the scale equals or crosses 1 (making the old*new product non-positive).
 				jQuery.style(elem, prop, initialInUnit + unit);
+				if ((1 - scale) * (1 - (scale = currentValue() / initial || 0.5)) <= 0) {
+					maxIterations = 0;
+				}
+				initialInUnit = initialInUnit / scale;
+			}
 
-				// Update scale, tolerating zero or NaN from tween.cur()
-				// Break the loop if scale is unchanged or perfect, or if we've just had enough.
-			} while (scale !== (scale = currentValue() / initial) && scale !== 1 && --maxIterations);
+			initialInUnit = initialInUnit * 2;
+			jQuery.style(elem, prop, initialInUnit + unit);
+
+			// Make sure we update the tween properties later on
+			valueParts = valueParts || [];
 		}
 
 		if (valueParts) {
@@ -4550,7 +4514,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	var rtagName = /<([a-z][^\/\0>\x20\t\r\n\f]+)/i;
 
-	var rscriptType = /^$|\/(?:java|ecma)script/i;
+	var rscriptType = /^$|^module$|\/(?:java|ecma)script/i;
 
 	// We have to close these tags to support XHTML (#13200)
 	var wrapMap = {
@@ -4626,7 +4590,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			if (elem || elem === 0) {
 
 				// Add nodes directly
-				if (jQuery.type(elem) === "object") {
+				if (toType(elem) === "object") {
 
 					// Support: Android <=4.0 only, PhantomJS 1 only
 					// push.apply(_, arraylike) throws on ancient WebKit
@@ -5144,7 +5108,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				enumerable: true,
 				configurable: true,
 
-				get: jQuery.isFunction(hook) ? function () {
+				get: isFunction(hook) ? function () {
 					if (this.originalEvent) {
 						return hook(this.originalEvent);
 					}
@@ -5270,7 +5234,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 
 		// Create a timestamp if incoming event doesn't have one
-		this.timeStamp = src && src.timeStamp || jQuery.now();
+		this.timeStamp = src && src.timeStamp || Date.now();
 
 		// Mark it as fixed
 		this[jQuery.expando] = true;
@@ -5463,7 +5427,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	/* eslint-enable */
 
-	// Support: IE <=10 - 11, Edge 12 - 13
+	// Support: IE <=10 - 11, Edge 12 - 13 only
 	// In IE/Edge using regex groups here causes severe slowdowns.
 	// See https://connect.microsoft.com/IE/feedback/details/1736512/
 	rnoInnerhtml = /<script|<style|<link/i,
@@ -5471,14 +5435,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	// checked="checked" or checked
 	rchecked = /checked\s*(?:[^=]|=\s*.checked.)/i,
-	    rscriptTypeMasked = /^true\/(.*)/,
 	    rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g;
 
 	// Prefer a tbody over its parent table for containing new rows
 	function manipulationTarget(elem, content) {
 		if (nodeName(elem, "table") && nodeName(content.nodeType !== 11 ? content : content.firstChild, "tr")) {
 
-			return jQuery(">tbody", elem)[0] || elem;
+			return jQuery(elem).children("tbody")[0] || elem;
 		}
 
 		return elem;
@@ -5490,10 +5453,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		return elem;
 	}
 	function restoreScript(elem) {
-		var match = rscriptTypeMasked.exec(elem.type);
-
-		if (match) {
-			elem.type = match[1];
+		if ((elem.type || "").slice(0, 5) === "true/") {
+			elem.type = elem.type.slice(5);
 		} else {
 			elem.removeAttribute("type");
 		}
@@ -5564,13 +5525,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		    l = collection.length,
 		    iNoClone = l - 1,
 		    value = args[0],
-		    isFunction = jQuery.isFunction(value);
+		    valueIsFunction = isFunction(value);
 
 		// We can't cloneNode fragments that contain checked, in WebKit
-		if (isFunction || l > 1 && typeof value === "string" && !support.checkClone && rchecked.test(value)) {
+		if (valueIsFunction || l > 1 && typeof value === "string" && !support.checkClone && rchecked.test(value)) {
 			return collection.each(function (index) {
 				var self = collection.eq(index);
-				if (isFunction) {
+				if (valueIsFunction) {
 					args[0] = value.call(this, index, self.html());
 				}
 				domManip(self, args, callback, ignored);
@@ -5622,14 +5583,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 						node = scripts[i];
 						if (rscriptType.test(node.type || "") && !dataPriv.access(node, "globalEval") && jQuery.contains(doc, node)) {
 
-							if (node.src) {
+							if (node.src && (node.type || "").toLowerCase() !== "module") {
 
 								// Optional AJAX dependency, but won't run scripts if not present
 								if (jQuery._evalUrl) {
 									jQuery._evalUrl(node.src);
 								}
 							} else {
-								DOMEval(node.textContent.replace(rcleanScript, ""), doc);
+								DOMEval(node.textContent.replace(rcleanScript, ""), doc, node);
 							}
 						}
 					}
@@ -5910,8 +5871,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			return this.pushStack(ret);
 		};
 	});
-	var rmargin = /^margin/;
-
 	var rnumnonpx = new RegExp("^(" + pnum + ")(?!px)[a-z%]+$", "i");
 
 	var getStyles = function getStyles(elem) {
@@ -5928,6 +5887,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		return view.getComputedStyle(elem);
 	};
 
+	var rboxStyle = new RegExp(cssExpand.join("|"), "i");
+
 	(function () {
 
 		// Executing both pixelPosition & boxSizingReliable tests require only one layout
@@ -5939,21 +5900,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return;
 			}
 
-			div.style.cssText = "box-sizing:border-box;" + "position:relative;display:block;" + "margin:auto;border:1px;padding:1px;" + "top:1%;width:50%";
-			div.innerHTML = "";
-			documentElement.appendChild(container);
+			container.style.cssText = "position:absolute;left:-11111px;width:60px;" + "margin-top:1px;padding:0;border:0";
+			div.style.cssText = "position:relative;display:block;box-sizing:border-box;overflow:scroll;" + "margin:auto;border:1px;padding:1px;" + "width:60%;top:1%";
+			documentElement.appendChild(container).appendChild(div);
 
 			var divStyle = window.getComputedStyle(div);
 			pixelPositionVal = divStyle.top !== "1%";
 
 			// Support: Android 4.0 - 4.3 only, Firefox <=3 - 44
-			reliableMarginLeftVal = divStyle.marginLeft === "2px";
-			boxSizingReliableVal = divStyle.width === "4px";
+			reliableMarginLeftVal = roundPixelMeasures(divStyle.marginLeft) === 12;
 
-			// Support: Android 4.0 - 4.3 only
+			// Support: Android 4.0 - 4.3 only, Safari <=9.1 - 10.1, iOS <=7.0 - 9.3
 			// Some styles come back with percentage values, even though they shouldn't
-			div.style.marginRight = "50%";
-			pixelMarginRightVal = divStyle.marginRight === "4px";
+			div.style.right = "60%";
+			pixelBoxStylesVal = roundPixelMeasures(divStyle.right) === 36;
+
+			// Support: IE 9 - 11 only
+			// Detect misreporting of content dimensions for box-sizing:border-box elements
+			boxSizingReliableVal = roundPixelMeasures(divStyle.width) === 36;
+
+			// Support: IE 9 only
+			// Detect overflow:scroll screwiness (gh-3699)
+			div.style.position = "absolute";
+			scrollboxSizeVal = div.offsetWidth === 36 || "absolute";
 
 			documentElement.removeChild(container);
 
@@ -5962,9 +5931,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			div = null;
 		}
 
+		function roundPixelMeasures(measure) {
+			return Math.round(parseFloat(measure));
+		}
+
 		var pixelPositionVal,
 		    boxSizingReliableVal,
-		    pixelMarginRightVal,
+		    scrollboxSizeVal,
+		    pixelBoxStylesVal,
 		    reliableMarginLeftVal,
 		    container = document.createElement("div"),
 		    div = document.createElement("div");
@@ -5980,25 +5954,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		div.cloneNode(true).style.backgroundClip = "";
 		support.clearCloneStyle = div.style.backgroundClip === "content-box";
 
-		container.style.cssText = "border:0;width:8px;height:0;top:0;left:-9999px;" + "padding:0;margin-top:1px;position:absolute";
-		container.appendChild(div);
-
 		jQuery.extend(support, {
-			pixelPosition: function pixelPosition() {
-				computeStyleTests();
-				return pixelPositionVal;
-			},
 			boxSizingReliable: function boxSizingReliable() {
 				computeStyleTests();
 				return boxSizingReliableVal;
 			},
-			pixelMarginRight: function pixelMarginRight() {
+			pixelBoxStyles: function pixelBoxStyles() {
 				computeStyleTests();
-				return pixelMarginRightVal;
+				return pixelBoxStylesVal;
+			},
+			pixelPosition: function pixelPosition() {
+				computeStyleTests();
+				return pixelPositionVal;
 			},
 			reliableMarginLeft: function reliableMarginLeft() {
 				computeStyleTests();
 				return reliableMarginLeftVal;
+			},
+			scrollboxSize: function scrollboxSize() {
+				computeStyleTests();
+				return scrollboxSizeVal;
 			}
 		});
 	})();
@@ -6033,7 +6008,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			// but width seems to be reliably pixels.
 			// This is against the CSSOM draft spec:
 			// https://drafts.csswg.org/cssom/#resolved-values
-			if (!support.pixelMarginRight() && rnumnonpx.test(ret) && rmargin.test(name)) {
+			if (!support.pixelBoxStyles() && rnumnonpx.test(ret) && rboxStyle.test(name)) {
 
 				// Remember the original values
 				width = style.width;
@@ -6133,80 +6108,106 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		Math.max(0, matches[2] - (subtract || 0)) + (matches[3] || "px") : value;
 	}
 
-	function augmentWidthOrHeight(elem, name, extra, isBorderBox, styles) {
-		var i,
-		    val = 0;
+	function boxModelAdjustment(elem, dimension, box, isBorderBox, styles, computedVal) {
+		var i = dimension === "width" ? 1 : 0,
+		    extra = 0,
+		    delta = 0;
 
-		// If we already have the right measurement, avoid augmentation
-		if (extra === (isBorderBox ? "border" : "content")) {
-			i = 4;
-
-			// Otherwise initialize for horizontal or vertical properties
-		} else {
-			i = name === "width" ? 1 : 0;
+		// Adjustment may not be necessary
+		if (box === (isBorderBox ? "border" : "content")) {
+			return 0;
 		}
 
 		for (; i < 4; i += 2) {
 
-			// Both box models exclude margin, so add it if we want it
-			if (extra === "margin") {
-				val += jQuery.css(elem, extra + cssExpand[i], true, styles);
+			// Both box models exclude margin
+			if (box === "margin") {
+				delta += jQuery.css(elem, box + cssExpand[i], true, styles);
 			}
 
-			if (isBorderBox) {
+			// If we get here with a content-box, we're seeking "padding" or "border" or "margin"
+			if (!isBorderBox) {
 
-				// border-box includes padding, so remove it if we want content
-				if (extra === "content") {
-					val -= jQuery.css(elem, "padding" + cssExpand[i], true, styles);
+				// Add padding
+				delta += jQuery.css(elem, "padding" + cssExpand[i], true, styles);
+
+				// For "border" or "margin", add border
+				if (box !== "padding") {
+					delta += jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
+
+					// But still keep track of it otherwise
+				} else {
+					extra += jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
 				}
 
-				// At this point, extra isn't border nor margin, so remove border
-				if (extra !== "margin") {
-					val -= jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
-				}
+				// If we get here with a border-box (content + padding + border), we're seeking "content" or
+				// "padding" or "margin"
 			} else {
 
-				// At this point, extra isn't content, so add padding
-				val += jQuery.css(elem, "padding" + cssExpand[i], true, styles);
+				// For "content", subtract padding
+				if (box === "content") {
+					delta -= jQuery.css(elem, "padding" + cssExpand[i], true, styles);
+				}
 
-				// At this point, extra isn't content nor padding, so add border
-				if (extra !== "padding") {
-					val += jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
+				// For "content" or "padding", subtract border
+				if (box !== "margin") {
+					delta -= jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
 				}
 			}
 		}
 
-		return val;
+		// Account for positive content-box scroll gutter when requested by providing computedVal
+		if (!isBorderBox && computedVal >= 0) {
+
+			// offsetWidth/offsetHeight is a rounded sum of content, padding, scroll gutter, and border
+			// Assuming integer scroll gutter, subtract the rest and round down
+			delta += Math.max(0, Math.ceil(elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)] - computedVal - delta - extra - 0.5));
+		}
+
+		return delta;
 	}
 
-	function getWidthOrHeight(elem, name, extra) {
+	function getWidthOrHeight(elem, dimension, extra) {
 
 		// Start with computed style
-		var valueIsBorderBox,
-		    styles = getStyles(elem),
-		    val = curCSS(elem, name, styles),
-		    isBorderBox = jQuery.css(elem, "boxSizing", false, styles) === "border-box";
+		var styles = getStyles(elem),
+		    val = curCSS(elem, dimension, styles),
+		    isBorderBox = jQuery.css(elem, "boxSizing", false, styles) === "border-box",
+		    valueIsBorderBox = isBorderBox;
 
-		// Computed unit is not pixels. Stop here and return.
+		// Support: Firefox <=54
+		// Return a confounding non-pixel value or feign ignorance, as appropriate.
 		if (rnumnonpx.test(val)) {
-			return val;
+			if (!extra) {
+				return val;
+			}
+			val = "auto";
 		}
 
 		// Check for style in case a browser which returns unreliable values
 		// for getComputedStyle silently falls back to the reliable elem.style
-		valueIsBorderBox = isBorderBox && (support.boxSizingReliable() || val === elem.style[name]);
+		valueIsBorderBox = valueIsBorderBox && (support.boxSizingReliable() || val === elem.style[dimension]);
 
-		// Fall back to offsetWidth/Height when value is "auto"
+		// Fall back to offsetWidth/offsetHeight when value is "auto"
 		// This happens for inline elements with no explicit setting (gh-3571)
-		if (val === "auto") {
-			val = elem["offset" + name[0].toUpperCase() + name.slice(1)];
+		// Support: Android <=4.1 - 4.3 only
+		// Also use offsetWidth/offsetHeight for misreported inline dimensions (gh-3602)
+		if (val === "auto" || !parseFloat(val) && jQuery.css(elem, "display", false, styles) === "inline") {
+
+			val = elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)];
+
+			// offsetWidth/offsetHeight provide border-box values
+			valueIsBorderBox = true;
 		}
 
-		// Normalize "", auto, and prepare for extra
+		// Normalize "" and auto
 		val = parseFloat(val) || 0;
 
-		// Use the active box-sizing model to add/subtract irrelevant styles
-		return val + augmentWidthOrHeight(elem, name, extra || (isBorderBox ? "border" : "content"), valueIsBorderBox, styles) + "px";
+		// Adjust for the element's box model
+		return val + boxModelAdjustment(elem, dimension, extra || (isBorderBox ? "border" : "content"), valueIsBorderBox, styles,
+
+		// Provide the current computed size to request scroll gutter calculation (gh-3589)
+		val) + "px";
 	}
 
 	jQuery.extend({
@@ -6245,9 +6246,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		// Add in properties whose names you wish to fix before
 		// setting or getting the value
-		cssProps: {
-			"float": "cssFloat"
-		},
+		cssProps: {},
 
 		// Get and set the style property on a DOM Node
 		style: function style(elem, name, value, extra) {
@@ -6261,7 +6260,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			var ret,
 			    type,
 			    hooks,
-			    origName = jQuery.camelCase(name),
+			    origName = camelCase(name),
 			    isCustomProp = rcustomProp.test(name),
 			    style = elem.style;
 
@@ -6328,7 +6327,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			var val,
 			    num,
 			    hooks,
-			    origName = jQuery.camelCase(name),
+			    origName = camelCase(name),
 			    isCustomProp = rcustomProp.test(name);
 
 			// Make sure that we're working with the right name. We don't
@@ -6366,8 +6365,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 	});
 
-	jQuery.each(["height", "width"], function (i, name) {
-		jQuery.cssHooks[name] = {
+	jQuery.each(["height", "width"], function (i, dimension) {
+		jQuery.cssHooks[dimension] = {
 			get: function get(elem, computed, extra) {
 				if (computed) {
 
@@ -6382,21 +6381,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					// Running getBoundingClientRect on a disconnected node
 					// in IE throws an error.
 					!elem.getClientRects().length || !elem.getBoundingClientRect().width) ? swap(elem, cssShow, function () {
-						return getWidthOrHeight(elem, name, extra);
-					}) : getWidthOrHeight(elem, name, extra);
+						return getWidthOrHeight(elem, dimension, extra);
+					}) : getWidthOrHeight(elem, dimension, extra);
 				}
 			},
 
 			set: function set(elem, value, extra) {
 				var matches,
-				    styles = extra && getStyles(elem),
-				    subtract = extra && augmentWidthOrHeight(elem, name, extra, jQuery.css(elem, "boxSizing", false, styles) === "border-box", styles);
+				    styles = getStyles(elem),
+				    isBorderBox = jQuery.css(elem, "boxSizing", false, styles) === "border-box",
+				    subtract = extra && boxModelAdjustment(elem, dimension, extra, isBorderBox, styles);
+
+				// Account for unreliable border-box dimensions by comparing offset* to computed and
+				// faking a content-box to get border and padding (gh-3699)
+				if (isBorderBox && support.scrollboxSize() === styles.position) {
+					subtract -= Math.ceil(elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)] - parseFloat(styles[dimension]) - boxModelAdjustment(elem, dimension, "border", false, styles) - 0.5);
+				}
 
 				// Convert to pixels if value adjustment is needed
 				if (subtract && (matches = rcssNum.exec(value)) && (matches[3] || "px") !== "px") {
 
-					elem.style[name] = value;
-					value = jQuery.css(elem, name);
+					elem.style[dimension] = value;
+					value = jQuery.css(elem, dimension);
 				}
 
 				return setPositiveNumber(elem, value, subtract);
@@ -6435,7 +6441,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			}
 		};
 
-		if (!rmargin.test(prefix)) {
+		if (prefix !== "margin") {
 			jQuery.cssHooks[prefix + suffix].set = setPositiveNumber;
 		}
 	});
@@ -6594,7 +6600,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		window.setTimeout(function () {
 			fxNow = undefined;
 		});
-		return fxNow = jQuery.now();
+		return fxNow = Date.now();
 	}
 
 	// Generate parameters to create a standard animation
@@ -6705,9 +6711,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		// Restrict "overflow" and "display" styles during box animations
 		if (isBox && elem.nodeType === 1) {
 
-			// Support: IE <=9 - 11, Edge 12 - 13
+			// Support: IE <=9 - 11, Edge 12 - 15
 			// Record all 3 overflow attributes because IE does not infer the shorthand
-			// from identically-valued overflowX and overflowY
+			// from identically-valued overflowX and overflowY and Edge just mirrors
+			// the overflowX value there.
 			opts.overflow = [style.overflow, style.overflowX, style.overflowY];
 
 			// Identify a display type, preferring old show/hide data over the CSS cascade
@@ -6815,7 +6822,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		// camelCase, specialEasing and expand cssHook pass
 		for (index in props) {
-			name = jQuery.camelCase(index);
+			name = camelCase(index);
 			easing = specialEasing[name];
 			value = props[index];
 			if (Array.isArray(value)) {
@@ -6941,8 +6948,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		for (; index < length; index++) {
 			result = Animation.prefilters[index].call(animation, elem, props, animation.opts);
 			if (result) {
-				if (jQuery.isFunction(result.stop)) {
-					jQuery._queueHooks(animation.elem, animation.opts.queue).stop = jQuery.proxy(result.stop, result);
+				if (isFunction(result.stop)) {
+					jQuery._queueHooks(animation.elem, animation.opts.queue).stop = result.stop.bind(result);
 				}
 				return result;
 			}
@@ -6950,7 +6957,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		jQuery.map(props, createTween, animation);
 
-		if (jQuery.isFunction(animation.opts.start)) {
+		if (isFunction(animation.opts.start)) {
 			animation.opts.start.call(elem, animation);
 		}
 
@@ -6977,7 +6984,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 
 		tweener: function tweener(props, callback) {
-			if (jQuery.isFunction(props)) {
+			if (isFunction(props)) {
 				callback = props;
 				props = ["*"];
 			} else {
@@ -7008,9 +7015,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	jQuery.speed = function (speed, easing, fn) {
 		var opt = speed && (typeof speed === "undefined" ? "undefined" : _typeof(speed)) === "object" ? jQuery.extend({}, speed) : {
-			complete: fn || !fn && easing || jQuery.isFunction(speed) && speed,
+			complete: fn || !fn && easing || isFunction(speed) && speed,
 			duration: speed,
-			easing: fn && easing || easing && !jQuery.isFunction(easing) && easing
+			easing: fn && easing || easing && !isFunction(easing) && easing
 		};
 
 		// Go to the end state if fx are off
@@ -7035,7 +7042,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		opt.old = opt.complete;
 
 		opt.complete = function () {
-			if (jQuery.isFunction(opt.old)) {
+			if (isFunction(opt.old)) {
 				opt.old.call(this);
 			}
 
@@ -7194,7 +7201,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		    i = 0,
 		    timers = jQuery.timers;
 
-		fxNow = jQuery.now();
+		fxNow = Date.now();
 
 		for (; i < timers.length; i++) {
 			timer = timers[i];
@@ -7521,7 +7528,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	});
 
 	// Strip and collapse whitespace according to HTML spec
-	// https://html.spec.whatwg.org/multipage/infrastructure.html#strip-and-collapse-whitespace
+	// https://infra.spec.whatwg.org/#strip-and-collapse-ascii-whitespace
 	function stripAndCollapse(value) {
 		var tokens = value.match(rnothtmlwhite) || [];
 		return tokens.join(" ");
@@ -7529,6 +7536,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	function getClass(elem) {
 		return elem.getAttribute && elem.getAttribute("class") || "";
+	}
+
+	function classesToArray(value) {
+		if (Array.isArray(value)) {
+			return value;
+		}
+		if (typeof value === "string") {
+			return value.match(rnothtmlwhite) || [];
+		}
+		return [];
 	}
 
 	jQuery.fn.extend({
@@ -7542,15 +7559,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			    finalValue,
 			    i = 0;
 
-			if (jQuery.isFunction(value)) {
+			if (isFunction(value)) {
 				return this.each(function (j) {
 					jQuery(this).addClass(value.call(this, j, getClass(this)));
 				});
 			}
 
-			if (typeof value === "string" && value) {
-				classes = value.match(rnothtmlwhite) || [];
+			classes = classesToArray(value);
 
+			if (classes.length) {
 				while (elem = this[i++]) {
 					curValue = getClass(elem);
 					cur = elem.nodeType === 1 && " " + stripAndCollapse(curValue) + " ";
@@ -7585,7 +7602,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			    finalValue,
 			    i = 0;
 
-			if (jQuery.isFunction(value)) {
+			if (isFunction(value)) {
 				return this.each(function (j) {
 					jQuery(this).removeClass(value.call(this, j, getClass(this)));
 				});
@@ -7595,9 +7612,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return this.attr("class", "");
 			}
 
-			if (typeof value === "string" && value) {
-				classes = value.match(rnothtmlwhite) || [];
+			classes = classesToArray(value);
 
+			if (classes.length) {
 				while (elem = this[i++]) {
 					curValue = getClass(elem);
 
@@ -7627,13 +7644,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 
 		toggleClass: function toggleClass(value, stateVal) {
-			var type = typeof value === "undefined" ? "undefined" : _typeof(value);
+			var type = typeof value === "undefined" ? "undefined" : _typeof(value),
+			    isValidValue = type === "string" || Array.isArray(value);
 
-			if (typeof stateVal === "boolean" && type === "string") {
+			if (typeof stateVal === "boolean" && isValidValue) {
 				return stateVal ? this.addClass(value) : this.removeClass(value);
 			}
 
-			if (jQuery.isFunction(value)) {
+			if (isFunction(value)) {
 				return this.each(function (i) {
 					jQuery(this).toggleClass(value.call(this, i, getClass(this), stateVal), stateVal);
 				});
@@ -7642,12 +7660,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			return this.each(function () {
 				var className, i, self, classNames;
 
-				if (type === "string") {
+				if (isValidValue) {
 
 					// Toggle individual class names
 					i = 0;
 					self = jQuery(this);
-					classNames = value.match(rnothtmlwhite) || [];
+					classNames = classesToArray(value);
 
 					while (className = classNames[i++]) {
 
@@ -7701,7 +7719,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		val: function val(value) {
 			var hooks,
 			    ret,
-			    isFunction,
+			    valueIsFunction,
 			    elem = this[0];
 
 			if (!arguments.length) {
@@ -7726,7 +7744,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return;
 			}
 
-			isFunction = jQuery.isFunction(value);
+			valueIsFunction = isFunction(value);
 
 			return this.each(function (i) {
 				var val;
@@ -7735,7 +7753,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					return;
 				}
 
-				if (isFunction) {
+				if (valueIsFunction) {
 					val = value.call(this, i, jQuery(this).val());
 				} else {
 					val = value;
@@ -7869,7 +7887,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	// Return jQuery for attributes-only inclusion
 
 
-	var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/;
+	support.focusin = "onfocusin" in window;
+
+	var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/,
+	    stopPropagationCallback = function stopPropagationCallback(e) {
+		e.stopPropagation();
+	};
 
 	jQuery.extend(jQuery.event, {
 
@@ -7882,11 +7905,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			    ontype,
 			    handle,
 			    special,
+			    lastElement,
 			    eventPath = [elem || document],
 			    type = hasOwn.call(event, "type") ? event.type : event,
 			    namespaces = hasOwn.call(event, "namespace") ? event.namespace.split(".") : [];
 
-			cur = tmp = elem = elem || document;
+			cur = lastElement = tmp = elem = elem || document;
 
 			// Don't do events on text and comment nodes
 			if (elem.nodeType === 3 || elem.nodeType === 8) {
@@ -7932,7 +7956,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 			// Determine event propagation path in advance, per W3C events spec (#9951)
 			// Bubble up to document, then to window; watch for a global ownerDocument var (#9724)
-			if (!onlyHandlers && !special.noBubble && !jQuery.isWindow(elem)) {
+			if (!onlyHandlers && !special.noBubble && !isWindow(elem)) {
 
 				bubbleType = special.delegateType || type;
 				if (!rfocusMorph.test(bubbleType + type)) {
@@ -7952,7 +7976,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			// Fire handlers on the event path
 			i = 0;
 			while ((cur = eventPath[i++]) && !event.isPropagationStopped()) {
-
+				lastElement = cur;
 				event.type = i > 1 ? bubbleType : special.bindType || type;
 
 				// jQuery handler
@@ -7979,7 +8003,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 					// Call a native DOM method on the target with the same name as the event.
 					// Don't do default actions on window, that's where global variables be (#6170)
-					if (ontype && jQuery.isFunction(elem[type]) && !jQuery.isWindow(elem)) {
+					if (ontype && isFunction(elem[type]) && !isWindow(elem)) {
 
 						// Don't re-trigger an onFOO event when we call its FOO() method
 						tmp = elem[ontype];
@@ -7990,7 +8014,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 						// Prevent re-triggering of the same event, since we already bubbled it above
 						jQuery.event.triggered = type;
+
+						if (event.isPropagationStopped()) {
+							lastElement.addEventListener(type, stopPropagationCallback);
+						}
+
 						elem[type]();
+
+						if (event.isPropagationStopped()) {
+							lastElement.removeEventListener(type, stopPropagationCallback);
+						}
+
 						jQuery.event.triggered = undefined;
 
 						if (tmp) {
@@ -8030,22 +8064,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			}
 		}
 	});
-
-	jQuery.each(("blur focus focusin focusout resize scroll click dblclick " + "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " + "change select submit keydown keypress keyup contextmenu").split(" "), function (i, name) {
-
-		// Handle event binding
-		jQuery.fn[name] = function (data, fn) {
-			return arguments.length > 0 ? this.on(name, null, data, fn) : this.trigger(name);
-		};
-	});
-
-	jQuery.fn.extend({
-		hover: function hover(fnOver, fnOut) {
-			return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
-		}
-	});
-
-	support.focusin = "onfocusin" in window;
 
 	// Support: Firefox <=44
 	// Firefox doesn't have focus(in | out) events
@@ -8089,7 +8107,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	}
 	var location = window.location;
 
-	var nonce = jQuery.now();
+	var nonce = Date.now();
 
 	var rquery = /\?/;
 
@@ -8136,7 +8154,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					buildParams(prefix + "[" + ((typeof v === "undefined" ? "undefined" : _typeof(v)) === "object" && v != null ? i : "") + "]", v, traditional, add);
 				}
 			});
-		} else if (!traditional && jQuery.type(obj) === "object") {
+		} else if (!traditional && toType(obj) === "object") {
 
 			// Serialize object item.
 			for (name in obj) {
@@ -8157,7 +8175,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		    add = function add(key, valueOrFunction) {
 
 			// If value is a function, invoke it and use its return value
-			var value = jQuery.isFunction(valueOrFunction) ? valueOrFunction() : valueOrFunction;
+			var value = isFunction(valueOrFunction) ? valueOrFunction() : valueOrFunction;
 
 			s[s.length] = encodeURIComponent(key) + "=" + encodeURIComponent(value == null ? "" : value);
 		};
@@ -8270,7 +8288,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			    i = 0,
 			    dataTypes = dataTypeExpression.toLowerCase().match(rnothtmlwhite) || [];
 
-			if (jQuery.isFunction(func)) {
+			if (isFunction(func)) {
 
 				// For each dataType in the dataTypeExpression
 				while (dataType = dataTypes[i++]) {
@@ -8760,7 +8778,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			if (s.crossDomain == null) {
 				urlAnchor = document.createElement("a");
 
-				// Support: IE <=8 - 11, Edge 12 - 13
+				// Support: IE <=8 - 11, Edge 12 - 15
 				// IE throws exception on accessing the href property if url is malformed,
 				// e.g. http://example.com:80x/
 				try {
@@ -8817,8 +8835,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				// Remember the hash so we can put it back
 				uncached = s.url.slice(cacheURL.length);
 
-				// If data is available, append data to url
-				if (s.data) {
+				// If data is available and should be processed, append data to url
+				if (s.data && (s.processData || typeof s.data === "string")) {
 					cacheURL += (rquery.test(cacheURL) ? "&" : "?") + s.data;
 
 					// #9682: remove data so that it's not used in an eventual retry
@@ -9050,7 +9068,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		jQuery[method] = function (url, data, callback, type) {
 
 			// Shift arguments if data argument was omitted
-			if (jQuery.isFunction(data)) {
+			if (isFunction(data)) {
 				type = type || callback;
 				callback = data;
 				data = undefined;
@@ -9086,7 +9104,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			var wrap;
 
 			if (this[0]) {
-				if (jQuery.isFunction(html)) {
+				if (isFunction(html)) {
 					html = html.call(this[0]);
 				}
 
@@ -9112,7 +9130,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 
 		wrapInner: function wrapInner(html) {
-			if (jQuery.isFunction(html)) {
+			if (isFunction(html)) {
 				return this.each(function (i) {
 					jQuery(this).wrapInner(html.call(this, i));
 				});
@@ -9131,10 +9149,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 
 		wrap: function wrap(html) {
-			var isFunction = jQuery.isFunction(html);
+			var htmlIsFunction = isFunction(html);
 
 			return this.each(function (i) {
-				jQuery(this).wrapAll(isFunction ? html.call(this, i) : html);
+				jQuery(this).wrapAll(htmlIsFunction ? html.call(this, i) : html);
 			});
 		},
 
@@ -9215,7 +9233,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					_callback = function callback(type) {
 						return function () {
 							if (_callback) {
-								_callback = errorCallback = xhr.onload = xhr.onerror = xhr.onabort = xhr.onreadystatechange = null;
+								_callback = errorCallback = xhr.onload = xhr.onerror = xhr.onabort = xhr.ontimeout = xhr.onreadystatechange = null;
 
 								if (type === "abort") {
 									xhr.abort();
@@ -9246,7 +9264,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 					// Listen to events
 					xhr.onload = _callback();
-					errorCallback = xhr.onerror = _callback("error");
+					errorCallback = xhr.onerror = xhr.ontimeout = _callback("error");
 
 					// Support: IE 9 only
 					// Use onreadystatechange to replace onabort
@@ -9386,7 +9404,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		if (jsonProp || s.dataTypes[0] === "jsonp") {
 
 			// Get callback name, remembering preexisting value associated with it
-			callbackName = s.jsonpCallback = jQuery.isFunction(s.jsonpCallback) ? s.jsonpCallback() : s.jsonpCallback;
+			callbackName = s.jsonpCallback = isFunction(s.jsonpCallback) ? s.jsonpCallback() : s.jsonpCallback;
 
 			// Insert callback into url or form data
 			if (jsonProp) {
@@ -9435,7 +9453,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				}
 
 				// Call if it was a function and we have a response
-				if (responseContainer && jQuery.isFunction(overwritten)) {
+				if (responseContainer && isFunction(overwritten)) {
 					overwritten(responseContainer[0]);
 				}
 
@@ -9524,7 +9542,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 
 		// If it's a function
-		if (jQuery.isFunction(params)) {
+		if (isFunction(params)) {
 
 			// We assume that it's the callback
 			callback = params;
@@ -9620,7 +9638,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				curLeft = parseFloat(curCSSLeft) || 0;
 			}
 
-			if (jQuery.isFunction(options)) {
+			if (isFunction(options)) {
 
 				// Use jQuery.extend here to allow modification of coordinates argument (gh-1848)
 				options = options.call(elem, i, jQuery.extend({}, curOffset));
@@ -9642,6 +9660,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	};
 
 	jQuery.fn.extend({
+
+		// offset() relates an element's border box to the document origin
 		offset: function offset(options) {
 
 			// Preserve chaining for setter
@@ -9651,9 +9671,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				});
 			}
 
-			var doc,
-			    docElem,
-			    rect,
+			var rect,
 			    win,
 			    elem = this[0];
 
@@ -9669,18 +9687,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return { top: 0, left: 0 };
 			}
 
+			// Get document-relative position by adding viewport scroll to viewport-relative gBCR
 			rect = elem.getBoundingClientRect();
-
-			doc = elem.ownerDocument;
-			docElem = doc.documentElement;
-			win = doc.defaultView;
-
+			win = elem.ownerDocument.defaultView;
 			return {
-				top: rect.top + win.pageYOffset - docElem.clientTop,
-				left: rect.left + win.pageXOffset - docElem.clientLeft
+				top: rect.top + win.pageYOffset,
+				left: rect.left + win.pageXOffset
 			};
 		},
 
+		// position() relates an element's margin box to its offset parent's padding box
+		// This corresponds to the behavior of CSS absolute positioning
 		position: function position() {
 			if (!this[0]) {
 				return;
@@ -9688,31 +9705,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 			var offsetParent,
 			    offset,
+			    doc,
 			    elem = this[0],
 			    parentOffset = { top: 0, left: 0 };
 
-			// Fixed elements are offset from window (parentOffset = {top:0, left: 0},
-			// because it is its only offset parent
+			// position:fixed elements are offset from the viewport, which itself always has zero offset
 			if (jQuery.css(elem, "position") === "fixed") {
 
-				// Assume getBoundingClientRect is there when computed position is fixed
+				// Assume position:fixed implies availability of getBoundingClientRect
 				offset = elem.getBoundingClientRect();
 			} else {
-
-				// Get *real* offsetParent
-				offsetParent = this.offsetParent();
-
-				// Get correct offsets
 				offset = this.offset();
-				if (!nodeName(offsetParent[0], "html")) {
-					parentOffset = offsetParent.offset();
-				}
 
-				// Add offsetParent borders
-				parentOffset = {
-					top: parentOffset.top + jQuery.css(offsetParent[0], "borderTopWidth", true),
-					left: parentOffset.left + jQuery.css(offsetParent[0], "borderLeftWidth", true)
-				};
+				// Account for the *real* offset parent, which can be the document or its root element
+				// when a statically positioned element is identified
+				doc = elem.ownerDocument;
+				offsetParent = elem.offsetParent || doc.documentElement;
+				while (offsetParent && (offsetParent === doc.body || offsetParent === doc.documentElement) && jQuery.css(offsetParent, "position") === "static") {
+
+					offsetParent = offsetParent.parentNode;
+				}
+				if (offsetParent && offsetParent !== elem && offsetParent.nodeType === 1) {
+
+					// Incorporate borders into its offset, since they are outside its content origin
+					parentOffset = jQuery(offsetParent).offset();
+					parentOffset.top += jQuery.css(offsetParent, "borderTopWidth", true);
+					parentOffset.left += jQuery.css(offsetParent, "borderLeftWidth", true);
+				}
 			}
 
 			// Subtract parent offsets and element margins
@@ -9754,7 +9773,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 				// Coalesce documents and windows
 				var win;
-				if (jQuery.isWindow(elem)) {
+				if (isWindow(elem)) {
 					win = elem;
 				} else if (elem.nodeType === 9) {
 					win = elem.defaultView;
@@ -9802,7 +9821,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return access(this, function (elem, type, value) {
 					var doc;
 
-					if (jQuery.isWindow(elem)) {
+					if (isWindow(elem)) {
 
 						// $( window ).outerWidth/Height return w/h including scrollbars (gh-1729)
 						return funcName.indexOf("outer") === 0 ? elem["inner" + name] : elem.document.documentElement["client" + name];
@@ -9829,6 +9848,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		});
 	});
 
+	jQuery.each(("blur focus focusin focusout resize scroll click dblclick " + "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " + "change select submit keydown keypress keyup contextmenu").split(" "), function (i, name) {
+
+		// Handle event binding
+		jQuery.fn[name] = function (data, fn) {
+			return arguments.length > 0 ? this.on(name, null, data, fn) : this.trigger(name);
+		};
+	});
+
+	jQuery.fn.extend({
+		hover: function hover(fnOver, fnOut) {
+			return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
+		}
+	});
+
 	jQuery.fn.extend({
 
 		bind: function bind(types, data, fn) {
@@ -9848,6 +9881,37 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 	});
 
+	// Bind a function to a context, optionally partially applying any
+	// arguments.
+	// jQuery.proxy is deprecated to promote standards (specifically Function#bind)
+	// However, it is not slated for removal any time soon
+	jQuery.proxy = function (fn, context) {
+		var tmp, args, proxy;
+
+		if (typeof context === "string") {
+			tmp = fn[context];
+			context = fn;
+			fn = tmp;
+		}
+
+		// Quick check to determine if target is callable, in the spec
+		// this throws a TypeError, but we will just return undefined.
+		if (!isFunction(fn)) {
+			return undefined;
+		}
+
+		// Simulated bind
+		args = _slice.call(arguments, 2);
+		proxy = function proxy() {
+			return fn.apply(context || this, args.concat(_slice.call(arguments)));
+		};
+
+		// Set the guid of unique handler to the same of original handler, so it can be removed
+		proxy.guid = fn.guid = fn.guid || jQuery.guid++;
+
+		return proxy;
+	};
+
 	jQuery.holdReady = function (hold) {
 		if (hold) {
 			jQuery.readyWait++;
@@ -9858,6 +9922,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	jQuery.isArray = Array.isArray;
 	jQuery.parseJSON = JSON.parse;
 	jQuery.nodeName = nodeName;
+	jQuery.isFunction = isFunction;
+	jQuery.isWindow = isWindow;
+	jQuery.camelCase = camelCase;
+	jQuery.type = toType;
+
+	jQuery.now = Date.now;
+
+	jQuery.isNumeric = function (obj) {
+
+		// As of jQuery 3.0, isNumeric is limited to
+		// strings and numbers (primitives or objects)
+		// that can be coerced to finite numbers (gh-2662)
+		var type = jQuery.type(obj);
+		return (type === "number" || type === "string") &&
+
+		// parseFloat NaNs numeric-cast false positives ("")
+		// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
+		// subtraction forces infinities to NaN
+		!isNaN(obj - parseFloat(obj));
+	};
 
 	// Register as a named AMD module, since jQuery can be concatenated with other
 	// files that may use define, but not via a proper concatenation script that
@@ -9909,7 +9993,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	return jQuery;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)(module)))
 
 /***/ }),
 /* 1 */
@@ -11289,6 +11373,36 @@ exports.Nest = Nest;
 "use strict";
 
 
+module.exports = function (module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function () {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function get() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function get() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -11459,7 +11573,7 @@ Touch.init = function ($) {
 exports.Touch = Touch;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11843,7 +11957,7 @@ Accordion.defaults = {
 exports.Accordion = Accordion;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12235,7 +12349,7 @@ AccordionMenu.defaults = {
 exports.AccordionMenu = AccordionMenu;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12851,7 +12965,7 @@ Drilldown.defaults = {
 exports.Drilldown = Drilldown;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13385,7 +13499,7 @@ DropdownMenu.defaults = {
 exports.DropdownMenu = DropdownMenu;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13639,7 +13753,7 @@ Positionable.defaults = {
 exports.Positionable = Positionable;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13822,7 +13936,7 @@ SmoothScroll.defaults = {
 exports.SmoothScroll = SmoothScroll;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14376,7 +14490,7 @@ Tabs.defaults = {
 exports.Tabs = Tabs;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14442,36 +14556,6 @@ function Timer(elem, options, cb) {
 exports.Timer = Timer;
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function (module) {
-	if (!module.webpackPolyfill) {
-		module.deprecate = function () {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if (!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function get() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function get() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-/***/ }),
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14482,166 +14566,442 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _whatInput = __webpack_require__(38);
+var _whatInput = __webpack_require__(42);
 
 var _whatInput2 = _interopRequireDefault(_whatInput);
 
-var _foundationSites = __webpack_require__(21);
+var _foundationSites = __webpack_require__(22);
 
 var _foundationSites2 = _interopRequireDefault(_foundationSites);
+
+__webpack_require__(41);
+
+var _dependancies = __webpack_require__(43);
+
+var _dependancies2 = _interopRequireDefault(_dependancies);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.$ = _jquery2.default;
-
 // If you want to pick and choose which modules to include, comment out the above and uncomment
 // the line below
 //import './lib/foundation-explicit-pieces';
 
+window.libs = _dependancies2.default;
 
 (0, _jquery2.default)(document).foundation();
 
-//Social Media Icons
+_dependancies2.default.AOS.init();
 
-(function () {
-  "use strict";
-  //console.log("Social Media Icons");
+// SVG Injector
+// Elements to inject
+var mySVGsToInject = document.querySelectorAll('img.inject-me');
 
-  var iconSet = document.querySelectorAll(".socialIcons");
+// Options
+var injectorOptions = {
+  evalScripts: 'once',
+  pngFallback: 'assets/png'
+};
 
-  function logClicked(e) {
-    //console.log("SVG clicked: "+e.currentTarget.id);
-    //e.currentTarget.classList.toggle("clickTrigger");
-    //window.location.href = "http://www.google.ca" //opens in same window
-    //window.open('http://www.google.com',"_blank"); // this works
-    if (e.currentTarget.id === "facebook") {
-      window.open('https://www.facebook.com/markedwardlanderyou', "_blank");
-    } else if (e.currentTarget.id === "twitter") {
-      window.open('https://twitter.com/samurai71', "_blank");
-    } else if (e.currentTarget.id === "linkedin") {
-      window.open('https://www.linkedin.com/in/marklanderyou', "_blank");
-    } else if (e.currentTarget.id === "behance") {
-      window.open('https://www.behance.net/marklanderyou', "_blank");
+var afterAllInjectionsFinishedCallback = function afterAllInjectionsFinishedCallback(totalSVGsInjected) {
+  // Callback after all SVGs are injected
+  console.log('We injected ' + totalSVGsInjected + ' SVG(s)!');
+};
+
+var perInjectionCallback = function perInjectionCallback(svg) {
+  // Callback after each SVG is injected
+  console.log('SVG injected: ' + svg);
+};
+
+// create injector configured by options
+var injector = new _dependancies2.default.svgInjector(injectorOptions);
+
+// Trigger the injection
+injector.inject(mySVGsToInject, afterAllInjectionsFinishedCallback, perInjectionCallback);
+
+// slick carousel
+(0, _jquery2.default)(".content-carousel").slick({
+  // normal options...
+  speed: 5000,
+  autoplay: true,
+  autoplaySpeed: 0,
+  cssEase: 'linear',
+  slidesToShow: 5,
+  slidesToScroll: 1,
+  infinite: true,
+  swipeToSlide: true,
+  centerMode: true,
+  focusOnSelect: true,
+  // the magic
+  responsive: [{
+    breakpoint: 1024,
+    settings: {
+      slidesToShow: 3,
+      infinite: true
     }
-  }
-
-  function logLoaded(e) {
-    //console.log("svg loaded");
-    var targetSVG = e.currentTarget.contentDocument;
-    //console.log(targetSVG);
-    var socialIcon = targetSVG.querySelector(".mainIcon");
-    //console.log(socialIcon.id);
-    socialIcon.addEventListener("click", logClicked, false);
-  }
-
-  for (var i = 0; i < iconSet.length; i++) {
-    iconSet[i].addEventListener("load", logLoaded, false);
-  }
-
-  // Facebook.addEventListener("click",faceBook,false);
-  // linkedin.addEventListener("click",linkedIn,false);
-  // twitter.addEventListener("click",Twitter,false);
-  // behance.addEventListener("click",Behance,false); Don't use
-})();
-
-// end of Social Media Icon
-
-
-//Facebook
-
-(function () {
-  "use strict";
-  //console.log("Facebook JS loaded");
-
-  window.fbAsyncInit = function () {
-    FB.init({
-      appId: '310277112705215',
-      xfbml: true,
-      version: 'v2.8'
-    });
-  };
-
-  (function (d, s, id) {
-    var js,
-        fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {
-      return;
+  }, {
+    breakpoint: 600,
+    settings: {
+      slidesToShow: 2,
+      dots: true
     }
-    js = d.createElement(s);js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-  })(document, 'script', 'facebook-jssdk');
+  }, {
+    breakpoint: 300,
+    settings: "unslick" // destroys slick
+  }]
+});
 
-  (function (d, s, id) {
-    var js,
-        fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s);js.id = id;
-    js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8&appId=310277112705215";
-    fjs.parentNode.insertBefore(js, fjs);
-  })(document, 'script', 'facebook-jssdk');
-})();
+// tablesaw table plugin
+(0, _jquery2.default)(function () {
+  (0, _jquery2.default)(document).foundation().trigger('enhance.tablesaw');
+});
 
-//End of Facebook
+var TablesawConfig = {
+  swipeHorizontalThreshold: 15
+};
 
-// Start of Weather network
-
-// (function () {
-//   "use strict";
-  //console.log("Weather Javascipt Loaded");
-
-//   var _plm = _plm || [];
-//   _plm.push(['_btn', 71576]);
-//   _plm.push(['_loc', 'caon0383']);
-//   _plm.push(['location', document.location.host]);
-//   (function (d, e, i) {
-//     if (d.getElementById(i)) return;
-//     var px = d.createElement(e);
-//     px.type = 'text/javascript';
-//     px.async = true;
-//     px.id = i;
-//     px.src = ('https:' == d.location.protocol ? 'https:' : 'http:') + '//widget.twnmm.com/js/btn/pelm.js?orig=en_ca';
-//     var s = d.getElementsByTagName('script')[0];
-
-//     var py = d.createElement('link');
-//     py.rel = 'stylesheet';
-//     py.href = ('https:' == d.location.protocol ? 'https:' : 'http:') + '//widget.twnmm.com/styles/btn/styles.css';
-
-//     s.parentNode.insertBefore(px, s);
-//     s.parentNode.insertBefore(py, s);
-//   })(document, 'script', 'plmxbtn');
-// })();
-
-//End of Weather network
-
-//Start of Filter Menu
-
-// shows and hides filtered items
-
-(function () {
-  "use strict";
-
-  (0, _jquery2.default)(".filter-simple-button").click(function () {
-    var value = (0, _jquery2.default)(this).attr('data-filter');
-    if (value === "all") {
-      (0, _jquery2.default)('.filter-simple-item').show('1000');
-    } else {
-      (0, _jquery2.default)(".filter-simple-item").not('.' + value).hide('3000');
-      (0, _jquery2.default)('.filter-simple-item').filter('.' + value).show('3000');
-    }
-  });
-
-  // changes active class on filter buttons
-  (0, _jquery2.default)('.filter-simple-button').click(function () {
-    (0, _jquery2.default)(this).siblings().removeClass('is-active');
-    (0, _jquery2.default)(this).addClass('is-active');
-  });
-})();
-
-// End of Filter Menu
+// app dashboard toggle
+(0, _jquery2.default)('[data-app-dashboard-toggle-shrink]').on('click', function (e) {
+  e.preventDefault();
+  (0, _jquery2.default)(this).parents('.app-dashboard').toggleClass('shrink-medium').toggleClass('shrink-large');
+});
 
 /***/ }),
 /* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+!function (e, t) {
+  "object" == ( false ? "undefined" : _typeof(exports)) && "object" == ( false ? "undefined" : _typeof(module)) ? module.exports = t() :  true ? !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (t),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) ? exports.AOS = t() : e.AOS = t();
+}(undefined, function () {
+  return function (e) {
+    function t(o) {
+      if (n[o]) return n[o].exports;var i = n[o] = { exports: {}, id: o, loaded: !1 };return e[o].call(i.exports, i, i.exports, t), i.loaded = !0, i.exports;
+    }var n = {};return t.m = e, t.c = n, t.p = "dist/", t(0);
+  }([function (e, t, n) {
+    "use strict";
+    function o(e) {
+      return e && e.__esModule ? e : { default: e };
+    }var i = Object.assign || function (e) {
+      for (var t = 1; t < arguments.length; t++) {
+        var n = arguments[t];for (var o in n) {
+          Object.prototype.hasOwnProperty.call(n, o) && (e[o] = n[o]);
+        }
+      }return e;
+    },
+        r = n(1),
+        a = (o(r), n(6)),
+        u = o(a),
+        c = n(7),
+        f = o(c),
+        s = n(8),
+        d = o(s),
+        l = n(9),
+        p = o(l),
+        m = n(10),
+        b = o(m),
+        v = n(11),
+        y = o(v),
+        g = n(14),
+        h = o(g),
+        w = [],
+        k = !1,
+        x = { offset: 120, delay: 0, easing: "ease", duration: 400, disable: !1, once: !1, startEvent: "DOMContentLoaded", throttleDelay: 99, debounceDelay: 50, disableMutationObserver: !1 },
+        j = function j() {
+      var e = arguments.length > 0 && void 0 !== arguments[0] && arguments[0];if (e && (k = !0), k) return w = (0, y.default)(w, x), (0, b.default)(w, x.once), w;
+    },
+        O = function O() {
+      w = (0, h.default)(), j();
+    },
+        _ = function _() {
+      w.forEach(function (e, t) {
+        e.node.removeAttribute("data-aos"), e.node.removeAttribute("data-aos-easing"), e.node.removeAttribute("data-aos-duration"), e.node.removeAttribute("data-aos-delay");
+      });
+    },
+        S = function S(e) {
+      return e === !0 || "mobile" === e && p.default.mobile() || "phone" === e && p.default.phone() || "tablet" === e && p.default.tablet() || "function" == typeof e && e() === !0;
+    },
+        z = function z(e) {
+      x = i(x, e), w = (0, h.default)();var t = document.all && !window.atob;return S(x.disable) || t ? _() : (document.querySelector("body").setAttribute("data-aos-easing", x.easing), document.querySelector("body").setAttribute("data-aos-duration", x.duration), document.querySelector("body").setAttribute("data-aos-delay", x.delay), "DOMContentLoaded" === x.startEvent && ["complete", "interactive"].indexOf(document.readyState) > -1 ? j(!0) : "load" === x.startEvent ? window.addEventListener(x.startEvent, function () {
+        j(!0);
+      }) : document.addEventListener(x.startEvent, function () {
+        j(!0);
+      }), window.addEventListener("resize", (0, f.default)(j, x.debounceDelay, !0)), window.addEventListener("orientationchange", (0, f.default)(j, x.debounceDelay, !0)), window.addEventListener("scroll", (0, u.default)(function () {
+        (0, b.default)(w, x.once);
+      }, x.throttleDelay)), x.disableMutationObserver || (0, d.default)("[data-aos]", O), w);
+    };e.exports = { init: z, refresh: j, refreshHard: O };
+  }, function (e, t) {},,,,, function (e, t) {
+    (function (t) {
+      "use strict";
+      function n(e, t, n) {
+        function o(t) {
+          var n = b,
+              o = v;return b = v = void 0, k = t, g = e.apply(o, n);
+        }function r(e) {
+          return k = e, h = setTimeout(s, t), _ ? o(e) : g;
+        }function a(e) {
+          var n = e - w,
+              o = e - k,
+              i = t - n;return S ? j(i, y - o) : i;
+        }function c(e) {
+          var n = e - w,
+              o = e - k;return void 0 === w || n >= t || n < 0 || S && o >= y;
+        }function s() {
+          var e = O();return c(e) ? d(e) : void (h = setTimeout(s, a(e)));
+        }function d(e) {
+          return h = void 0, z && b ? o(e) : (b = v = void 0, g);
+        }function l() {
+          void 0 !== h && clearTimeout(h), k = 0, b = w = v = h = void 0;
+        }function p() {
+          return void 0 === h ? g : d(O());
+        }function m() {
+          var e = O(),
+              n = c(e);if (b = arguments, v = this, w = e, n) {
+            if (void 0 === h) return r(w);if (S) return h = setTimeout(s, t), o(w);
+          }return void 0 === h && (h = setTimeout(s, t)), g;
+        }var b,
+            v,
+            y,
+            g,
+            h,
+            w,
+            k = 0,
+            _ = !1,
+            S = !1,
+            z = !0;if ("function" != typeof e) throw new TypeError(f);return t = u(t) || 0, i(n) && (_ = !!n.leading, S = "maxWait" in n, y = S ? x(u(n.maxWait) || 0, t) : y, z = "trailing" in n ? !!n.trailing : z), m.cancel = l, m.flush = p, m;
+      }function o(e, t, o) {
+        var r = !0,
+            a = !0;if ("function" != typeof e) throw new TypeError(f);return i(o) && (r = "leading" in o ? !!o.leading : r, a = "trailing" in o ? !!o.trailing : a), n(e, t, { leading: r, maxWait: t, trailing: a });
+      }function i(e) {
+        var t = "undefined" == typeof e ? "undefined" : c(e);return !!e && ("object" == t || "function" == t);
+      }function r(e) {
+        return !!e && "object" == ("undefined" == typeof e ? "undefined" : c(e));
+      }function a(e) {
+        return "symbol" == ("undefined" == typeof e ? "undefined" : c(e)) || r(e) && k.call(e) == d;
+      }function u(e) {
+        if ("number" == typeof e) return e;if (a(e)) return s;if (i(e)) {
+          var t = "function" == typeof e.valueOf ? e.valueOf() : e;e = i(t) ? t + "" : t;
+        }if ("string" != typeof e) return 0 === e ? e : +e;e = e.replace(l, "");var n = m.test(e);return n || b.test(e) ? v(e.slice(2), n ? 2 : 8) : p.test(e) ? s : +e;
+      }var c = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (e) {
+        return typeof e === "undefined" ? "undefined" : _typeof(e);
+      } : function (e) {
+        return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e === "undefined" ? "undefined" : _typeof(e);
+      },
+          f = "Expected a function",
+          s = NaN,
+          d = "[object Symbol]",
+          l = /^\s+|\s+$/g,
+          p = /^[-+]0x[0-9a-f]+$/i,
+          m = /^0b[01]+$/i,
+          b = /^0o[0-7]+$/i,
+          v = parseInt,
+          y = "object" == ("undefined" == typeof t ? "undefined" : c(t)) && t && t.Object === Object && t,
+          g = "object" == ("undefined" == typeof self ? "undefined" : c(self)) && self && self.Object === Object && self,
+          h = y || g || Function("return this")(),
+          w = Object.prototype,
+          k = w.toString,
+          x = Math.max,
+          j = Math.min,
+          O = function O() {
+        return h.Date.now();
+      };e.exports = o;
+    }).call(t, function () {
+      return this;
+    }());
+  }, function (e, t) {
+    (function (t) {
+      "use strict";
+      function n(e, t, n) {
+        function i(t) {
+          var n = b,
+              o = v;return b = v = void 0, O = t, g = e.apply(o, n);
+        }function r(e) {
+          return O = e, h = setTimeout(s, t), _ ? i(e) : g;
+        }function u(e) {
+          var n = e - w,
+              o = e - O,
+              i = t - n;return S ? x(i, y - o) : i;
+        }function f(e) {
+          var n = e - w,
+              o = e - O;return void 0 === w || n >= t || n < 0 || S && o >= y;
+        }function s() {
+          var e = j();return f(e) ? d(e) : void (h = setTimeout(s, u(e)));
+        }function d(e) {
+          return h = void 0, z && b ? i(e) : (b = v = void 0, g);
+        }function l() {
+          void 0 !== h && clearTimeout(h), O = 0, b = w = v = h = void 0;
+        }function p() {
+          return void 0 === h ? g : d(j());
+        }function m() {
+          var e = j(),
+              n = f(e);if (b = arguments, v = this, w = e, n) {
+            if (void 0 === h) return r(w);if (S) return h = setTimeout(s, t), i(w);
+          }return void 0 === h && (h = setTimeout(s, t)), g;
+        }var b,
+            v,
+            y,
+            g,
+            h,
+            w,
+            O = 0,
+            _ = !1,
+            S = !1,
+            z = !0;if ("function" != typeof e) throw new TypeError(c);return t = a(t) || 0, o(n) && (_ = !!n.leading, S = "maxWait" in n, y = S ? k(a(n.maxWait) || 0, t) : y, z = "trailing" in n ? !!n.trailing : z), m.cancel = l, m.flush = p, m;
+      }function o(e) {
+        var t = "undefined" == typeof e ? "undefined" : u(e);return !!e && ("object" == t || "function" == t);
+      }function i(e) {
+        return !!e && "object" == ("undefined" == typeof e ? "undefined" : u(e));
+      }function r(e) {
+        return "symbol" == ("undefined" == typeof e ? "undefined" : u(e)) || i(e) && w.call(e) == s;
+      }function a(e) {
+        if ("number" == typeof e) return e;if (r(e)) return f;if (o(e)) {
+          var t = "function" == typeof e.valueOf ? e.valueOf() : e;e = o(t) ? t + "" : t;
+        }if ("string" != typeof e) return 0 === e ? e : +e;e = e.replace(d, "");var n = p.test(e);return n || m.test(e) ? b(e.slice(2), n ? 2 : 8) : l.test(e) ? f : +e;
+      }var u = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (e) {
+        return typeof e === "undefined" ? "undefined" : _typeof(e);
+      } : function (e) {
+        return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e === "undefined" ? "undefined" : _typeof(e);
+      },
+          c = "Expected a function",
+          f = NaN,
+          s = "[object Symbol]",
+          d = /^\s+|\s+$/g,
+          l = /^[-+]0x[0-9a-f]+$/i,
+          p = /^0b[01]+$/i,
+          m = /^0o[0-7]+$/i,
+          b = parseInt,
+          v = "object" == ("undefined" == typeof t ? "undefined" : u(t)) && t && t.Object === Object && t,
+          y = "object" == ("undefined" == typeof self ? "undefined" : u(self)) && self && self.Object === Object && self,
+          g = v || y || Function("return this")(),
+          h = Object.prototype,
+          w = h.toString,
+          k = Math.max,
+          x = Math.min,
+          j = function j() {
+        return g.Date.now();
+      };e.exports = n;
+    }).call(t, function () {
+      return this;
+    }());
+  }, function (e, t) {
+    "use strict";
+    function n(e) {
+      var t = void 0,
+          o = void 0,
+          i = void 0;for (t = 0; t < e.length; t += 1) {
+        if (o = e[t], o.dataset && o.dataset.aos) return !0;if (i = o.children && n(o.children)) return !0;
+      }return !1;
+    }function o(e, t) {
+      var n = window.document,
+          o = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver,
+          a = new o(i);r = t, a.observe(n.documentElement, { childList: !0, subtree: !0, removedNodes: !0 });
+    }function i(e) {
+      e && e.forEach(function (e) {
+        var t = Array.prototype.slice.call(e.addedNodes),
+            o = Array.prototype.slice.call(e.removedNodes),
+            i = t.concat(o);if (n(i)) return r();
+      });
+    }Object.defineProperty(t, "__esModule", { value: !0 });var r = function r() {};t.default = o;
+  }, function (e, t) {
+    "use strict";
+    function n(e, t) {
+      if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
+    }function o() {
+      return navigator.userAgent || navigator.vendor || window.opera || "";
+    }Object.defineProperty(t, "__esModule", { value: !0 });var i = function () {
+      function e(e, t) {
+        for (var n = 0; n < t.length; n++) {
+          var o = t[n];o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, o.key, o);
+        }
+      }return function (t, n, o) {
+        return n && e(t.prototype, n), o && e(t, o), t;
+      };
+    }(),
+        r = /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i,
+        a = /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i,
+        u = /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i,
+        c = /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i,
+        f = function () {
+      function e() {
+        n(this, e);
+      }return i(e, [{ key: "phone", value: function value() {
+          var e = o();return !(!r.test(e) && !a.test(e.substr(0, 4)));
+        } }, { key: "mobile", value: function value() {
+          var e = o();return !(!u.test(e) && !c.test(e.substr(0, 4)));
+        } }, { key: "tablet", value: function value() {
+          return this.mobile() && !this.phone();
+        } }]), e;
+    }();t.default = new f();
+  }, function (e, t) {
+    "use strict";
+    Object.defineProperty(t, "__esModule", { value: !0 });var n = function n(e, t, _n) {
+      var o = e.node.getAttribute("data-aos-once");t > e.position ? e.node.classList.add("aos-animate") : "undefined" != typeof o && ("false" === o || !_n && "true" !== o) && e.node.classList.remove("aos-animate");
+    },
+        o = function o(e, t) {
+      var o = window.pageYOffset,
+          i = window.innerHeight;e.forEach(function (e, r) {
+        n(e, i + o, t);
+      });
+    };t.default = o;
+  }, function (e, t, n) {
+    "use strict";
+    function o(e) {
+      return e && e.__esModule ? e : { default: e };
+    }Object.defineProperty(t, "__esModule", { value: !0 });var i = n(12),
+        r = o(i),
+        a = function a(e, t) {
+      return e.forEach(function (e, n) {
+        e.node.classList.add("aos-init"), e.position = (0, r.default)(e.node, t.offset);
+      }), e;
+    };t.default = a;
+  }, function (e, t, n) {
+    "use strict";
+    function o(e) {
+      return e && e.__esModule ? e : { default: e };
+    }Object.defineProperty(t, "__esModule", { value: !0 });var i = n(13),
+        r = o(i),
+        a = function a(e, t) {
+      var n = 0,
+          o = 0,
+          i = window.innerHeight,
+          a = { offset: e.getAttribute("data-aos-offset"), anchor: e.getAttribute("data-aos-anchor"), anchorPlacement: e.getAttribute("data-aos-anchor-placement") };switch (a.offset && !isNaN(a.offset) && (o = parseInt(a.offset)), a.anchor && document.querySelectorAll(a.anchor) && (e = document.querySelectorAll(a.anchor)[0]), n = (0, r.default)(e).top, a.anchorPlacement) {case "top-bottom":
+          break;case "center-bottom":
+          n += e.offsetHeight / 2;break;case "bottom-bottom":
+          n += e.offsetHeight;break;case "top-center":
+          n += i / 2;break;case "bottom-center":
+          n += i / 2 + e.offsetHeight;break;case "center-center":
+          n += i / 2 + e.offsetHeight / 2;break;case "top-top":
+          n += i;break;case "bottom-top":
+          n += e.offsetHeight + i;break;case "center-top":
+          n += e.offsetHeight / 2 + i;}return a.anchorPlacement || a.offset || isNaN(t) || (o = t), n + o;
+    };t.default = a;
+  }, function (e, t) {
+    "use strict";
+    Object.defineProperty(t, "__esModule", { value: !0 });var n = function n(e) {
+      for (var t = 0, n = 0; e && !isNaN(e.offsetLeft) && !isNaN(e.offsetTop);) {
+        t += e.offsetLeft - ("BODY" != e.tagName ? e.scrollLeft : 0), n += e.offsetTop - ("BODY" != e.tagName ? e.scrollTop : 0), e = e.offsetParent;
+      }return { top: n, left: t };
+    };t.default = n;
+  }, function (e, t) {
+    "use strict";
+    Object.defineProperty(t, "__esModule", { value: !0 });var n = function n(e) {
+      return e = e || document.querySelectorAll("[data-aos]"), Array.prototype.map.call(e, function (e) {
+        return { node: e };
+      });
+    };t.default = n;
+  }]);
+});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)(module)))
+
+/***/ }),
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14655,7 +15015,7 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _foundation = __webpack_require__(23);
+var _foundation = __webpack_require__(24);
 
 var _foundationUtil = __webpack_require__(1);
 
@@ -14671,53 +15031,53 @@ var _foundationUtil6 = __webpack_require__(6);
 
 var _foundationUtil7 = __webpack_require__(9);
 
-var _foundationUtil8 = __webpack_require__(18);
+var _foundationUtil8 = __webpack_require__(19);
 
-var _foundationUtil9 = __webpack_require__(10);
+var _foundationUtil9 = __webpack_require__(11);
 
 var _foundationUtil10 = __webpack_require__(5);
 
-var _foundation2 = __webpack_require__(22);
+var _foundation2 = __webpack_require__(23);
 
-var _foundation3 = __webpack_require__(11);
+var _foundation3 = __webpack_require__(12);
 
-var _foundation4 = __webpack_require__(12);
+var _foundation4 = __webpack_require__(13);
 
-var _foundation5 = __webpack_require__(13);
+var _foundation5 = __webpack_require__(14);
 
-var _foundation6 = __webpack_require__(24);
+var _foundation6 = __webpack_require__(25);
 
-var _foundation7 = __webpack_require__(14);
+var _foundation7 = __webpack_require__(15);
 
-var _foundation8 = __webpack_require__(25);
+var _foundation8 = __webpack_require__(26);
 
-var _foundation9 = __webpack_require__(26);
+var _foundation9 = __webpack_require__(27);
 
-var _foundation10 = __webpack_require__(27);
+var _foundation10 = __webpack_require__(28);
 
-var _foundation11 = __webpack_require__(28);
+var _foundation11 = __webpack_require__(29);
 
-var _foundation12 = __webpack_require__(29);
+var _foundation12 = __webpack_require__(30);
 
-var _foundation13 = __webpack_require__(31);
+var _foundation13 = __webpack_require__(32);
 
-var _foundation14 = __webpack_require__(32);
+var _foundation14 = __webpack_require__(33);
 
-var _foundation15 = __webpack_require__(33);
+var _foundation15 = __webpack_require__(34);
 
-var _foundation16 = __webpack_require__(34);
+var _foundation16 = __webpack_require__(35);
 
-var _foundation17 = __webpack_require__(16);
+var _foundation17 = __webpack_require__(17);
 
-var _foundation18 = __webpack_require__(35);
+var _foundation18 = __webpack_require__(36);
 
-var _foundation19 = __webpack_require__(17);
+var _foundation19 = __webpack_require__(18);
 
-var _foundation20 = __webpack_require__(36);
+var _foundation20 = __webpack_require__(37);
 
-var _foundation21 = __webpack_require__(37);
+var _foundation21 = __webpack_require__(38);
 
-var _foundation22 = __webpack_require__(30);
+var _foundation22 = __webpack_require__(31);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -14791,7 +15151,7 @@ _foundation.Foundation.plugin(_foundation22.ResponsiveAccordionTabs, 'Responsive
 exports.default = _foundation.Foundation;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15461,7 +15821,7 @@ Abide.defaults = {
 exports.Abide = Abide;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15826,7 +16186,7 @@ function hyphenate(str) {
 exports.Foundation = Foundation;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15849,7 +16209,7 @@ var _foundationUtil = __webpack_require__(3);
 
 var _foundationUtil2 = __webpack_require__(1);
 
-var _foundation = __webpack_require__(15);
+var _foundation = __webpack_require__(16);
 
 var _foundationUtil3 = __webpack_require__(5);
 
@@ -16300,7 +16660,7 @@ Dropdown.defaults = {
 exports.Dropdown = Dropdown;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16707,7 +17067,7 @@ Equalizer.defaults = {
 exports.Equalizer = Equalizer;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16979,7 +17339,7 @@ Interchange.SPECIAL_QUERIES = {
 exports.Interchange = Interchange;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17000,7 +17360,7 @@ var _foundationUtil = __webpack_require__(1);
 
 var _foundation = __webpack_require__(2);
 
-var _foundation2 = __webpack_require__(16);
+var _foundation2 = __webpack_require__(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17301,7 +17661,7 @@ Magellan.defaults = {
 exports.Magellan = Magellan;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17932,7 +18292,7 @@ OffCanvas.defaults = {
 exports.OffCanvas = OffCanvas;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17953,7 +18313,7 @@ var _foundationUtil = __webpack_require__(3);
 
 var _foundationUtil2 = __webpack_require__(6);
 
-var _foundationUtil3 = __webpack_require__(18);
+var _foundationUtil3 = __webpack_require__(19);
 
 var _foundationUtil4 = __webpack_require__(8);
 
@@ -17961,7 +18321,7 @@ var _foundationUtil5 = __webpack_require__(1);
 
 var _foundation = __webpack_require__(2);
 
-var _foundationUtil6 = __webpack_require__(10);
+var _foundationUtil6 = __webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18540,7 +18900,7 @@ Orbit.defaults = {
 exports.Orbit = Orbit;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18563,9 +18923,9 @@ var _foundationUtil2 = __webpack_require__(1);
 
 var _foundation = __webpack_require__(2);
 
-var _foundation2 = __webpack_require__(11);
+var _foundation2 = __webpack_require__(12);
 
-var _foundation3 = __webpack_require__(17);
+var _foundation3 = __webpack_require__(18);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18836,7 +19196,7 @@ ResponsiveAccordionTabs.defaults = {};
 exports.ResponsiveAccordionTabs = ResponsiveAccordionTabs;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18859,11 +19219,11 @@ var _foundationUtil2 = __webpack_require__(1);
 
 var _foundation = __webpack_require__(2);
 
-var _foundation2 = __webpack_require__(14);
+var _foundation2 = __webpack_require__(15);
 
-var _foundation3 = __webpack_require__(13);
+var _foundation3 = __webpack_require__(14);
 
-var _foundation4 = __webpack_require__(12);
+var _foundation4 = __webpack_require__(13);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19045,7 +19405,7 @@ ResponsiveMenu.defaults = {};
 exports.ResponsiveMenu = ResponsiveMenu;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19253,7 +19613,7 @@ ResponsiveToggle.defaults = {
 exports.ResponsiveToggle = ResponsiveToggle;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19903,7 +20263,7 @@ function mobileSniff() {
 exports.Reveal = Reveal;
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19928,7 +20288,7 @@ var _foundationUtil3 = __webpack_require__(1);
 
 var _foundation = __webpack_require__(2);
 
-var _foundationUtil4 = __webpack_require__(10);
+var _foundationUtil4 = __webpack_require__(11);
 
 var _foundationUtil5 = __webpack_require__(5);
 
@@ -20713,7 +21073,7 @@ function baseLog(base, value) {
 exports.Slider = Slider;
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21299,7 +21659,7 @@ function emCalc(em) {
 exports.Sticky = Sticky;
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21501,7 +21861,7 @@ Toggler.defaults = {
 exports.Toggler = Toggler;
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21526,7 +21886,7 @@ var _foundationUtil2 = __webpack_require__(4);
 
 var _foundationUtil3 = __webpack_require__(5);
 
-var _foundation = __webpack_require__(15);
+var _foundation = __webpack_require__(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22019,7 +22379,4937 @@ Tooltip.defaults = {
 exports.Tooltip = Tooltip;
 
 /***/ }),
-/* 38 */
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/*
+     _ _      _       _
+ ___| (_) ___| | __  (_)___
+/ __| | |/ __| |/ /  | / __|
+\__ \ | | (__|   < _ | \__ \
+|___/_|_|\___|_|\_(_)/ |___/
+                   |__/
+
+ Version: 1.8.1
+  Author: Ken Wheeler
+ Website: http://kenwheeler.github.io
+    Docs: http://kenwheeler.github.io/slick
+    Repo: http://github.com/kenwheeler/slick
+  Issues: http://github.com/kenwheeler/slick/issues
+
+ */
+/* global window, document, define, jQuery, setInterval, clearInterval */
+;(function (factory) {
+    'use strict';
+
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports !== 'undefined') {
+        module.exports = factory(require('jquery'));
+    } else {
+        factory(jQuery);
+    }
+})(function ($) {
+    'use strict';
+
+    var Slick = window.Slick || {};
+
+    Slick = function () {
+
+        var instanceUid = 0;
+
+        function Slick(element, settings) {
+
+            var _ = this,
+                dataSettings;
+
+            _.defaults = {
+                accessibility: true,
+                adaptiveHeight: false,
+                appendArrows: $(element),
+                appendDots: $(element),
+                arrows: true,
+                asNavFor: null,
+                prevArrow: '<button class="slick-prev" aria-label="Previous" type="button">Previous</button>',
+                nextArrow: '<button class="slick-next" aria-label="Next" type="button">Next</button>',
+                autoplay: false,
+                autoplaySpeed: 3000,
+                centerMode: false,
+                centerPadding: '50px',
+                cssEase: 'ease',
+                customPaging: function customPaging(slider, i) {
+                    return $('<button type="button" />').text(i + 1);
+                },
+                dots: false,
+                dotsClass: 'slick-dots',
+                draggable: true,
+                easing: 'linear',
+                edgeFriction: 0.35,
+                fade: false,
+                focusOnSelect: false,
+                focusOnChange: false,
+                infinite: true,
+                initialSlide: 0,
+                lazyLoad: 'ondemand',
+                mobileFirst: false,
+                pauseOnHover: true,
+                pauseOnFocus: true,
+                pauseOnDotsHover: false,
+                respondTo: 'window',
+                responsive: null,
+                rows: 1,
+                rtl: false,
+                slide: '',
+                slidesPerRow: 1,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                speed: 500,
+                swipe: true,
+                swipeToSlide: false,
+                touchMove: true,
+                touchThreshold: 5,
+                useCSS: true,
+                useTransform: true,
+                variableWidth: false,
+                vertical: false,
+                verticalSwiping: false,
+                waitForAnimate: true,
+                zIndex: 1000
+            };
+
+            _.initials = {
+                animating: false,
+                dragging: false,
+                autoPlayTimer: null,
+                currentDirection: 0,
+                currentLeft: null,
+                currentSlide: 0,
+                direction: 1,
+                $dots: null,
+                listWidth: null,
+                listHeight: null,
+                loadIndex: 0,
+                $nextArrow: null,
+                $prevArrow: null,
+                scrolling: false,
+                slideCount: null,
+                slideWidth: null,
+                $slideTrack: null,
+                $slides: null,
+                sliding: false,
+                slideOffset: 0,
+                swipeLeft: null,
+                swiping: false,
+                $list: null,
+                touchObject: {},
+                transformsEnabled: false,
+                unslicked: false
+            };
+
+            $.extend(_, _.initials);
+
+            _.activeBreakpoint = null;
+            _.animType = null;
+            _.animProp = null;
+            _.breakpoints = [];
+            _.breakpointSettings = [];
+            _.cssTransitions = false;
+            _.focussed = false;
+            _.interrupted = false;
+            _.hidden = 'hidden';
+            _.paused = true;
+            _.positionProp = null;
+            _.respondTo = null;
+            _.rowCount = 1;
+            _.shouldClick = true;
+            _.$slider = $(element);
+            _.$slidesCache = null;
+            _.transformType = null;
+            _.transitionType = null;
+            _.visibilityChange = 'visibilitychange';
+            _.windowWidth = 0;
+            _.windowTimer = null;
+
+            dataSettings = $(element).data('slick') || {};
+
+            _.options = $.extend({}, _.defaults, settings, dataSettings);
+
+            _.currentSlide = _.options.initialSlide;
+
+            _.originalSettings = _.options;
+
+            if (typeof document.mozHidden !== 'undefined') {
+                _.hidden = 'mozHidden';
+                _.visibilityChange = 'mozvisibilitychange';
+            } else if (typeof document.webkitHidden !== 'undefined') {
+                _.hidden = 'webkitHidden';
+                _.visibilityChange = 'webkitvisibilitychange';
+            }
+
+            _.autoPlay = $.proxy(_.autoPlay, _);
+            _.autoPlayClear = $.proxy(_.autoPlayClear, _);
+            _.autoPlayIterator = $.proxy(_.autoPlayIterator, _);
+            _.changeSlide = $.proxy(_.changeSlide, _);
+            _.clickHandler = $.proxy(_.clickHandler, _);
+            _.selectHandler = $.proxy(_.selectHandler, _);
+            _.setPosition = $.proxy(_.setPosition, _);
+            _.swipeHandler = $.proxy(_.swipeHandler, _);
+            _.dragHandler = $.proxy(_.dragHandler, _);
+            _.keyHandler = $.proxy(_.keyHandler, _);
+
+            _.instanceUid = instanceUid++;
+
+            // A simple way to check for HTML strings
+            // Strict HTML recognition (must start with <)
+            // Extracted from jQuery v1.11 source
+            _.htmlExpr = /^(?:\s*(<[\w\W]+>)[^>]*)$/;
+
+            _.registerBreakpoints();
+            _.init(true);
+        }
+
+        return Slick;
+    }();
+
+    Slick.prototype.activateADA = function () {
+        var _ = this;
+
+        _.$slideTrack.find('.slick-active').attr({
+            'aria-hidden': 'false'
+        }).find('a, input, button, select').attr({
+            'tabindex': '0'
+        });
+    };
+
+    Slick.prototype.addSlide = Slick.prototype.slickAdd = function (markup, index, addBefore) {
+
+        var _ = this;
+
+        if (typeof index === 'boolean') {
+            addBefore = index;
+            index = null;
+        } else if (index < 0 || index >= _.slideCount) {
+            return false;
+        }
+
+        _.unload();
+
+        if (typeof index === 'number') {
+            if (index === 0 && _.$slides.length === 0) {
+                $(markup).appendTo(_.$slideTrack);
+            } else if (addBefore) {
+                $(markup).insertBefore(_.$slides.eq(index));
+            } else {
+                $(markup).insertAfter(_.$slides.eq(index));
+            }
+        } else {
+            if (addBefore === true) {
+                $(markup).prependTo(_.$slideTrack);
+            } else {
+                $(markup).appendTo(_.$slideTrack);
+            }
+        }
+
+        _.$slides = _.$slideTrack.children(this.options.slide);
+
+        _.$slideTrack.children(this.options.slide).detach();
+
+        _.$slideTrack.append(_.$slides);
+
+        _.$slides.each(function (index, element) {
+            $(element).attr('data-slick-index', index);
+        });
+
+        _.$slidesCache = _.$slides;
+
+        _.reinit();
+    };
+
+    Slick.prototype.animateHeight = function () {
+        var _ = this;
+        if (_.options.slidesToShow === 1 && _.options.adaptiveHeight === true && _.options.vertical === false) {
+            var targetHeight = _.$slides.eq(_.currentSlide).outerHeight(true);
+            _.$list.animate({
+                height: targetHeight
+            }, _.options.speed);
+        }
+    };
+
+    Slick.prototype.animateSlide = function (targetLeft, callback) {
+
+        var animProps = {},
+            _ = this;
+
+        _.animateHeight();
+
+        if (_.options.rtl === true && _.options.vertical === false) {
+            targetLeft = -targetLeft;
+        }
+        if (_.transformsEnabled === false) {
+            if (_.options.vertical === false) {
+                _.$slideTrack.animate({
+                    left: targetLeft
+                }, _.options.speed, _.options.easing, callback);
+            } else {
+                _.$slideTrack.animate({
+                    top: targetLeft
+                }, _.options.speed, _.options.easing, callback);
+            }
+        } else {
+
+            if (_.cssTransitions === false) {
+                if (_.options.rtl === true) {
+                    _.currentLeft = -_.currentLeft;
+                }
+                $({
+                    animStart: _.currentLeft
+                }).animate({
+                    animStart: targetLeft
+                }, {
+                    duration: _.options.speed,
+                    easing: _.options.easing,
+                    step: function step(now) {
+                        now = Math.ceil(now);
+                        if (_.options.vertical === false) {
+                            animProps[_.animType] = 'translate(' + now + 'px, 0px)';
+                            _.$slideTrack.css(animProps);
+                        } else {
+                            animProps[_.animType] = 'translate(0px,' + now + 'px)';
+                            _.$slideTrack.css(animProps);
+                        }
+                    },
+                    complete: function complete() {
+                        if (callback) {
+                            callback.call();
+                        }
+                    }
+                });
+            } else {
+
+                _.applyTransition();
+                targetLeft = Math.ceil(targetLeft);
+
+                if (_.options.vertical === false) {
+                    animProps[_.animType] = 'translate3d(' + targetLeft + 'px, 0px, 0px)';
+                } else {
+                    animProps[_.animType] = 'translate3d(0px,' + targetLeft + 'px, 0px)';
+                }
+                _.$slideTrack.css(animProps);
+
+                if (callback) {
+                    setTimeout(function () {
+
+                        _.disableTransition();
+
+                        callback.call();
+                    }, _.options.speed);
+                }
+            }
+        }
+    };
+
+    Slick.prototype.getNavTarget = function () {
+
+        var _ = this,
+            asNavFor = _.options.asNavFor;
+
+        if (asNavFor && asNavFor !== null) {
+            asNavFor = $(asNavFor).not(_.$slider);
+        }
+
+        return asNavFor;
+    };
+
+    Slick.prototype.asNavFor = function (index) {
+
+        var _ = this,
+            asNavFor = _.getNavTarget();
+
+        if (asNavFor !== null && (typeof asNavFor === 'undefined' ? 'undefined' : _typeof(asNavFor)) === 'object') {
+            asNavFor.each(function () {
+                var target = $(this).slick('getSlick');
+                if (!target.unslicked) {
+                    target.slideHandler(index, true);
+                }
+            });
+        }
+    };
+
+    Slick.prototype.applyTransition = function (slide) {
+
+        var _ = this,
+            transition = {};
+
+        if (_.options.fade === false) {
+            transition[_.transitionType] = _.transformType + ' ' + _.options.speed + 'ms ' + _.options.cssEase;
+        } else {
+            transition[_.transitionType] = 'opacity ' + _.options.speed + 'ms ' + _.options.cssEase;
+        }
+
+        if (_.options.fade === false) {
+            _.$slideTrack.css(transition);
+        } else {
+            _.$slides.eq(slide).css(transition);
+        }
+    };
+
+    Slick.prototype.autoPlay = function () {
+
+        var _ = this;
+
+        _.autoPlayClear();
+
+        if (_.slideCount > _.options.slidesToShow) {
+            _.autoPlayTimer = setInterval(_.autoPlayIterator, _.options.autoplaySpeed);
+        }
+    };
+
+    Slick.prototype.autoPlayClear = function () {
+
+        var _ = this;
+
+        if (_.autoPlayTimer) {
+            clearInterval(_.autoPlayTimer);
+        }
+    };
+
+    Slick.prototype.autoPlayIterator = function () {
+
+        var _ = this,
+            slideTo = _.currentSlide + _.options.slidesToScroll;
+
+        if (!_.paused && !_.interrupted && !_.focussed) {
+
+            if (_.options.infinite === false) {
+
+                if (_.direction === 1 && _.currentSlide + 1 === _.slideCount - 1) {
+                    _.direction = 0;
+                } else if (_.direction === 0) {
+
+                    slideTo = _.currentSlide - _.options.slidesToScroll;
+
+                    if (_.currentSlide - 1 === 0) {
+                        _.direction = 1;
+                    }
+                }
+            }
+
+            _.slideHandler(slideTo);
+        }
+    };
+
+    Slick.prototype.buildArrows = function () {
+
+        var _ = this;
+
+        if (_.options.arrows === true) {
+
+            _.$prevArrow = $(_.options.prevArrow).addClass('slick-arrow');
+            _.$nextArrow = $(_.options.nextArrow).addClass('slick-arrow');
+
+            if (_.slideCount > _.options.slidesToShow) {
+
+                _.$prevArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
+                _.$nextArrow.removeClass('slick-hidden').removeAttr('aria-hidden tabindex');
+
+                if (_.htmlExpr.test(_.options.prevArrow)) {
+                    _.$prevArrow.prependTo(_.options.appendArrows);
+                }
+
+                if (_.htmlExpr.test(_.options.nextArrow)) {
+                    _.$nextArrow.appendTo(_.options.appendArrows);
+                }
+
+                if (_.options.infinite !== true) {
+                    _.$prevArrow.addClass('slick-disabled').attr('aria-disabled', 'true');
+                }
+            } else {
+
+                _.$prevArrow.add(_.$nextArrow).addClass('slick-hidden').attr({
+                    'aria-disabled': 'true',
+                    'tabindex': '-1'
+                });
+            }
+        }
+    };
+
+    Slick.prototype.buildDots = function () {
+
+        var _ = this,
+            i,
+            dot;
+
+        if (_.options.dots === true && _.slideCount > _.options.slidesToShow) {
+
+            _.$slider.addClass('slick-dotted');
+
+            dot = $('<ul />').addClass(_.options.dotsClass);
+
+            for (i = 0; i <= _.getDotCount(); i += 1) {
+                dot.append($('<li />').append(_.options.customPaging.call(this, _, i)));
+            }
+
+            _.$dots = dot.appendTo(_.options.appendDots);
+
+            _.$dots.find('li').first().addClass('slick-active');
+        }
+    };
+
+    Slick.prototype.buildOut = function () {
+
+        var _ = this;
+
+        _.$slides = _.$slider.children(_.options.slide + ':not(.slick-cloned)').addClass('slick-slide');
+
+        _.slideCount = _.$slides.length;
+
+        _.$slides.each(function (index, element) {
+            $(element).attr('data-slick-index', index).data('originalStyling', $(element).attr('style') || '');
+        });
+
+        _.$slider.addClass('slick-slider');
+
+        _.$slideTrack = _.slideCount === 0 ? $('<div class="slick-track"/>').appendTo(_.$slider) : _.$slides.wrapAll('<div class="slick-track"/>').parent();
+
+        _.$list = _.$slideTrack.wrap('<div class="slick-list"/>').parent();
+        _.$slideTrack.css('opacity', 0);
+
+        if (_.options.centerMode === true || _.options.swipeToSlide === true) {
+            _.options.slidesToScroll = 1;
+        }
+
+        $('img[data-lazy]', _.$slider).not('[src]').addClass('slick-loading');
+
+        _.setupInfinite();
+
+        _.buildArrows();
+
+        _.buildDots();
+
+        _.updateDots();
+
+        _.setSlideClasses(typeof _.currentSlide === 'number' ? _.currentSlide : 0);
+
+        if (_.options.draggable === true) {
+            _.$list.addClass('draggable');
+        }
+    };
+
+    Slick.prototype.buildRows = function () {
+
+        var _ = this,
+            a,
+            b,
+            c,
+            newSlides,
+            numOfSlides,
+            originalSlides,
+            slidesPerSection;
+
+        newSlides = document.createDocumentFragment();
+        originalSlides = _.$slider.children();
+
+        if (_.options.rows > 0) {
+
+            slidesPerSection = _.options.slidesPerRow * _.options.rows;
+            numOfSlides = Math.ceil(originalSlides.length / slidesPerSection);
+
+            for (a = 0; a < numOfSlides; a++) {
+                var slide = document.createElement('div');
+                for (b = 0; b < _.options.rows; b++) {
+                    var row = document.createElement('div');
+                    for (c = 0; c < _.options.slidesPerRow; c++) {
+                        var target = a * slidesPerSection + (b * _.options.slidesPerRow + c);
+                        if (originalSlides.get(target)) {
+                            row.appendChild(originalSlides.get(target));
+                        }
+                    }
+                    slide.appendChild(row);
+                }
+                newSlides.appendChild(slide);
+            }
+
+            _.$slider.empty().append(newSlides);
+            _.$slider.children().children().children().css({
+                'width': 100 / _.options.slidesPerRow + '%',
+                'display': 'inline-block'
+            });
+        }
+    };
+
+    Slick.prototype.checkResponsive = function (initial, forceUpdate) {
+
+        var _ = this,
+            breakpoint,
+            targetBreakpoint,
+            respondToWidth,
+            triggerBreakpoint = false;
+        var sliderWidth = _.$slider.width();
+        var windowWidth = window.innerWidth || $(window).width();
+
+        if (_.respondTo === 'window') {
+            respondToWidth = windowWidth;
+        } else if (_.respondTo === 'slider') {
+            respondToWidth = sliderWidth;
+        } else if (_.respondTo === 'min') {
+            respondToWidth = Math.min(windowWidth, sliderWidth);
+        }
+
+        if (_.options.responsive && _.options.responsive.length && _.options.responsive !== null) {
+
+            targetBreakpoint = null;
+
+            for (breakpoint in _.breakpoints) {
+                if (_.breakpoints.hasOwnProperty(breakpoint)) {
+                    if (_.originalSettings.mobileFirst === false) {
+                        if (respondToWidth < _.breakpoints[breakpoint]) {
+                            targetBreakpoint = _.breakpoints[breakpoint];
+                        }
+                    } else {
+                        if (respondToWidth > _.breakpoints[breakpoint]) {
+                            targetBreakpoint = _.breakpoints[breakpoint];
+                        }
+                    }
+                }
+            }
+
+            if (targetBreakpoint !== null) {
+                if (_.activeBreakpoint !== null) {
+                    if (targetBreakpoint !== _.activeBreakpoint || forceUpdate) {
+                        _.activeBreakpoint = targetBreakpoint;
+                        if (_.breakpointSettings[targetBreakpoint] === 'unslick') {
+                            _.unslick(targetBreakpoint);
+                        } else {
+                            _.options = $.extend({}, _.originalSettings, _.breakpointSettings[targetBreakpoint]);
+                            if (initial === true) {
+                                _.currentSlide = _.options.initialSlide;
+                            }
+                            _.refresh(initial);
+                        }
+                        triggerBreakpoint = targetBreakpoint;
+                    }
+                } else {
+                    _.activeBreakpoint = targetBreakpoint;
+                    if (_.breakpointSettings[targetBreakpoint] === 'unslick') {
+                        _.unslick(targetBreakpoint);
+                    } else {
+                        _.options = $.extend({}, _.originalSettings, _.breakpointSettings[targetBreakpoint]);
+                        if (initial === true) {
+                            _.currentSlide = _.options.initialSlide;
+                        }
+                        _.refresh(initial);
+                    }
+                    triggerBreakpoint = targetBreakpoint;
+                }
+            } else {
+                if (_.activeBreakpoint !== null) {
+                    _.activeBreakpoint = null;
+                    _.options = _.originalSettings;
+                    if (initial === true) {
+                        _.currentSlide = _.options.initialSlide;
+                    }
+                    _.refresh(initial);
+                    triggerBreakpoint = targetBreakpoint;
+                }
+            }
+
+            // only trigger breakpoints during an actual break. not on initialize.
+            if (!initial && triggerBreakpoint !== false) {
+                _.$slider.trigger('breakpoint', [_, triggerBreakpoint]);
+            }
+        }
+    };
+
+    Slick.prototype.changeSlide = function (event, dontAnimate) {
+
+        var _ = this,
+            $target = $(event.currentTarget),
+            indexOffset,
+            slideOffset,
+            unevenOffset;
+
+        // If target is a link, prevent default action.
+        if ($target.is('a')) {
+            event.preventDefault();
+        }
+
+        // If target is not the <li> element (ie: a child), find the <li>.
+        if (!$target.is('li')) {
+            $target = $target.closest('li');
+        }
+
+        unevenOffset = _.slideCount % _.options.slidesToScroll !== 0;
+        indexOffset = unevenOffset ? 0 : (_.slideCount - _.currentSlide) % _.options.slidesToScroll;
+
+        switch (event.data.message) {
+
+            case 'previous':
+                slideOffset = indexOffset === 0 ? _.options.slidesToScroll : _.options.slidesToShow - indexOffset;
+                if (_.slideCount > _.options.slidesToShow) {
+                    _.slideHandler(_.currentSlide - slideOffset, false, dontAnimate);
+                }
+                break;
+
+            case 'next':
+                slideOffset = indexOffset === 0 ? _.options.slidesToScroll : indexOffset;
+                if (_.slideCount > _.options.slidesToShow) {
+                    _.slideHandler(_.currentSlide + slideOffset, false, dontAnimate);
+                }
+                break;
+
+            case 'index':
+                var index = event.data.index === 0 ? 0 : event.data.index || $target.index() * _.options.slidesToScroll;
+
+                _.slideHandler(_.checkNavigable(index), false, dontAnimate);
+                $target.children().trigger('focus');
+                break;
+
+            default:
+                return;
+        }
+    };
+
+    Slick.prototype.checkNavigable = function (index) {
+
+        var _ = this,
+            navigables,
+            prevNavigable;
+
+        navigables = _.getNavigableIndexes();
+        prevNavigable = 0;
+        if (index > navigables[navigables.length - 1]) {
+            index = navigables[navigables.length - 1];
+        } else {
+            for (var n in navigables) {
+                if (index < navigables[n]) {
+                    index = prevNavigable;
+                    break;
+                }
+                prevNavigable = navigables[n];
+            }
+        }
+
+        return index;
+    };
+
+    Slick.prototype.cleanUpEvents = function () {
+
+        var _ = this;
+
+        if (_.options.dots && _.$dots !== null) {
+
+            $('li', _.$dots).off('click.slick', _.changeSlide).off('mouseenter.slick', $.proxy(_.interrupt, _, true)).off('mouseleave.slick', $.proxy(_.interrupt, _, false));
+
+            if (_.options.accessibility === true) {
+                _.$dots.off('keydown.slick', _.keyHandler);
+            }
+        }
+
+        _.$slider.off('focus.slick blur.slick');
+
+        if (_.options.arrows === true && _.slideCount > _.options.slidesToShow) {
+            _.$prevArrow && _.$prevArrow.off('click.slick', _.changeSlide);
+            _.$nextArrow && _.$nextArrow.off('click.slick', _.changeSlide);
+
+            if (_.options.accessibility === true) {
+                _.$prevArrow && _.$prevArrow.off('keydown.slick', _.keyHandler);
+                _.$nextArrow && _.$nextArrow.off('keydown.slick', _.keyHandler);
+            }
+        }
+
+        _.$list.off('touchstart.slick mousedown.slick', _.swipeHandler);
+        _.$list.off('touchmove.slick mousemove.slick', _.swipeHandler);
+        _.$list.off('touchend.slick mouseup.slick', _.swipeHandler);
+        _.$list.off('touchcancel.slick mouseleave.slick', _.swipeHandler);
+
+        _.$list.off('click.slick', _.clickHandler);
+
+        $(document).off(_.visibilityChange, _.visibility);
+
+        _.cleanUpSlideEvents();
+
+        if (_.options.accessibility === true) {
+            _.$list.off('keydown.slick', _.keyHandler);
+        }
+
+        if (_.options.focusOnSelect === true) {
+            $(_.$slideTrack).children().off('click.slick', _.selectHandler);
+        }
+
+        $(window).off('orientationchange.slick.slick-' + _.instanceUid, _.orientationChange);
+
+        $(window).off('resize.slick.slick-' + _.instanceUid, _.resize);
+
+        $('[draggable!=true]', _.$slideTrack).off('dragstart', _.preventDefault);
+
+        $(window).off('load.slick.slick-' + _.instanceUid, _.setPosition);
+    };
+
+    Slick.prototype.cleanUpSlideEvents = function () {
+
+        var _ = this;
+
+        _.$list.off('mouseenter.slick', $.proxy(_.interrupt, _, true));
+        _.$list.off('mouseleave.slick', $.proxy(_.interrupt, _, false));
+    };
+
+    Slick.prototype.cleanUpRows = function () {
+
+        var _ = this,
+            originalSlides;
+
+        if (_.options.rows > 0) {
+            originalSlides = _.$slides.children().children();
+            originalSlides.removeAttr('style');
+            _.$slider.empty().append(originalSlides);
+        }
+    };
+
+    Slick.prototype.clickHandler = function (event) {
+
+        var _ = this;
+
+        if (_.shouldClick === false) {
+            event.stopImmediatePropagation();
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    };
+
+    Slick.prototype.destroy = function (refresh) {
+
+        var _ = this;
+
+        _.autoPlayClear();
+
+        _.touchObject = {};
+
+        _.cleanUpEvents();
+
+        $('.slick-cloned', _.$slider).detach();
+
+        if (_.$dots) {
+            _.$dots.remove();
+        }
+
+        if (_.$prevArrow && _.$prevArrow.length) {
+
+            _.$prevArrow.removeClass('slick-disabled slick-arrow slick-hidden').removeAttr('aria-hidden aria-disabled tabindex').css('display', '');
+
+            if (_.htmlExpr.test(_.options.prevArrow)) {
+                _.$prevArrow.remove();
+            }
+        }
+
+        if (_.$nextArrow && _.$nextArrow.length) {
+
+            _.$nextArrow.removeClass('slick-disabled slick-arrow slick-hidden').removeAttr('aria-hidden aria-disabled tabindex').css('display', '');
+
+            if (_.htmlExpr.test(_.options.nextArrow)) {
+                _.$nextArrow.remove();
+            }
+        }
+
+        if (_.$slides) {
+
+            _.$slides.removeClass('slick-slide slick-active slick-center slick-visible slick-current').removeAttr('aria-hidden').removeAttr('data-slick-index').each(function () {
+                $(this).attr('style', $(this).data('originalStyling'));
+            });
+
+            _.$slideTrack.children(this.options.slide).detach();
+
+            _.$slideTrack.detach();
+
+            _.$list.detach();
+
+            _.$slider.append(_.$slides);
+        }
+
+        _.cleanUpRows();
+
+        _.$slider.removeClass('slick-slider');
+        _.$slider.removeClass('slick-initialized');
+        _.$slider.removeClass('slick-dotted');
+
+        _.unslicked = true;
+
+        if (!refresh) {
+            _.$slider.trigger('destroy', [_]);
+        }
+    };
+
+    Slick.prototype.disableTransition = function (slide) {
+
+        var _ = this,
+            transition = {};
+
+        transition[_.transitionType] = '';
+
+        if (_.options.fade === false) {
+            _.$slideTrack.css(transition);
+        } else {
+            _.$slides.eq(slide).css(transition);
+        }
+    };
+
+    Slick.prototype.fadeSlide = function (slideIndex, callback) {
+
+        var _ = this;
+
+        if (_.cssTransitions === false) {
+
+            _.$slides.eq(slideIndex).css({
+                zIndex: _.options.zIndex
+            });
+
+            _.$slides.eq(slideIndex).animate({
+                opacity: 1
+            }, _.options.speed, _.options.easing, callback);
+        } else {
+
+            _.applyTransition(slideIndex);
+
+            _.$slides.eq(slideIndex).css({
+                opacity: 1,
+                zIndex: _.options.zIndex
+            });
+
+            if (callback) {
+                setTimeout(function () {
+
+                    _.disableTransition(slideIndex);
+
+                    callback.call();
+                }, _.options.speed);
+            }
+        }
+    };
+
+    Slick.prototype.fadeSlideOut = function (slideIndex) {
+
+        var _ = this;
+
+        if (_.cssTransitions === false) {
+
+            _.$slides.eq(slideIndex).animate({
+                opacity: 0,
+                zIndex: _.options.zIndex - 2
+            }, _.options.speed, _.options.easing);
+        } else {
+
+            _.applyTransition(slideIndex);
+
+            _.$slides.eq(slideIndex).css({
+                opacity: 0,
+                zIndex: _.options.zIndex - 2
+            });
+        }
+    };
+
+    Slick.prototype.filterSlides = Slick.prototype.slickFilter = function (filter) {
+
+        var _ = this;
+
+        if (filter !== null) {
+
+            _.$slidesCache = _.$slides;
+
+            _.unload();
+
+            _.$slideTrack.children(this.options.slide).detach();
+
+            _.$slidesCache.filter(filter).appendTo(_.$slideTrack);
+
+            _.reinit();
+        }
+    };
+
+    Slick.prototype.focusHandler = function () {
+
+        var _ = this;
+
+        _.$slider.off('focus.slick blur.slick').on('focus.slick blur.slick', '*', function (event) {
+
+            event.stopImmediatePropagation();
+            var $sf = $(this);
+
+            setTimeout(function () {
+
+                if (_.options.pauseOnFocus) {
+                    _.focussed = $sf.is(':focus');
+                    _.autoPlay();
+                }
+            }, 0);
+        });
+    };
+
+    Slick.prototype.getCurrent = Slick.prototype.slickCurrentSlide = function () {
+
+        var _ = this;
+        return _.currentSlide;
+    };
+
+    Slick.prototype.getDotCount = function () {
+
+        var _ = this;
+
+        var breakPoint = 0;
+        var counter = 0;
+        var pagerQty = 0;
+
+        if (_.options.infinite === true) {
+            if (_.slideCount <= _.options.slidesToShow) {
+                ++pagerQty;
+            } else {
+                while (breakPoint < _.slideCount) {
+                    ++pagerQty;
+                    breakPoint = counter + _.options.slidesToScroll;
+                    counter += _.options.slidesToScroll <= _.options.slidesToShow ? _.options.slidesToScroll : _.options.slidesToShow;
+                }
+            }
+        } else if (_.options.centerMode === true) {
+            pagerQty = _.slideCount;
+        } else if (!_.options.asNavFor) {
+            pagerQty = 1 + Math.ceil((_.slideCount - _.options.slidesToShow) / _.options.slidesToScroll);
+        } else {
+            while (breakPoint < _.slideCount) {
+                ++pagerQty;
+                breakPoint = counter + _.options.slidesToScroll;
+                counter += _.options.slidesToScroll <= _.options.slidesToShow ? _.options.slidesToScroll : _.options.slidesToShow;
+            }
+        }
+
+        return pagerQty - 1;
+    };
+
+    Slick.prototype.getLeft = function (slideIndex) {
+
+        var _ = this,
+            targetLeft,
+            verticalHeight,
+            verticalOffset = 0,
+            targetSlide,
+            coef;
+
+        _.slideOffset = 0;
+        verticalHeight = _.$slides.first().outerHeight(true);
+
+        if (_.options.infinite === true) {
+            if (_.slideCount > _.options.slidesToShow) {
+                _.slideOffset = _.slideWidth * _.options.slidesToShow * -1;
+                coef = -1;
+
+                if (_.options.vertical === true && _.options.centerMode === true) {
+                    if (_.options.slidesToShow === 2) {
+                        coef = -1.5;
+                    } else if (_.options.slidesToShow === 1) {
+                        coef = -2;
+                    }
+                }
+                verticalOffset = verticalHeight * _.options.slidesToShow * coef;
+            }
+            if (_.slideCount % _.options.slidesToScroll !== 0) {
+                if (slideIndex + _.options.slidesToScroll > _.slideCount && _.slideCount > _.options.slidesToShow) {
+                    if (slideIndex > _.slideCount) {
+                        _.slideOffset = (_.options.slidesToShow - (slideIndex - _.slideCount)) * _.slideWidth * -1;
+                        verticalOffset = (_.options.slidesToShow - (slideIndex - _.slideCount)) * verticalHeight * -1;
+                    } else {
+                        _.slideOffset = _.slideCount % _.options.slidesToScroll * _.slideWidth * -1;
+                        verticalOffset = _.slideCount % _.options.slidesToScroll * verticalHeight * -1;
+                    }
+                }
+            }
+        } else {
+            if (slideIndex + _.options.slidesToShow > _.slideCount) {
+                _.slideOffset = (slideIndex + _.options.slidesToShow - _.slideCount) * _.slideWidth;
+                verticalOffset = (slideIndex + _.options.slidesToShow - _.slideCount) * verticalHeight;
+            }
+        }
+
+        if (_.slideCount <= _.options.slidesToShow) {
+            _.slideOffset = 0;
+            verticalOffset = 0;
+        }
+
+        if (_.options.centerMode === true && _.slideCount <= _.options.slidesToShow) {
+            _.slideOffset = _.slideWidth * Math.floor(_.options.slidesToShow) / 2 - _.slideWidth * _.slideCount / 2;
+        } else if (_.options.centerMode === true && _.options.infinite === true) {
+            _.slideOffset += _.slideWidth * Math.floor(_.options.slidesToShow / 2) - _.slideWidth;
+        } else if (_.options.centerMode === true) {
+            _.slideOffset = 0;
+            _.slideOffset += _.slideWidth * Math.floor(_.options.slidesToShow / 2);
+        }
+
+        if (_.options.vertical === false) {
+            targetLeft = slideIndex * _.slideWidth * -1 + _.slideOffset;
+        } else {
+            targetLeft = slideIndex * verticalHeight * -1 + verticalOffset;
+        }
+
+        if (_.options.variableWidth === true) {
+
+            if (_.slideCount <= _.options.slidesToShow || _.options.infinite === false) {
+                targetSlide = _.$slideTrack.children('.slick-slide').eq(slideIndex);
+            } else {
+                targetSlide = _.$slideTrack.children('.slick-slide').eq(slideIndex + _.options.slidesToShow);
+            }
+
+            if (_.options.rtl === true) {
+                if (targetSlide[0]) {
+                    targetLeft = (_.$slideTrack.width() - targetSlide[0].offsetLeft - targetSlide.width()) * -1;
+                } else {
+                    targetLeft = 0;
+                }
+            } else {
+                targetLeft = targetSlide[0] ? targetSlide[0].offsetLeft * -1 : 0;
+            }
+
+            if (_.options.centerMode === true) {
+                if (_.slideCount <= _.options.slidesToShow || _.options.infinite === false) {
+                    targetSlide = _.$slideTrack.children('.slick-slide').eq(slideIndex);
+                } else {
+                    targetSlide = _.$slideTrack.children('.slick-slide').eq(slideIndex + _.options.slidesToShow + 1);
+                }
+
+                if (_.options.rtl === true) {
+                    if (targetSlide[0]) {
+                        targetLeft = (_.$slideTrack.width() - targetSlide[0].offsetLeft - targetSlide.width()) * -1;
+                    } else {
+                        targetLeft = 0;
+                    }
+                } else {
+                    targetLeft = targetSlide[0] ? targetSlide[0].offsetLeft * -1 : 0;
+                }
+
+                targetLeft += (_.$list.width() - targetSlide.outerWidth()) / 2;
+            }
+        }
+
+        return targetLeft;
+    };
+
+    Slick.prototype.getOption = Slick.prototype.slickGetOption = function (option) {
+
+        var _ = this;
+
+        return _.options[option];
+    };
+
+    Slick.prototype.getNavigableIndexes = function () {
+
+        var _ = this,
+            breakPoint = 0,
+            counter = 0,
+            indexes = [],
+            max;
+
+        if (_.options.infinite === false) {
+            max = _.slideCount;
+        } else {
+            breakPoint = _.options.slidesToScroll * -1;
+            counter = _.options.slidesToScroll * -1;
+            max = _.slideCount * 2;
+        }
+
+        while (breakPoint < max) {
+            indexes.push(breakPoint);
+            breakPoint = counter + _.options.slidesToScroll;
+            counter += _.options.slidesToScroll <= _.options.slidesToShow ? _.options.slidesToScroll : _.options.slidesToShow;
+        }
+
+        return indexes;
+    };
+
+    Slick.prototype.getSlick = function () {
+
+        return this;
+    };
+
+    Slick.prototype.getSlideCount = function () {
+
+        var _ = this,
+            slidesTraversed,
+            swipedSlide,
+            centerOffset;
+
+        centerOffset = _.options.centerMode === true ? _.slideWidth * Math.floor(_.options.slidesToShow / 2) : 0;
+
+        if (_.options.swipeToSlide === true) {
+            _.$slideTrack.find('.slick-slide').each(function (index, slide) {
+                if (slide.offsetLeft - centerOffset + $(slide).outerWidth() / 2 > _.swipeLeft * -1) {
+                    swipedSlide = slide;
+                    return false;
+                }
+            });
+
+            slidesTraversed = Math.abs($(swipedSlide).attr('data-slick-index') - _.currentSlide) || 1;
+
+            return slidesTraversed;
+        } else {
+            return _.options.slidesToScroll;
+        }
+    };
+
+    Slick.prototype.goTo = Slick.prototype.slickGoTo = function (slide, dontAnimate) {
+
+        var _ = this;
+
+        _.changeSlide({
+            data: {
+                message: 'index',
+                index: parseInt(slide)
+            }
+        }, dontAnimate);
+    };
+
+    Slick.prototype.init = function (creation) {
+
+        var _ = this;
+
+        if (!$(_.$slider).hasClass('slick-initialized')) {
+
+            $(_.$slider).addClass('slick-initialized');
+
+            _.buildRows();
+            _.buildOut();
+            _.setProps();
+            _.startLoad();
+            _.loadSlider();
+            _.initializeEvents();
+            _.updateArrows();
+            _.updateDots();
+            _.checkResponsive(true);
+            _.focusHandler();
+        }
+
+        if (creation) {
+            _.$slider.trigger('init', [_]);
+        }
+
+        if (_.options.accessibility === true) {
+            _.initADA();
+        }
+
+        if (_.options.autoplay) {
+
+            _.paused = false;
+            _.autoPlay();
+        }
+    };
+
+    Slick.prototype.initADA = function () {
+        var _ = this,
+            numDotGroups = Math.ceil(_.slideCount / _.options.slidesToShow),
+            tabControlIndexes = _.getNavigableIndexes().filter(function (val) {
+            return val >= 0 && val < _.slideCount;
+        });
+
+        _.$slides.add(_.$slideTrack.find('.slick-cloned')).attr({
+            'aria-hidden': 'true',
+            'tabindex': '-1'
+        }).find('a, input, button, select').attr({
+            'tabindex': '-1'
+        });
+
+        if (_.$dots !== null) {
+            _.$slides.not(_.$slideTrack.find('.slick-cloned')).each(function (i) {
+                var slideControlIndex = tabControlIndexes.indexOf(i);
+
+                $(this).attr({
+                    'role': 'tabpanel',
+                    'id': 'slick-slide' + _.instanceUid + i,
+                    'tabindex': -1
+                });
+
+                if (slideControlIndex !== -1) {
+                    var ariaButtonControl = 'slick-slide-control' + _.instanceUid + slideControlIndex;
+                    if ($('#' + ariaButtonControl).length) {
+                        $(this).attr({
+                            'aria-describedby': ariaButtonControl
+                        });
+                    }
+                }
+            });
+
+            _.$dots.attr('role', 'tablist').find('li').each(function (i) {
+                var mappedSlideIndex = tabControlIndexes[i];
+
+                $(this).attr({
+                    'role': 'presentation'
+                });
+
+                $(this).find('button').first().attr({
+                    'role': 'tab',
+                    'id': 'slick-slide-control' + _.instanceUid + i,
+                    'aria-controls': 'slick-slide' + _.instanceUid + mappedSlideIndex,
+                    'aria-label': i + 1 + ' of ' + numDotGroups,
+                    'aria-selected': null,
+                    'tabindex': '-1'
+                });
+            }).eq(_.currentSlide).find('button').attr({
+                'aria-selected': 'true',
+                'tabindex': '0'
+            }).end();
+        }
+
+        for (var i = _.currentSlide, max = i + _.options.slidesToShow; i < max; i++) {
+            if (_.options.focusOnChange) {
+                _.$slides.eq(i).attr({ 'tabindex': '0' });
+            } else {
+                _.$slides.eq(i).removeAttr('tabindex');
+            }
+        }
+
+        _.activateADA();
+    };
+
+    Slick.prototype.initArrowEvents = function () {
+
+        var _ = this;
+
+        if (_.options.arrows === true && _.slideCount > _.options.slidesToShow) {
+            _.$prevArrow.off('click.slick').on('click.slick', {
+                message: 'previous'
+            }, _.changeSlide);
+            _.$nextArrow.off('click.slick').on('click.slick', {
+                message: 'next'
+            }, _.changeSlide);
+
+            if (_.options.accessibility === true) {
+                _.$prevArrow.on('keydown.slick', _.keyHandler);
+                _.$nextArrow.on('keydown.slick', _.keyHandler);
+            }
+        }
+    };
+
+    Slick.prototype.initDotEvents = function () {
+
+        var _ = this;
+
+        if (_.options.dots === true && _.slideCount > _.options.slidesToShow) {
+            $('li', _.$dots).on('click.slick', {
+                message: 'index'
+            }, _.changeSlide);
+
+            if (_.options.accessibility === true) {
+                _.$dots.on('keydown.slick', _.keyHandler);
+            }
+        }
+
+        if (_.options.dots === true && _.options.pauseOnDotsHover === true && _.slideCount > _.options.slidesToShow) {
+
+            $('li', _.$dots).on('mouseenter.slick', $.proxy(_.interrupt, _, true)).on('mouseleave.slick', $.proxy(_.interrupt, _, false));
+        }
+    };
+
+    Slick.prototype.initSlideEvents = function () {
+
+        var _ = this;
+
+        if (_.options.pauseOnHover) {
+
+            _.$list.on('mouseenter.slick', $.proxy(_.interrupt, _, true));
+            _.$list.on('mouseleave.slick', $.proxy(_.interrupt, _, false));
+        }
+    };
+
+    Slick.prototype.initializeEvents = function () {
+
+        var _ = this;
+
+        _.initArrowEvents();
+
+        _.initDotEvents();
+        _.initSlideEvents();
+
+        _.$list.on('touchstart.slick mousedown.slick', {
+            action: 'start'
+        }, _.swipeHandler);
+        _.$list.on('touchmove.slick mousemove.slick', {
+            action: 'move'
+        }, _.swipeHandler);
+        _.$list.on('touchend.slick mouseup.slick', {
+            action: 'end'
+        }, _.swipeHandler);
+        _.$list.on('touchcancel.slick mouseleave.slick', {
+            action: 'end'
+        }, _.swipeHandler);
+
+        _.$list.on('click.slick', _.clickHandler);
+
+        $(document).on(_.visibilityChange, $.proxy(_.visibility, _));
+
+        if (_.options.accessibility === true) {
+            _.$list.on('keydown.slick', _.keyHandler);
+        }
+
+        if (_.options.focusOnSelect === true) {
+            $(_.$slideTrack).children().on('click.slick', _.selectHandler);
+        }
+
+        $(window).on('orientationchange.slick.slick-' + _.instanceUid, $.proxy(_.orientationChange, _));
+
+        $(window).on('resize.slick.slick-' + _.instanceUid, $.proxy(_.resize, _));
+
+        $('[draggable!=true]', _.$slideTrack).on('dragstart', _.preventDefault);
+
+        $(window).on('load.slick.slick-' + _.instanceUid, _.setPosition);
+        $(_.setPosition);
+    };
+
+    Slick.prototype.initUI = function () {
+
+        var _ = this;
+
+        if (_.options.arrows === true && _.slideCount > _.options.slidesToShow) {
+
+            _.$prevArrow.show();
+            _.$nextArrow.show();
+        }
+
+        if (_.options.dots === true && _.slideCount > _.options.slidesToShow) {
+
+            _.$dots.show();
+        }
+    };
+
+    Slick.prototype.keyHandler = function (event) {
+
+        var _ = this;
+        //Dont slide if the cursor is inside the form fields and arrow keys are pressed
+        if (!event.target.tagName.match('TEXTAREA|INPUT|SELECT')) {
+            if (event.keyCode === 37 && _.options.accessibility === true) {
+                _.changeSlide({
+                    data: {
+                        message: _.options.rtl === true ? 'next' : 'previous'
+                    }
+                });
+            } else if (event.keyCode === 39 && _.options.accessibility === true) {
+                _.changeSlide({
+                    data: {
+                        message: _.options.rtl === true ? 'previous' : 'next'
+                    }
+                });
+            }
+        }
+    };
+
+    Slick.prototype.lazyLoad = function () {
+
+        var _ = this,
+            loadRange,
+            cloneRange,
+            rangeStart,
+            rangeEnd;
+
+        function loadImages(imagesScope) {
+
+            $('img[data-lazy]', imagesScope).each(function () {
+
+                var image = $(this),
+                    imageSource = $(this).attr('data-lazy'),
+                    imageSrcSet = $(this).attr('data-srcset'),
+                    imageSizes = $(this).attr('data-sizes') || _.$slider.attr('data-sizes'),
+                    imageToLoad = document.createElement('img');
+
+                imageToLoad.onload = function () {
+
+                    image.animate({ opacity: 0 }, 100, function () {
+
+                        if (imageSrcSet) {
+                            image.attr('srcset', imageSrcSet);
+
+                            if (imageSizes) {
+                                image.attr('sizes', imageSizes);
+                            }
+                        }
+
+                        image.attr('src', imageSource).animate({ opacity: 1 }, 200, function () {
+                            image.removeAttr('data-lazy data-srcset data-sizes').removeClass('slick-loading');
+                        });
+                        _.$slider.trigger('lazyLoaded', [_, image, imageSource]);
+                    });
+                };
+
+                imageToLoad.onerror = function () {
+
+                    image.removeAttr('data-lazy').removeClass('slick-loading').addClass('slick-lazyload-error');
+
+                    _.$slider.trigger('lazyLoadError', [_, image, imageSource]);
+                };
+
+                imageToLoad.src = imageSource;
+            });
+        }
+
+        if (_.options.centerMode === true) {
+            if (_.options.infinite === true) {
+                rangeStart = _.currentSlide + (_.options.slidesToShow / 2 + 1);
+                rangeEnd = rangeStart + _.options.slidesToShow + 2;
+            } else {
+                rangeStart = Math.max(0, _.currentSlide - (_.options.slidesToShow / 2 + 1));
+                rangeEnd = 2 + (_.options.slidesToShow / 2 + 1) + _.currentSlide;
+            }
+        } else {
+            rangeStart = _.options.infinite ? _.options.slidesToShow + _.currentSlide : _.currentSlide;
+            rangeEnd = Math.ceil(rangeStart + _.options.slidesToShow);
+            if (_.options.fade === true) {
+                if (rangeStart > 0) rangeStart--;
+                if (rangeEnd <= _.slideCount) rangeEnd++;
+            }
+        }
+
+        loadRange = _.$slider.find('.slick-slide').slice(rangeStart, rangeEnd);
+
+        if (_.options.lazyLoad === 'anticipated') {
+            var prevSlide = rangeStart - 1,
+                nextSlide = rangeEnd,
+                $slides = _.$slider.find('.slick-slide');
+
+            for (var i = 0; i < _.options.slidesToScroll; i++) {
+                if (prevSlide < 0) prevSlide = _.slideCount - 1;
+                loadRange = loadRange.add($slides.eq(prevSlide));
+                loadRange = loadRange.add($slides.eq(nextSlide));
+                prevSlide--;
+                nextSlide++;
+            }
+        }
+
+        loadImages(loadRange);
+
+        if (_.slideCount <= _.options.slidesToShow) {
+            cloneRange = _.$slider.find('.slick-slide');
+            loadImages(cloneRange);
+        } else if (_.currentSlide >= _.slideCount - _.options.slidesToShow) {
+            cloneRange = _.$slider.find('.slick-cloned').slice(0, _.options.slidesToShow);
+            loadImages(cloneRange);
+        } else if (_.currentSlide === 0) {
+            cloneRange = _.$slider.find('.slick-cloned').slice(_.options.slidesToShow * -1);
+            loadImages(cloneRange);
+        }
+    };
+
+    Slick.prototype.loadSlider = function () {
+
+        var _ = this;
+
+        _.setPosition();
+
+        _.$slideTrack.css({
+            opacity: 1
+        });
+
+        _.$slider.removeClass('slick-loading');
+
+        _.initUI();
+
+        if (_.options.lazyLoad === 'progressive') {
+            _.progressiveLazyLoad();
+        }
+    };
+
+    Slick.prototype.next = Slick.prototype.slickNext = function () {
+
+        var _ = this;
+
+        _.changeSlide({
+            data: {
+                message: 'next'
+            }
+        });
+    };
+
+    Slick.prototype.orientationChange = function () {
+
+        var _ = this;
+
+        _.checkResponsive();
+        _.setPosition();
+    };
+
+    Slick.prototype.pause = Slick.prototype.slickPause = function () {
+
+        var _ = this;
+
+        _.autoPlayClear();
+        _.paused = true;
+    };
+
+    Slick.prototype.play = Slick.prototype.slickPlay = function () {
+
+        var _ = this;
+
+        _.autoPlay();
+        _.options.autoplay = true;
+        _.paused = false;
+        _.focussed = false;
+        _.interrupted = false;
+    };
+
+    Slick.prototype.postSlide = function (index) {
+
+        var _ = this;
+
+        if (!_.unslicked) {
+
+            _.$slider.trigger('afterChange', [_, index]);
+
+            _.animating = false;
+
+            if (_.slideCount > _.options.slidesToShow) {
+                _.setPosition();
+            }
+
+            _.swipeLeft = null;
+
+            if (_.options.autoplay) {
+                _.autoPlay();
+            }
+
+            if (_.options.accessibility === true) {
+                _.initADA();
+
+                if (_.options.focusOnChange) {
+                    var $currentSlide = $(_.$slides.get(_.currentSlide));
+                    $currentSlide.attr('tabindex', 0).focus();
+                }
+            }
+        }
+    };
+
+    Slick.prototype.prev = Slick.prototype.slickPrev = function () {
+
+        var _ = this;
+
+        _.changeSlide({
+            data: {
+                message: 'previous'
+            }
+        });
+    };
+
+    Slick.prototype.preventDefault = function (event) {
+
+        event.preventDefault();
+    };
+
+    Slick.prototype.progressiveLazyLoad = function (tryCount) {
+
+        tryCount = tryCount || 1;
+
+        var _ = this,
+            $imgsToLoad = $('img[data-lazy]', _.$slider),
+            image,
+            imageSource,
+            imageSrcSet,
+            imageSizes,
+            imageToLoad;
+
+        if ($imgsToLoad.length) {
+
+            image = $imgsToLoad.first();
+            imageSource = image.attr('data-lazy');
+            imageSrcSet = image.attr('data-srcset');
+            imageSizes = image.attr('data-sizes') || _.$slider.attr('data-sizes');
+            imageToLoad = document.createElement('img');
+
+            imageToLoad.onload = function () {
+
+                if (imageSrcSet) {
+                    image.attr('srcset', imageSrcSet);
+
+                    if (imageSizes) {
+                        image.attr('sizes', imageSizes);
+                    }
+                }
+
+                image.attr('src', imageSource).removeAttr('data-lazy data-srcset data-sizes').removeClass('slick-loading');
+
+                if (_.options.adaptiveHeight === true) {
+                    _.setPosition();
+                }
+
+                _.$slider.trigger('lazyLoaded', [_, image, imageSource]);
+                _.progressiveLazyLoad();
+            };
+
+            imageToLoad.onerror = function () {
+
+                if (tryCount < 3) {
+
+                    /**
+                     * try to load the image 3 times,
+                     * leave a slight delay so we don't get
+                     * servers blocking the request.
+                     */
+                    setTimeout(function () {
+                        _.progressiveLazyLoad(tryCount + 1);
+                    }, 500);
+                } else {
+
+                    image.removeAttr('data-lazy').removeClass('slick-loading').addClass('slick-lazyload-error');
+
+                    _.$slider.trigger('lazyLoadError', [_, image, imageSource]);
+
+                    _.progressiveLazyLoad();
+                }
+            };
+
+            imageToLoad.src = imageSource;
+        } else {
+
+            _.$slider.trigger('allImagesLoaded', [_]);
+        }
+    };
+
+    Slick.prototype.refresh = function (initializing) {
+
+        var _ = this,
+            currentSlide,
+            lastVisibleIndex;
+
+        lastVisibleIndex = _.slideCount - _.options.slidesToShow;
+
+        // in non-infinite sliders, we don't want to go past the
+        // last visible index.
+        if (!_.options.infinite && _.currentSlide > lastVisibleIndex) {
+            _.currentSlide = lastVisibleIndex;
+        }
+
+        // if less slides than to show, go to start.
+        if (_.slideCount <= _.options.slidesToShow) {
+            _.currentSlide = 0;
+        }
+
+        currentSlide = _.currentSlide;
+
+        _.destroy(true);
+
+        $.extend(_, _.initials, { currentSlide: currentSlide });
+
+        _.init();
+
+        if (!initializing) {
+
+            _.changeSlide({
+                data: {
+                    message: 'index',
+                    index: currentSlide
+                }
+            }, false);
+        }
+    };
+
+    Slick.prototype.registerBreakpoints = function () {
+
+        var _ = this,
+            breakpoint,
+            currentBreakpoint,
+            l,
+            responsiveSettings = _.options.responsive || null;
+
+        if ($.type(responsiveSettings) === 'array' && responsiveSettings.length) {
+
+            _.respondTo = _.options.respondTo || 'window';
+
+            for (breakpoint in responsiveSettings) {
+
+                l = _.breakpoints.length - 1;
+
+                if (responsiveSettings.hasOwnProperty(breakpoint)) {
+                    currentBreakpoint = responsiveSettings[breakpoint].breakpoint;
+
+                    // loop through the breakpoints and cut out any existing
+                    // ones with the same breakpoint number, we don't want dupes.
+                    while (l >= 0) {
+                        if (_.breakpoints[l] && _.breakpoints[l] === currentBreakpoint) {
+                            _.breakpoints.splice(l, 1);
+                        }
+                        l--;
+                    }
+
+                    _.breakpoints.push(currentBreakpoint);
+                    _.breakpointSettings[currentBreakpoint] = responsiveSettings[breakpoint].settings;
+                }
+            }
+
+            _.breakpoints.sort(function (a, b) {
+                return _.options.mobileFirst ? a - b : b - a;
+            });
+        }
+    };
+
+    Slick.prototype.reinit = function () {
+
+        var _ = this;
+
+        _.$slides = _.$slideTrack.children(_.options.slide).addClass('slick-slide');
+
+        _.slideCount = _.$slides.length;
+
+        if (_.currentSlide >= _.slideCount && _.currentSlide !== 0) {
+            _.currentSlide = _.currentSlide - _.options.slidesToScroll;
+        }
+
+        if (_.slideCount <= _.options.slidesToShow) {
+            _.currentSlide = 0;
+        }
+
+        _.registerBreakpoints();
+
+        _.setProps();
+        _.setupInfinite();
+        _.buildArrows();
+        _.updateArrows();
+        _.initArrowEvents();
+        _.buildDots();
+        _.updateDots();
+        _.initDotEvents();
+        _.cleanUpSlideEvents();
+        _.initSlideEvents();
+
+        _.checkResponsive(false, true);
+
+        if (_.options.focusOnSelect === true) {
+            $(_.$slideTrack).children().on('click.slick', _.selectHandler);
+        }
+
+        _.setSlideClasses(typeof _.currentSlide === 'number' ? _.currentSlide : 0);
+
+        _.setPosition();
+        _.focusHandler();
+
+        _.paused = !_.options.autoplay;
+        _.autoPlay();
+
+        _.$slider.trigger('reInit', [_]);
+    };
+
+    Slick.prototype.resize = function () {
+
+        var _ = this;
+
+        if ($(window).width() !== _.windowWidth) {
+            clearTimeout(_.windowDelay);
+            _.windowDelay = window.setTimeout(function () {
+                _.windowWidth = $(window).width();
+                _.checkResponsive();
+                if (!_.unslicked) {
+                    _.setPosition();
+                }
+            }, 50);
+        }
+    };
+
+    Slick.prototype.removeSlide = Slick.prototype.slickRemove = function (index, removeBefore, removeAll) {
+
+        var _ = this;
+
+        if (typeof index === 'boolean') {
+            removeBefore = index;
+            index = removeBefore === true ? 0 : _.slideCount - 1;
+        } else {
+            index = removeBefore === true ? --index : index;
+        }
+
+        if (_.slideCount < 1 || index < 0 || index > _.slideCount - 1) {
+            return false;
+        }
+
+        _.unload();
+
+        if (removeAll === true) {
+            _.$slideTrack.children().remove();
+        } else {
+            _.$slideTrack.children(this.options.slide).eq(index).remove();
+        }
+
+        _.$slides = _.$slideTrack.children(this.options.slide);
+
+        _.$slideTrack.children(this.options.slide).detach();
+
+        _.$slideTrack.append(_.$slides);
+
+        _.$slidesCache = _.$slides;
+
+        _.reinit();
+    };
+
+    Slick.prototype.setCSS = function (position) {
+
+        var _ = this,
+            positionProps = {},
+            x,
+            y;
+
+        if (_.options.rtl === true) {
+            position = -position;
+        }
+        x = _.positionProp == 'left' ? Math.ceil(position) + 'px' : '0px';
+        y = _.positionProp == 'top' ? Math.ceil(position) + 'px' : '0px';
+
+        positionProps[_.positionProp] = position;
+
+        if (_.transformsEnabled === false) {
+            _.$slideTrack.css(positionProps);
+        } else {
+            positionProps = {};
+            if (_.cssTransitions === false) {
+                positionProps[_.animType] = 'translate(' + x + ', ' + y + ')';
+                _.$slideTrack.css(positionProps);
+            } else {
+                positionProps[_.animType] = 'translate3d(' + x + ', ' + y + ', 0px)';
+                _.$slideTrack.css(positionProps);
+            }
+        }
+    };
+
+    Slick.prototype.setDimensions = function () {
+
+        var _ = this;
+
+        if (_.options.vertical === false) {
+            if (_.options.centerMode === true) {
+                _.$list.css({
+                    padding: '0px ' + _.options.centerPadding
+                });
+            }
+        } else {
+            _.$list.height(_.$slides.first().outerHeight(true) * _.options.slidesToShow);
+            if (_.options.centerMode === true) {
+                _.$list.css({
+                    padding: _.options.centerPadding + ' 0px'
+                });
+            }
+        }
+
+        _.listWidth = _.$list.width();
+        _.listHeight = _.$list.height();
+
+        if (_.options.vertical === false && _.options.variableWidth === false) {
+            _.slideWidth = Math.ceil(_.listWidth / _.options.slidesToShow);
+            _.$slideTrack.width(Math.ceil(_.slideWidth * _.$slideTrack.children('.slick-slide').length));
+        } else if (_.options.variableWidth === true) {
+            _.$slideTrack.width(5000 * _.slideCount);
+        } else {
+            _.slideWidth = Math.ceil(_.listWidth);
+            _.$slideTrack.height(Math.ceil(_.$slides.first().outerHeight(true) * _.$slideTrack.children('.slick-slide').length));
+        }
+
+        var offset = _.$slides.first().outerWidth(true) - _.$slides.first().width();
+        if (_.options.variableWidth === false) _.$slideTrack.children('.slick-slide').width(_.slideWidth - offset);
+    };
+
+    Slick.prototype.setFade = function () {
+
+        var _ = this,
+            targetLeft;
+
+        _.$slides.each(function (index, element) {
+            targetLeft = _.slideWidth * index * -1;
+            if (_.options.rtl === true) {
+                $(element).css({
+                    position: 'relative',
+                    right: targetLeft,
+                    top: 0,
+                    zIndex: _.options.zIndex - 2,
+                    opacity: 0
+                });
+            } else {
+                $(element).css({
+                    position: 'relative',
+                    left: targetLeft,
+                    top: 0,
+                    zIndex: _.options.zIndex - 2,
+                    opacity: 0
+                });
+            }
+        });
+
+        _.$slides.eq(_.currentSlide).css({
+            zIndex: _.options.zIndex - 1,
+            opacity: 1
+        });
+    };
+
+    Slick.prototype.setHeight = function () {
+
+        var _ = this;
+
+        if (_.options.slidesToShow === 1 && _.options.adaptiveHeight === true && _.options.vertical === false) {
+            var targetHeight = _.$slides.eq(_.currentSlide).outerHeight(true);
+            _.$list.css('height', targetHeight);
+        }
+    };
+
+    Slick.prototype.setOption = Slick.prototype.slickSetOption = function () {
+
+        /**
+         * accepts arguments in format of:
+         *
+         *  - for changing a single option's value:
+         *     .slick("setOption", option, value, refresh )
+         *
+         *  - for changing a set of responsive options:
+         *     .slick("setOption", 'responsive', [{}, ...], refresh )
+         *
+         *  - for updating multiple values at once (not responsive)
+         *     .slick("setOption", { 'option': value, ... }, refresh )
+         */
+
+        var _ = this,
+            l,
+            item,
+            option,
+            value,
+            refresh = false,
+            type;
+
+        if ($.type(arguments[0]) === 'object') {
+
+            option = arguments[0];
+            refresh = arguments[1];
+            type = 'multiple';
+        } else if ($.type(arguments[0]) === 'string') {
+
+            option = arguments[0];
+            value = arguments[1];
+            refresh = arguments[2];
+
+            if (arguments[0] === 'responsive' && $.type(arguments[1]) === 'array') {
+
+                type = 'responsive';
+            } else if (typeof arguments[1] !== 'undefined') {
+
+                type = 'single';
+            }
+        }
+
+        if (type === 'single') {
+
+            _.options[option] = value;
+        } else if (type === 'multiple') {
+
+            $.each(option, function (opt, val) {
+
+                _.options[opt] = val;
+            });
+        } else if (type === 'responsive') {
+
+            for (item in value) {
+
+                if ($.type(_.options.responsive) !== 'array') {
+
+                    _.options.responsive = [value[item]];
+                } else {
+
+                    l = _.options.responsive.length - 1;
+
+                    // loop through the responsive object and splice out duplicates.
+                    while (l >= 0) {
+
+                        if (_.options.responsive[l].breakpoint === value[item].breakpoint) {
+
+                            _.options.responsive.splice(l, 1);
+                        }
+
+                        l--;
+                    }
+
+                    _.options.responsive.push(value[item]);
+                }
+            }
+        }
+
+        if (refresh) {
+
+            _.unload();
+            _.reinit();
+        }
+    };
+
+    Slick.prototype.setPosition = function () {
+
+        var _ = this;
+
+        _.setDimensions();
+
+        _.setHeight();
+
+        if (_.options.fade === false) {
+            _.setCSS(_.getLeft(_.currentSlide));
+        } else {
+            _.setFade();
+        }
+
+        _.$slider.trigger('setPosition', [_]);
+    };
+
+    Slick.prototype.setProps = function () {
+
+        var _ = this,
+            bodyStyle = document.body.style;
+
+        _.positionProp = _.options.vertical === true ? 'top' : 'left';
+
+        if (_.positionProp === 'top') {
+            _.$slider.addClass('slick-vertical');
+        } else {
+            _.$slider.removeClass('slick-vertical');
+        }
+
+        if (bodyStyle.WebkitTransition !== undefined || bodyStyle.MozTransition !== undefined || bodyStyle.msTransition !== undefined) {
+            if (_.options.useCSS === true) {
+                _.cssTransitions = true;
+            }
+        }
+
+        if (_.options.fade) {
+            if (typeof _.options.zIndex === 'number') {
+                if (_.options.zIndex < 3) {
+                    _.options.zIndex = 3;
+                }
+            } else {
+                _.options.zIndex = _.defaults.zIndex;
+            }
+        }
+
+        if (bodyStyle.OTransform !== undefined) {
+            _.animType = 'OTransform';
+            _.transformType = '-o-transform';
+            _.transitionType = 'OTransition';
+            if (bodyStyle.perspectiveProperty === undefined && bodyStyle.webkitPerspective === undefined) _.animType = false;
+        }
+        if (bodyStyle.MozTransform !== undefined) {
+            _.animType = 'MozTransform';
+            _.transformType = '-moz-transform';
+            _.transitionType = 'MozTransition';
+            if (bodyStyle.perspectiveProperty === undefined && bodyStyle.MozPerspective === undefined) _.animType = false;
+        }
+        if (bodyStyle.webkitTransform !== undefined) {
+            _.animType = 'webkitTransform';
+            _.transformType = '-webkit-transform';
+            _.transitionType = 'webkitTransition';
+            if (bodyStyle.perspectiveProperty === undefined && bodyStyle.webkitPerspective === undefined) _.animType = false;
+        }
+        if (bodyStyle.msTransform !== undefined) {
+            _.animType = 'msTransform';
+            _.transformType = '-ms-transform';
+            _.transitionType = 'msTransition';
+            if (bodyStyle.msTransform === undefined) _.animType = false;
+        }
+        if (bodyStyle.transform !== undefined && _.animType !== false) {
+            _.animType = 'transform';
+            _.transformType = 'transform';
+            _.transitionType = 'transition';
+        }
+        _.transformsEnabled = _.options.useTransform && _.animType !== null && _.animType !== false;
+    };
+
+    Slick.prototype.setSlideClasses = function (index) {
+
+        var _ = this,
+            centerOffset,
+            allSlides,
+            indexOffset,
+            remainder;
+
+        allSlides = _.$slider.find('.slick-slide').removeClass('slick-active slick-center slick-current').attr('aria-hidden', 'true');
+
+        _.$slides.eq(index).addClass('slick-current');
+
+        if (_.options.centerMode === true) {
+
+            var evenCoef = _.options.slidesToShow % 2 === 0 ? 1 : 0;
+
+            centerOffset = Math.floor(_.options.slidesToShow / 2);
+
+            if (_.options.infinite === true) {
+
+                if (index >= centerOffset && index <= _.slideCount - 1 - centerOffset) {
+                    _.$slides.slice(index - centerOffset + evenCoef, index + centerOffset + 1).addClass('slick-active').attr('aria-hidden', 'false');
+                } else {
+
+                    indexOffset = _.options.slidesToShow + index;
+                    allSlides.slice(indexOffset - centerOffset + 1 + evenCoef, indexOffset + centerOffset + 2).addClass('slick-active').attr('aria-hidden', 'false');
+                }
+
+                if (index === 0) {
+
+                    allSlides.eq(allSlides.length - 1 - _.options.slidesToShow).addClass('slick-center');
+                } else if (index === _.slideCount - 1) {
+
+                    allSlides.eq(_.options.slidesToShow).addClass('slick-center');
+                }
+            }
+
+            _.$slides.eq(index).addClass('slick-center');
+        } else {
+
+            if (index >= 0 && index <= _.slideCount - _.options.slidesToShow) {
+
+                _.$slides.slice(index, index + _.options.slidesToShow).addClass('slick-active').attr('aria-hidden', 'false');
+            } else if (allSlides.length <= _.options.slidesToShow) {
+
+                allSlides.addClass('slick-active').attr('aria-hidden', 'false');
+            } else {
+
+                remainder = _.slideCount % _.options.slidesToShow;
+                indexOffset = _.options.infinite === true ? _.options.slidesToShow + index : index;
+
+                if (_.options.slidesToShow == _.options.slidesToScroll && _.slideCount - index < _.options.slidesToShow) {
+
+                    allSlides.slice(indexOffset - (_.options.slidesToShow - remainder), indexOffset + remainder).addClass('slick-active').attr('aria-hidden', 'false');
+                } else {
+
+                    allSlides.slice(indexOffset, indexOffset + _.options.slidesToShow).addClass('slick-active').attr('aria-hidden', 'false');
+                }
+            }
+        }
+
+        if (_.options.lazyLoad === 'ondemand' || _.options.lazyLoad === 'anticipated') {
+            _.lazyLoad();
+        }
+    };
+
+    Slick.prototype.setupInfinite = function () {
+
+        var _ = this,
+            i,
+            slideIndex,
+            infiniteCount;
+
+        if (_.options.fade === true) {
+            _.options.centerMode = false;
+        }
+
+        if (_.options.infinite === true && _.options.fade === false) {
+
+            slideIndex = null;
+
+            if (_.slideCount > _.options.slidesToShow) {
+
+                if (_.options.centerMode === true) {
+                    infiniteCount = _.options.slidesToShow + 1;
+                } else {
+                    infiniteCount = _.options.slidesToShow;
+                }
+
+                for (i = _.slideCount; i > _.slideCount - infiniteCount; i -= 1) {
+                    slideIndex = i - 1;
+                    $(_.$slides[slideIndex]).clone(true).attr('id', '').attr('data-slick-index', slideIndex - _.slideCount).prependTo(_.$slideTrack).addClass('slick-cloned');
+                }
+                for (i = 0; i < infiniteCount + _.slideCount; i += 1) {
+                    slideIndex = i;
+                    $(_.$slides[slideIndex]).clone(true).attr('id', '').attr('data-slick-index', slideIndex + _.slideCount).appendTo(_.$slideTrack).addClass('slick-cloned');
+                }
+                _.$slideTrack.find('.slick-cloned').find('[id]').each(function () {
+                    $(this).attr('id', '');
+                });
+            }
+        }
+    };
+
+    Slick.prototype.interrupt = function (toggle) {
+
+        var _ = this;
+
+        if (!toggle) {
+            _.autoPlay();
+        }
+        _.interrupted = toggle;
+    };
+
+    Slick.prototype.selectHandler = function (event) {
+
+        var _ = this;
+
+        var targetElement = $(event.target).is('.slick-slide') ? $(event.target) : $(event.target).parents('.slick-slide');
+
+        var index = parseInt(targetElement.attr('data-slick-index'));
+
+        if (!index) index = 0;
+
+        if (_.slideCount <= _.options.slidesToShow) {
+
+            _.slideHandler(index, false, true);
+            return;
+        }
+
+        _.slideHandler(index);
+    };
+
+    Slick.prototype.slideHandler = function (index, sync, dontAnimate) {
+
+        var targetSlide,
+            animSlide,
+            oldSlide,
+            slideLeft,
+            targetLeft = null,
+            _ = this,
+            navTarget;
+
+        sync = sync || false;
+
+        if (_.animating === true && _.options.waitForAnimate === true) {
+            return;
+        }
+
+        if (_.options.fade === true && _.currentSlide === index) {
+            return;
+        }
+
+        if (sync === false) {
+            _.asNavFor(index);
+        }
+
+        targetSlide = index;
+        targetLeft = _.getLeft(targetSlide);
+        slideLeft = _.getLeft(_.currentSlide);
+
+        _.currentLeft = _.swipeLeft === null ? slideLeft : _.swipeLeft;
+
+        if (_.options.infinite === false && _.options.centerMode === false && (index < 0 || index > _.getDotCount() * _.options.slidesToScroll)) {
+            if (_.options.fade === false) {
+                targetSlide = _.currentSlide;
+                if (dontAnimate !== true && _.slideCount > _.options.slidesToShow) {
+                    _.animateSlide(slideLeft, function () {
+                        _.postSlide(targetSlide);
+                    });
+                } else {
+                    _.postSlide(targetSlide);
+                }
+            }
+            return;
+        } else if (_.options.infinite === false && _.options.centerMode === true && (index < 0 || index > _.slideCount - _.options.slidesToScroll)) {
+            if (_.options.fade === false) {
+                targetSlide = _.currentSlide;
+                if (dontAnimate !== true && _.slideCount > _.options.slidesToShow) {
+                    _.animateSlide(slideLeft, function () {
+                        _.postSlide(targetSlide);
+                    });
+                } else {
+                    _.postSlide(targetSlide);
+                }
+            }
+            return;
+        }
+
+        if (_.options.autoplay) {
+            clearInterval(_.autoPlayTimer);
+        }
+
+        if (targetSlide < 0) {
+            if (_.slideCount % _.options.slidesToScroll !== 0) {
+                animSlide = _.slideCount - _.slideCount % _.options.slidesToScroll;
+            } else {
+                animSlide = _.slideCount + targetSlide;
+            }
+        } else if (targetSlide >= _.slideCount) {
+            if (_.slideCount % _.options.slidesToScroll !== 0) {
+                animSlide = 0;
+            } else {
+                animSlide = targetSlide - _.slideCount;
+            }
+        } else {
+            animSlide = targetSlide;
+        }
+
+        _.animating = true;
+
+        _.$slider.trigger('beforeChange', [_, _.currentSlide, animSlide]);
+
+        oldSlide = _.currentSlide;
+        _.currentSlide = animSlide;
+
+        _.setSlideClasses(_.currentSlide);
+
+        if (_.options.asNavFor) {
+
+            navTarget = _.getNavTarget();
+            navTarget = navTarget.slick('getSlick');
+
+            if (navTarget.slideCount <= navTarget.options.slidesToShow) {
+                navTarget.setSlideClasses(_.currentSlide);
+            }
+        }
+
+        _.updateDots();
+        _.updateArrows();
+
+        if (_.options.fade === true) {
+            if (dontAnimate !== true) {
+
+                _.fadeSlideOut(oldSlide);
+
+                _.fadeSlide(animSlide, function () {
+                    _.postSlide(animSlide);
+                });
+            } else {
+                _.postSlide(animSlide);
+            }
+            _.animateHeight();
+            return;
+        }
+
+        if (dontAnimate !== true && _.slideCount > _.options.slidesToShow) {
+            _.animateSlide(targetLeft, function () {
+                _.postSlide(animSlide);
+            });
+        } else {
+            _.postSlide(animSlide);
+        }
+    };
+
+    Slick.prototype.startLoad = function () {
+
+        var _ = this;
+
+        if (_.options.arrows === true && _.slideCount > _.options.slidesToShow) {
+
+            _.$prevArrow.hide();
+            _.$nextArrow.hide();
+        }
+
+        if (_.options.dots === true && _.slideCount > _.options.slidesToShow) {
+
+            _.$dots.hide();
+        }
+
+        _.$slider.addClass('slick-loading');
+    };
+
+    Slick.prototype.swipeDirection = function () {
+
+        var xDist,
+            yDist,
+            r,
+            swipeAngle,
+            _ = this;
+
+        xDist = _.touchObject.startX - _.touchObject.curX;
+        yDist = _.touchObject.startY - _.touchObject.curY;
+        r = Math.atan2(yDist, xDist);
+
+        swipeAngle = Math.round(r * 180 / Math.PI);
+        if (swipeAngle < 0) {
+            swipeAngle = 360 - Math.abs(swipeAngle);
+        }
+
+        if (swipeAngle <= 45 && swipeAngle >= 0) {
+            return _.options.rtl === false ? 'left' : 'right';
+        }
+        if (swipeAngle <= 360 && swipeAngle >= 315) {
+            return _.options.rtl === false ? 'left' : 'right';
+        }
+        if (swipeAngle >= 135 && swipeAngle <= 225) {
+            return _.options.rtl === false ? 'right' : 'left';
+        }
+        if (_.options.verticalSwiping === true) {
+            if (swipeAngle >= 35 && swipeAngle <= 135) {
+                return 'down';
+            } else {
+                return 'up';
+            }
+        }
+
+        return 'vertical';
+    };
+
+    Slick.prototype.swipeEnd = function (event) {
+
+        var _ = this,
+            slideCount,
+            direction;
+
+        _.dragging = false;
+        _.swiping = false;
+
+        if (_.scrolling) {
+            _.scrolling = false;
+            return false;
+        }
+
+        _.interrupted = false;
+        _.shouldClick = _.touchObject.swipeLength > 10 ? false : true;
+
+        if (_.touchObject.curX === undefined) {
+            return false;
+        }
+
+        if (_.touchObject.edgeHit === true) {
+            _.$slider.trigger('edge', [_, _.swipeDirection()]);
+        }
+
+        if (_.touchObject.swipeLength >= _.touchObject.minSwipe) {
+
+            direction = _.swipeDirection();
+
+            switch (direction) {
+
+                case 'left':
+                case 'down':
+
+                    slideCount = _.options.swipeToSlide ? _.checkNavigable(_.currentSlide + _.getSlideCount()) : _.currentSlide + _.getSlideCount();
+
+                    _.currentDirection = 0;
+
+                    break;
+
+                case 'right':
+                case 'up':
+
+                    slideCount = _.options.swipeToSlide ? _.checkNavigable(_.currentSlide - _.getSlideCount()) : _.currentSlide - _.getSlideCount();
+
+                    _.currentDirection = 1;
+
+                    break;
+
+                default:
+
+            }
+
+            if (direction != 'vertical') {
+
+                _.slideHandler(slideCount);
+                _.touchObject = {};
+                _.$slider.trigger('swipe', [_, direction]);
+            }
+        } else {
+
+            if (_.touchObject.startX !== _.touchObject.curX) {
+
+                _.slideHandler(_.currentSlide);
+                _.touchObject = {};
+            }
+        }
+    };
+
+    Slick.prototype.swipeHandler = function (event) {
+
+        var _ = this;
+
+        if (_.options.swipe === false || 'ontouchend' in document && _.options.swipe === false) {
+            return;
+        } else if (_.options.draggable === false && event.type.indexOf('mouse') !== -1) {
+            return;
+        }
+
+        _.touchObject.fingerCount = event.originalEvent && event.originalEvent.touches !== undefined ? event.originalEvent.touches.length : 1;
+
+        _.touchObject.minSwipe = _.listWidth / _.options.touchThreshold;
+
+        if (_.options.verticalSwiping === true) {
+            _.touchObject.minSwipe = _.listHeight / _.options.touchThreshold;
+        }
+
+        switch (event.data.action) {
+
+            case 'start':
+                _.swipeStart(event);
+                break;
+
+            case 'move':
+                _.swipeMove(event);
+                break;
+
+            case 'end':
+                _.swipeEnd(event);
+                break;
+
+        }
+    };
+
+    Slick.prototype.swipeMove = function (event) {
+
+        var _ = this,
+            edgeWasHit = false,
+            curLeft,
+            swipeDirection,
+            swipeLength,
+            positionOffset,
+            touches,
+            verticalSwipeLength;
+
+        touches = event.originalEvent !== undefined ? event.originalEvent.touches : null;
+
+        if (!_.dragging || _.scrolling || touches && touches.length !== 1) {
+            return false;
+        }
+
+        curLeft = _.getLeft(_.currentSlide);
+
+        _.touchObject.curX = touches !== undefined ? touches[0].pageX : event.clientX;
+        _.touchObject.curY = touches !== undefined ? touches[0].pageY : event.clientY;
+
+        _.touchObject.swipeLength = Math.round(Math.sqrt(Math.pow(_.touchObject.curX - _.touchObject.startX, 2)));
+
+        verticalSwipeLength = Math.round(Math.sqrt(Math.pow(_.touchObject.curY - _.touchObject.startY, 2)));
+
+        if (!_.options.verticalSwiping && !_.swiping && verticalSwipeLength > 4) {
+            _.scrolling = true;
+            return false;
+        }
+
+        if (_.options.verticalSwiping === true) {
+            _.touchObject.swipeLength = verticalSwipeLength;
+        }
+
+        swipeDirection = _.swipeDirection();
+
+        if (event.originalEvent !== undefined && _.touchObject.swipeLength > 4) {
+            _.swiping = true;
+            event.preventDefault();
+        }
+
+        positionOffset = (_.options.rtl === false ? 1 : -1) * (_.touchObject.curX > _.touchObject.startX ? 1 : -1);
+        if (_.options.verticalSwiping === true) {
+            positionOffset = _.touchObject.curY > _.touchObject.startY ? 1 : -1;
+        }
+
+        swipeLength = _.touchObject.swipeLength;
+
+        _.touchObject.edgeHit = false;
+
+        if (_.options.infinite === false) {
+            if (_.currentSlide === 0 && swipeDirection === 'right' || _.currentSlide >= _.getDotCount() && swipeDirection === 'left') {
+                swipeLength = _.touchObject.swipeLength * _.options.edgeFriction;
+                _.touchObject.edgeHit = true;
+            }
+        }
+
+        if (_.options.vertical === false) {
+            _.swipeLeft = curLeft + swipeLength * positionOffset;
+        } else {
+            _.swipeLeft = curLeft + swipeLength * (_.$list.height() / _.listWidth) * positionOffset;
+        }
+        if (_.options.verticalSwiping === true) {
+            _.swipeLeft = curLeft + swipeLength * positionOffset;
+        }
+
+        if (_.options.fade === true || _.options.touchMove === false) {
+            return false;
+        }
+
+        if (_.animating === true) {
+            _.swipeLeft = null;
+            return false;
+        }
+
+        _.setCSS(_.swipeLeft);
+    };
+
+    Slick.prototype.swipeStart = function (event) {
+
+        var _ = this,
+            touches;
+
+        _.interrupted = true;
+
+        if (_.touchObject.fingerCount !== 1 || _.slideCount <= _.options.slidesToShow) {
+            _.touchObject = {};
+            return false;
+        }
+
+        if (event.originalEvent !== undefined && event.originalEvent.touches !== undefined) {
+            touches = event.originalEvent.touches[0];
+        }
+
+        _.touchObject.startX = _.touchObject.curX = touches !== undefined ? touches.pageX : event.clientX;
+        _.touchObject.startY = _.touchObject.curY = touches !== undefined ? touches.pageY : event.clientY;
+
+        _.dragging = true;
+    };
+
+    Slick.prototype.unfilterSlides = Slick.prototype.slickUnfilter = function () {
+
+        var _ = this;
+
+        if (_.$slidesCache !== null) {
+
+            _.unload();
+
+            _.$slideTrack.children(this.options.slide).detach();
+
+            _.$slidesCache.appendTo(_.$slideTrack);
+
+            _.reinit();
+        }
+    };
+
+    Slick.prototype.unload = function () {
+
+        var _ = this;
+
+        $('.slick-cloned', _.$slider).remove();
+
+        if (_.$dots) {
+            _.$dots.remove();
+        }
+
+        if (_.$prevArrow && _.htmlExpr.test(_.options.prevArrow)) {
+            _.$prevArrow.remove();
+        }
+
+        if (_.$nextArrow && _.htmlExpr.test(_.options.nextArrow)) {
+            _.$nextArrow.remove();
+        }
+
+        _.$slides.removeClass('slick-slide slick-active slick-visible slick-current').attr('aria-hidden', 'true').css('width', '');
+    };
+
+    Slick.prototype.unslick = function (fromBreakpoint) {
+
+        var _ = this;
+        _.$slider.trigger('unslick', [_, fromBreakpoint]);
+        _.destroy();
+    };
+
+    Slick.prototype.updateArrows = function () {
+
+        var _ = this,
+            centerOffset;
+
+        centerOffset = Math.floor(_.options.slidesToShow / 2);
+
+        if (_.options.arrows === true && _.slideCount > _.options.slidesToShow && !_.options.infinite) {
+
+            _.$prevArrow.removeClass('slick-disabled').attr('aria-disabled', 'false');
+            _.$nextArrow.removeClass('slick-disabled').attr('aria-disabled', 'false');
+
+            if (_.currentSlide === 0) {
+
+                _.$prevArrow.addClass('slick-disabled').attr('aria-disabled', 'true');
+                _.$nextArrow.removeClass('slick-disabled').attr('aria-disabled', 'false');
+            } else if (_.currentSlide >= _.slideCount - _.options.slidesToShow && _.options.centerMode === false) {
+
+                _.$nextArrow.addClass('slick-disabled').attr('aria-disabled', 'true');
+                _.$prevArrow.removeClass('slick-disabled').attr('aria-disabled', 'false');
+            } else if (_.currentSlide >= _.slideCount - 1 && _.options.centerMode === true) {
+
+                _.$nextArrow.addClass('slick-disabled').attr('aria-disabled', 'true');
+                _.$prevArrow.removeClass('slick-disabled').attr('aria-disabled', 'false');
+            }
+        }
+    };
+
+    Slick.prototype.updateDots = function () {
+
+        var _ = this;
+
+        if (_.$dots !== null) {
+
+            _.$dots.find('li').removeClass('slick-active').end();
+
+            _.$dots.find('li').eq(Math.floor(_.currentSlide / _.options.slidesToScroll)).addClass('slick-active');
+        }
+    };
+
+    Slick.prototype.visibility = function () {
+
+        var _ = this;
+
+        if (_.options.autoplay) {
+
+            if (document[_.hidden]) {
+
+                _.interrupted = true;
+            } else {
+
+                _.interrupted = false;
+            }
+        }
+    };
+
+    $.fn.slick = function () {
+        var _ = this,
+            opt = arguments[0],
+            args = Array.prototype.slice.call(arguments, 1),
+            l = _.length,
+            i,
+            ret;
+        for (i = 0; i < l; i++) {
+            if ((typeof opt === 'undefined' ? 'undefined' : _typeof(opt)) == 'object' || typeof opt == 'undefined') _[i].slick = new Slick(_[i], opt);else ret = _[i].slick[opt].apply(_[i].slick, args);
+            if (typeof ret != 'undefined') return ret;
+        }
+        return _;
+    };
+});
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/*!
+ * SVGInjector v2.1.3 - Fast, caching, dynamic inline SVG DOM injection library
+ * https://github.com/flobacher/SVGInjector2
+ * forked from:
+ * https://github.com/iconic/SVGInjector
+ *
+ * Copyright (c) 2015 flobacher <flo@digital-fuse.net>
+ * @license MIT
+ *
+ * original Copyright (c) 2014 Waybury <hello@waybury.com>
+ * @license MIT
+ */
+!function (e, t) {
+  "use strict";
+  var r = function () {
+    function r(e) {
+      r.instanceCounter++, this.init(e);
+    }var n,
+        i,
+        s,
+        l,
+        a,
+        o,
+        c,
+        u,
+        f,
+        p,
+        d,
+        v,
+        g,
+        m,
+        h,
+        b,
+        y,
+        S,
+        A,
+        C,
+        x,
+        k,
+        N,
+        w,
+        j,
+        E,
+        I,
+        F,
+        T,
+        G,
+        V = "http://www.w3.org/2000/svg",
+        O = "http://www.w3.org/1999/xlink",
+        q = ["sprite"];return s = [], r.instanceCounter = 0, r.prototype.init = function (r) {
+      r = r || {}, n = {}, o = {}, o.isLocal = "file:" === e.location.protocol, o.hasSvgSupport = t.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1"), i = { count: 0, elements: [] }, l = {}, a = {}, a.evalScripts = r.evalScripts || "always", a.pngFallback = r.pngFallback || !1, a.svgFallbackDir = r.svgFallbackDir || !1, a.onlyInjectVisiblePart = r.onlyInjectVisiblePart || !0, a.keepStylesClass = void 0 === r.keepStylesClass ? "" : r.keepStylesClass, a.spriteClassName = void 0 === r.spriteClassName ? "sprite" : r.spriteClassName, a.spriteClassIdName = void 0 === r.spriteClassIdName ? "sprite--" : r.spriteClassIdName, a.removeStylesClass = void 0 === r.removeStylesClass ? "icon" : r.removeStylesClass, a.removeAllStyles = void 0 !== r.removeAllStyles && r.removeAllStyles, a.fallbackClassName = void 0 === r.fallbackClassName ? q : r.fallbackClassName, a.prefixStyleTags = void 0 === r.prefixStyleTags || r.prefixStyleTags, a.spritesheetURL = void 0 !== r.spritesheetURL && "" !== r.spritesheetURL && r.spritesheetURL, a.prefixFragIdClass = a.spriteClassIdName, a.forceFallbacks = void 0 !== r.forceFallbacks && r.forceFallbacks, a.forceFallbacks && (o.hasSvgSupport = !1), x(t.querySelector("html"), "no-svg", o.hasSvgSupport), o.hasSvgSupport && void 0 === r.removeStylesClass && C(a.removeStylesClass);
+    }, r.prototype.inject = function (e, t, r) {
+      if (void 0 !== e.length) {
+        var n = 0,
+            i = this;I.call(e, function (s) {
+          i.injectElement(s, function (i) {
+            r && "function" == typeof r && r(i), t && e.length === ++n && t(n);
+          });
+        });
+      } else e ? this.injectElement(e, function (n) {
+        r && "function" == typeof r && r(n), t && t(1), e = null;
+      }) : t && t(0);
+    }, G = r.prototype.injectElement = function (e, t) {
+      var r,
+          n = e.getAttribute("data-src") || e.getAttribute("src");if (!n) {
+        if (!a.spritesheetURL) return;if ("" === (r = h(e))) return;n = a.spritesheetURL + "#" + r;
+      }e.setAttribute("data-src", n);var s = n.split("#");1 === s.length && s.push("");var l;if (!/\.svg/i.test(n)) return void t("Attempted to inject a file with a non-svg extension: " + n);if (!o.hasSvgSupport) {
+        var f = e.getAttribute("data-fallback") || e.getAttribute("data-png");return void (f ? (e.setAttribute("src", f), t(null)) : a.pngFallback ? (s.length > 1 && s[1] ? (l = s[1] + ".png", j(a.fallbackClassName) ? c(e, s[1], a.fallbackClassName) : w(a.fallbackClassName) ? a.fallbackClassName(e, s[1]) : "string" == typeof a.fallbackClassName ? E(e, a.fallbackClassName) : e.setAttribute("src", a.pngFallback + "/" + l)) : (l = n.split("/").pop().replace(".svg", ".png"), e.setAttribute("src", a.pngFallback + "/" + l)), t(null)) : t("This browser does not support SVG and no PNG fallback was defined."));
+      }j(a.fallbackClassName) && u(e, s[1], a.fallbackClassName), -1 === i.elements.indexOf(e) && (i.elements.push(e), A(t, n, e));
+    }, r.prototype.getEnv = function () {
+      return o;
+    }, r.prototype.getConfig = function () {
+      return a;
+    }, c = function c(e, t, r) {
+      var n = void 0 === r ? q : r.slice(0);I.call(n, function (e, r) {
+        n[r] = e.replace("%s", t);
+      }), E(e, n);
+    }, u = function u(e, t, r) {
+      r = void 0 === r ? q.slice(0) : r.slice(0);var n,
+          i,
+          s = e.getAttribute("class");void 0 !== s && null !== s && (i = s.split(" ")) && (I.call(r, function (e) {
+        e = e.replace("%s", t), (n = i.indexOf(e)) >= 0 && (i[n] = "");
+      }), e.setAttribute("class", N(i.join(" "))));
+    }, p = function p(e, t, r, n) {
+      var i = 0;return e.textContent = e.textContent.replace(/url\(('|")*#.+('|")*(?=\))/g, function (e) {
+        return i++, e + "-" + t;
+      }), i;
+    }, f = function f(e, t) {
+      var r,
+          n,
+          i,
+          s,
+          l,
+          a,
+          o,
+          c,
+          u,
+          f,
+          p,
+          d,
+          v,
+          g,
+          m,
+          h,
+          b = [{ def: "linearGradient", attrs: ["fill", "stroke"] }, { def: "radialGradient", attrs: ["fill", "stroke"] }, { def: "clipPath", attrs: ["clip-path"] }, { def: "mask", attrs: ["mask"] }, { def: "filter", attrs: ["filter"] }, { def: "color-profile", attrs: ["color-profile"] }, { def: "cursor", attrs: ["cursor"] }, { def: "marker", attrs: ["marker", "marker-start", "marker-mid", "marker-end"] }];I.call(b, function (b) {
+        for (n = e.querySelectorAll(b.def + "[id]"), s = 0, i = n.length; s < i; s++) {
+          for (r = n[s].id + "-" + t, c = b.attrs, f = 0, u = c.length; f < u; f++) {
+            for (l = e.querySelectorAll("[" + c[f] + '="url(#' + n[s].id + ')"]'), o = 0, a = l.length; o < a; o++) {
+              l[o].setAttribute(c[f], "url(#" + r + ")");
+            }
+          }for (p = e.querySelectorAll("[*|href]"), g = [], v = 0, d = p.length; v < d; v++) {
+            p[v].getAttributeNS(O, "href").toString() === "#" + n[s].id && g.push(p[v]);
+          }for (h = 0, m = g.length; h < m; h++) {
+            g[h].setAttributeNS(O, "href", "#" + r);
+          }n[s].id = r;
+        }
+      });
+    }, d = function d(e, t, r) {
+      var n;void 0 === r && (r = ["id", "viewBox"]);for (var i = 0; i < e.attributes.length; i++) {
+        n = e.attributes.item(i), r.indexOf(n.name) < 0 && t.setAttribute(n.name, n.value);
+      }
+    }, v = function v(e) {
+      var r = t.createElementNS(V, "svg");return I.call(e.childNodes, function (e) {
+        r.appendChild(e.cloneNode(!0));
+      }), d(e, r), r;
+    }, g = function g(e, t, r) {
+      var n,
+          i,
+          s,
+          l,
+          a,
+          o,
+          c = r.getAttribute("data-src").split("#"),
+          u = e.textContent,
+          f = "",
+          p = function p(e, t, r) {
+        r[t] = "." + s + " " + e;
+      };if (c.length > 1) i = c[1], s = i + "-" + t, n = new RegExp("\\." + i + " ", "g"), e.textContent = u.replace(n, "." + s + " ");else {
+        for (l = c[0].split("/"), s = l[l.length - 1].replace(".svg", "") + "-" + t, n = new RegExp("([\\s\\S]*?){([\\s\\S]*?)}", "g"); null !== (a = n.exec(u));) {
+          o = a[1].trim().split(", "), o.forEach(p);f += o.join(", ") + "{" + a[2] + "}\n";
+        }e.textContent = f;
+      }r.setAttribute("class", r.getAttribute("class") + " " + s);
+    }, m = function m(e) {
+      var t = e.getAttribute("class");return t ? t.trim().split(" ") : [];
+    }, h = function h(e) {
+      var t = m(e),
+          r = "";return I.call(t, function (e) {
+        e.indexOf(a.spriteClassIdName) >= 0 && (r = e.replace(a.spriteClassIdName, ""));
+      }), r;
+    }, b = function b(e, t, r) {
+      var n,
+          i,
+          s,
+          l,
+          a,
+          o,
+          c = null,
+          u = !1,
+          f = !1,
+          p = null;if (void 0 === r) n = c = t.cloneNode(!0), c.getAttribute("width") || t.getAttribute("width") || (f = !0);else if (!(n = t.getElementById(r))) return;if (s = n.getAttribute("viewBox"), i = s.split(" "), !c) {
+        if (n instanceof SVGSymbolElement) c = v(n), f = u = !0;else if (n instanceof SVGViewElement) {
+          if (p = null, e.onlyInjectVisiblePart) {
+            var d = '*[width="' + i[2] + '"][height="' + i[3] + '"]';l = {}, 0 === Math.abs(parseInt(i[0])) ? d += ":not([x])" : (l.x = i[0], d += '[x="' + i[0] + '"]'), 0 === Math.abs(parseInt(i[1])) ? d += ":not([y])" : (l.y = i[1], d += '[y="' + i[1] + '"]'), o = t.querySelectorAll(d), o.length, p = o[0];
+          }if (p && p instanceof SVGSVGElement) {
+            c = p.cloneNode(!0);for (var g in l) {
+              "width" !== g && "height" !== g && c.removeAttribute(g);
+            }
+          } else if (p && p instanceof SVGUseElement) {
+            var h = t.getElementById(p.getAttributeNS(O, "href").substr(1));c = v(h), s = h.getAttribute("viewBox"), i = s.split(" "), f = u = !0;
+          } else f = u = !0, c = t.cloneNode(!0);
+        }a = m(c);var b = e.prefixFragIdClass + r;a.indexOf(b) < 0 && (a.push(b), c.setAttribute("class", a.join(" ")));
+      }return u && c.setAttribute("viewBox", i.join(" ")), f && (c.setAttribute("width", i[2] + "px"), c.setAttribute("height", i[3] + "px")), c.setAttribute("xmlns", V), c.setAttribute("xmlns:xlink", O), c;
+    }, y = function y(e, t, r, n) {
+      s[e] = s[e] || [], s[e].push({ callback: r, fragmentId: t, element: n, name: name });
+    }, S = function S(e) {
+      for (var t, r = 0, n = s[e].length; r < n; r++) {
+        !function (r) {
+          setTimeout(function () {
+            t = s[e][r], k(e, t.fragmentId, t.callback, t.element, t.name);
+          }, 0);
+        }(r);
+      }
+    }, A = function A(t, r, i) {
+      var s, l, a, c, u;if (s = r.split("#"), l = s[0], a = 2 === s.length ? s[1] : void 0, void 0 !== a && (u = l.split("/"), c = u[u.length - 1].replace(".svg", "")), void 0 !== n[l]) n[l] instanceof SVGSVGElement ? k(l, a, t, i, c) : y(l, a, t, i, c);else {
+        if (!e.XMLHttpRequest) return t("Browser does not support XMLHttpRequest"), !1;n[l] = {}, y(l, a, t, i, c);var f = new XMLHttpRequest();f.onreadystatechange = function () {
+          if (4 === f.readyState) {
+            if (404 === f.status || null === f.responseXML) return t("Unable to load SVG file: " + l), !1;if (!(200 === f.status || o.isLocal && 0 === f.status)) return t("There was a problem injecting the SVG: " + f.status + " " + f.statusText), !1;if (f.responseXML instanceof Document) n[l] = f.responseXML.documentElement;else if (DOMParser && DOMParser instanceof Function) {
+              var e;try {
+                var i = new DOMParser();e = i.parseFromString(f.responseText, "text/xml");
+              } catch (t) {
+                e = void 0;
+              }if (!e || e.getElementsByTagName("parsererror").length) return t("Unable to parse SVG file: " + r), !1;n[l] = e.documentElement;
+            }S(l);
+          }
+        }, f.open("GET", l), f.overrideMimeType && f.overrideMimeType("text/xml"), f.send();
+      }
+    }, C = function C(e) {
+      var r = "svg." + e + " {fill: currentColor;}",
+          n = t.head || t.getElementsByTagName("head")[0],
+          i = t.createElement("style");i.type = "text/css", i.styleSheet ? i.styleSheet.cssText = r : i.appendChild(t.createTextNode(r)), n.appendChild(i);
+    }, x = function x(e, t, r) {
+      r ? e.className.replace(t, "") : e.className += " " + t;
+    }, k = function k(t, r, s, o, c) {
+      var u, v, h, y, S, A, C, x;if (void 0 === (u = b(a, n[t], r)) || "string" == typeof u) return S = o.getAttribute("data-fallback-svg"), S = !(!S && !a.svgFallbackDir) && a.svgFallbackDir + "/" + r + ".svg", S ? (o.setAttribute("data-src", S), i.elements.splice(i.elements.indexOf(o), 1), G(o, s)) : s(u), !1;u.setAttribute("role", "img"), I.call(u.children || [], function (e) {
+        e instanceof SVGDefsElement || e instanceof SVGTitleElement || e instanceof SVGDescElement || e.setAttribute("role", "presentation");
+      }), y = o.getAttribute("aria-hidden") || u.getAttribute("aria-hidden"), y ? (u.setAttribute("aria-hidden", "true"), C = u.querySelector("title"), x = u.querySelector("desc"), C && u.removeChild(C), x && u.removeChild(x)) : (h = F("desc", u, o, r, !1), v = F("title", u, o, r, !1), (h.length > 0 || v.length > 0) && (A = v + " " + h, u.setAttribute("aria-labelledby", A.trim()))), d(o, u, ["class"]);var k = [].concat(u.getAttribute("class") || [], "injected-svg", o.getAttribute("class") || []).join(" ");u.setAttribute("class", N(k)), f(u, i.count, c), u.removeAttribute("xmlns:a");for (var w, j, E = u.querySelectorAll("script"), T = [], V = 0, O = E.length; V < O; V++) {
+        (j = E[V].getAttribute("type")) && "application/ecmascript" !== j && "application/javascript" !== j || (w = E[V].innerText || E[V].textContent, T.push(w), u.removeChild(E[V]));
+      }if (T.length > 0 && ("always" === a.evalScripts || "once" === a.evalScripts && !l[t])) {
+        for (var q = 0, L = T.length; q < L; q++) {
+          new Function(T[q])(e);
+        }l[t] = !0;
+      }var M = u.querySelectorAll("style");I.call(M, function (e) {
+        var t = m(u),
+            r = !0;(t.indexOf(a.removeStylesClass) >= 0 || a.removeAllStyles) && t.indexOf(a.keepStylesClass) < 0 ? e.parentNode.removeChild(e) : (p(e, i.count, u, c) > 0 && (r = !1), a.prefixStyleTags && (g(e, i.count, u, c), r = !1), r && (e.textContent += ""));
+      }), o.parentNode.replaceChild(u, o), delete i.elements[i.elements.indexOf(o)], i.count++, s(u);
+    }, N = function N(e) {
+      e = e.split(" ");for (var t = {}, r = e.length, n = []; r--;) {
+        t.hasOwnProperty(e[r]) || (t[e[r]] = 1, n.unshift(e[r]));
+      }return n.join(" ");
+    }, w = function w(e) {
+      return !!(e && e.constructor && e.call && e.apply);
+    }, j = function j(e) {
+      return "[object Array]" === Object.prototype.toString.call(e);
+    }, E = function E(e, t) {
+      var r = e.getAttribute("class");r = r || "", j(t) && (t = t.join(" ")), t = r + " " + t, e.setAttribute("class", N(t));
+    }, I = Array.prototype.forEach || function (e, t) {
+      if (void 0 === this || null === this || "function" != typeof e) throw new TypeError();var r,
+          n = this.length >>> 0;for (r = 0; r < n; ++r) {
+        r in this && e.call(t, this[r], r, this);
+      }
+    }, F = function F(e, t, r, n, s) {
+      var l,
+          a = n ? n + "-" : "";return a += e + "-" + i.count, l = r.querySelector(e), l ? T(e, t, l.textContent, a, t.firstChild) : (l = t.querySelector(e), l ? l.setAttribute("id", a) : s ? T(e, t, n, a, t.firstChild) : a = ""), a;
+    }, T = function T(e, r, n, i, s) {
+      var l,
+          a = r.querySelector(e);return l = t.createElementNS(V, e), l.appendChild(t.createTextNode(n)), l.setAttribute("id", i), r.insertBefore(l, s), a && a.parentNode.removeChild(a), l;
+    }, r;
+  }();"object" == (typeof angular === "undefined" ? "undefined" : _typeof(angular)) ? angular.module("svginjector", []).provider("svgInjectorOptions", function () {
+    var e = {};return { set: function set(t) {
+        e = t;
+      }, $get: function $get() {
+        return e;
+      } };
+  }).factory("svgInjectorFactory", ["svgInjectorOptions", function (e) {
+    return new r(e);
+  }]).directive("svg", ["svgInjectorFactory", function (e) {
+    var t = e.getConfig();return { restrict: "E", link: function link(r, n, i) {
+        i.class && i.class.indexOf(t.spriteClassIdName) >= 0 ? i.$observe("class", function () {
+          e.inject(n[0]);
+        }) : (i.dataSrc || i.src) && e.inject(n[0]);
+      } };
+  }]) : "object" == ( false ? "undefined" : _typeof(module)) && "object" == _typeof(module.exports) ? module.exports = r :  true ? !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+    return r;
+  }.call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : "object" == (typeof e === "undefined" ? "undefined" : _typeof(e)) && (e.SVGInjector = r);
+}(window, document);
+//# sourceMappingURL=./dist/svg-injector.map.js
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)(module)))
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/*! Tablesaw - v3.0.9 - 2018-02-14
+* https://github.com/filamentgroup/tablesaw
+* Copyright (c) 2018 Filament Group; Licensed MIT */
+(function (root, factory) {
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_RESULT__ = function (jQuery) {
+			return root.Tablesaw = factory(jQuery, root);
+		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+		if ("document" in root) {
+			module.exports = factory(require('jquery'), root);
+		} else {
+			// special jQuery case for CommonJS (pass in a window)
+			module.exports = factory(require('jquery')(root), root);
+		}
+	} else {
+		root.Tablesaw = factory(jQuery, root);
+	}
+})(typeof window !== "undefined" ? window : undefined, function ($, window) {
+	"use strict";
+
+	var document = window.document;
+
+	var domContentLoadedTriggered = false;
+	document.addEventListener("DOMContentLoaded", function () {
+		domContentLoadedTriggered = true;
+	});
+
+	var Tablesaw = {
+		i18n: {
+			modeStack: "Stack",
+			modeSwipe: "Swipe",
+			modeToggle: "Toggle",
+			modeSwitchColumnsAbbreviated: "Cols",
+			modeSwitchColumns: "Columns",
+			columnToggleButton: "Columns",
+			columnToggleError: "No eligible columns.",
+			sort: "Sort",
+			swipePreviousColumn: "Previous column",
+			swipeNextColumn: "Next column"
+		},
+		// cut the mustard
+		mustard: "head" in document && ( // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
+		!window.blackberry || window.WebKitPoint) && // only WebKit Blackberry (OS 6+)
+		!window.operamini,
+		$: $,
+		_init: function _init(element) {
+			Tablesaw.$(element || document).trigger("enhance.tablesaw");
+		},
+		init: function init(element) {
+			if (!domContentLoadedTriggered) {
+				if ("addEventListener" in document) {
+					// Use raw DOMContentLoaded instead of shoestring (may have issues in Android 2.3, exhibited by stack table)
+					document.addEventListener("DOMContentLoaded", function () {
+						Tablesaw._init(element);
+					});
+				}
+			} else {
+				Tablesaw._init(element);
+			}
+		}
+	};
+
+	$(document).on("enhance.tablesaw", function () {
+		// Extend i18n config, if one exists.
+		if (typeof TablesawConfig !== "undefined" && TablesawConfig.i18n) {
+			Tablesaw.i18n = $.extend(Tablesaw.i18n, TablesawConfig.i18n || {});
+		}
+
+		Tablesaw.i18n.modes = [Tablesaw.i18n.modeStack, Tablesaw.i18n.modeSwipe, Tablesaw.i18n.modeToggle];
+	});
+
+	if (Tablesaw.mustard) {
+		$(document.documentElement).addClass("tablesaw-enhanced");
+	}
+
+	(function () {
+		var pluginName = "tablesaw";
+		var classes = {
+			toolbar: "tablesaw-bar"
+		};
+		var events = {
+			create: "tablesawcreate",
+			destroy: "tablesawdestroy",
+			refresh: "tablesawrefresh",
+			resize: "tablesawresize"
+		};
+		var defaultMode = "stack";
+		var initSelector = "table";
+		var initFilterSelector = "[data-tablesaw],[data-tablesaw-mode],[data-tablesaw-sortable]";
+		var defaultConfig = {};
+
+		Tablesaw.events = events;
+
+		var Table = function Table(element) {
+			if (!element) {
+				throw new Error("Tablesaw requires an element.");
+			}
+
+			this.table = element;
+			this.$table = $(element);
+
+			// only one <thead> and <tfoot> are allowed, per the specification
+			this.$thead = this.$table.children().filter("thead").eq(0);
+
+			// multiple <tbody> are allowed, per the specification
+			this.$tbody = this.$table.children().filter("tbody");
+
+			this.mode = this.$table.attr("data-tablesaw-mode") || defaultMode;
+
+			this.$toolbar = null;
+
+			this.attributes = {
+				subrow: "data-tablesaw-subrow",
+				ignorerow: "data-tablesaw-ignorerow"
+			};
+
+			this.init();
+		};
+
+		Table.prototype.init = function () {
+			if (!this.$thead.length) {
+				throw new Error("tablesaw: a <thead> is required, but none was found.");
+			}
+
+			if (!this.$thead.find("th").length) {
+				throw new Error("tablesaw: no header cells found. Are you using <th> inside of <thead>?");
+			}
+
+			// assign an id if there is none
+			if (!this.$table.attr("id")) {
+				this.$table.attr("id", pluginName + "-" + Math.round(Math.random() * 10000));
+			}
+
+			this.createToolbar();
+
+			this._initCells();
+
+			this.$table.data(pluginName, this);
+
+			this.$table.trigger(events.create, [this]);
+		};
+
+		Table.prototype.getConfig = function (pluginSpecificConfig) {
+			// shoestring extend doesn’t support arbitrary args
+			var configs = $.extend(defaultConfig, pluginSpecificConfig || {});
+			return $.extend(configs, typeof TablesawConfig !== "undefined" ? TablesawConfig : {});
+		};
+
+		Table.prototype._getPrimaryHeaderRow = function () {
+			return this._getHeaderRows().eq(0);
+		};
+
+		Table.prototype._getHeaderRows = function () {
+			return this.$thead.children().filter("tr").filter(function () {
+				return !$(this).is("[data-tablesaw-ignorerow]");
+			});
+		};
+
+		Table.prototype._getRowIndex = function ($row) {
+			return $row.prevAll().length;
+		};
+
+		Table.prototype._getHeaderRowIndeces = function () {
+			var self = this;
+			var indeces = [];
+			this._getHeaderRows().each(function () {
+				indeces.push(self._getRowIndex($(this)));
+			});
+			return indeces;
+		};
+
+		Table.prototype._getPrimaryHeaderCells = function ($row) {
+			return ($row || this._getPrimaryHeaderRow()).find("th");
+		};
+
+		Table.prototype._$getCells = function (th) {
+			var self = this;
+			return $(th).add(th.cells).filter(function () {
+				var $t = $(this);
+				var $row = $t.parent();
+				var hasColspan = $t.is("[colspan]");
+				// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
+				return !$row.is("[" + self.attributes.subrow + "]") && (!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan);
+			});
+		};
+
+		Table.prototype._getVisibleColspan = function () {
+			var colspan = 0;
+			this._getPrimaryHeaderCells().each(function () {
+				var $t = $(this);
+				if ($t.css("display") !== "none") {
+					colspan += parseInt($t.attr("colspan"), 10) || 1;
+				}
+			});
+			return colspan;
+		};
+
+		Table.prototype.getColspanForCell = function ($cell) {
+			var visibleColspan = this._getVisibleColspan();
+			var visibleSiblingColumns = 0;
+			if ($cell.closest("tr").data("tablesaw-rowspanned")) {
+				visibleSiblingColumns++;
+			}
+
+			$cell.siblings().each(function () {
+				var $t = $(this);
+				var colColspan = parseInt($t.attr("colspan"), 10) || 1;
+
+				if ($t.css("display") !== "none") {
+					visibleSiblingColumns += colColspan;
+				}
+			});
+			// console.log( $cell[ 0 ], visibleColspan, visibleSiblingColumns );
+
+			return visibleColspan - visibleSiblingColumns;
+		};
+
+		Table.prototype.isCellInColumn = function (header, cell) {
+			return $(header).add(header.cells).filter(function () {
+				return this === cell;
+			}).length;
+		};
+
+		Table.prototype.updateColspanCells = function (cls, header, userAction) {
+			var self = this;
+			var primaryHeaderRow = self._getPrimaryHeaderRow();
+
+			// find persistent column rowspans
+			this.$table.find("[rowspan][data-tablesaw-priority]").each(function () {
+				var $t = $(this);
+				if ($t.attr("data-tablesaw-priority") !== "persist") {
+					return;
+				}
+
+				var $row = $t.closest("tr");
+				var rowspan = parseInt($t.attr("rowspan"), 10);
+				if (rowspan > 1) {
+					$row = $row.next();
+
+					$row.data("tablesaw-rowspanned", true);
+
+					rowspan--;
+				}
+			});
+
+			this.$table.find("[colspan],[data-tablesaw-maxcolspan]").filter(function () {
+				// is not in primary header row
+				return $(this).closest("tr")[0] !== primaryHeaderRow[0];
+			}).each(function () {
+				var $cell = $(this);
+
+				if (userAction === undefined || self.isCellInColumn(header, this)) {} else {
+					// if is not a user action AND the cell is not in the updating column, kill it
+					return;
+				}
+
+				var colspan = self.getColspanForCell($cell);
+
+				if (cls && userAction !== undefined) {
+					// console.log( colspan === 0 ? "addClass" : "removeClass", $cell );
+					$cell[colspan === 0 ? "addClass" : "removeClass"](cls);
+				}
+
+				// cache original colspan
+				var maxColspan = parseInt($cell.attr("data-tablesaw-maxcolspan"), 10);
+				if (!maxColspan) {
+					$cell.attr("data-tablesaw-maxcolspan", $cell.attr("colspan"));
+				} else if (colspan > maxColspan) {
+					colspan = maxColspan;
+				}
+
+				// console.log( this, "setting colspan to ", colspan );
+				$cell.attr("colspan", colspan);
+			});
+		};
+
+		Table.prototype._findPrimaryHeadersForCell = function (cell) {
+			var $headerRow = this._getPrimaryHeaderRow();
+			var $headers = this._getPrimaryHeaderCells($headerRow);
+			var headerRowIndex = this._getRowIndex($headerRow);
+			var results = [];
+
+			for (var rowNumber = 0; rowNumber < this.headerMapping.length; rowNumber++) {
+				if (rowNumber === headerRowIndex) {
+					continue;
+				}
+				for (var colNumber = 0; colNumber < this.headerMapping[rowNumber].length; colNumber++) {
+					if (this.headerMapping[rowNumber][colNumber] === cell) {
+						results.push($headers[colNumber]);
+					}
+				}
+			}
+			return results;
+		};
+
+		// used by init cells
+		Table.prototype.getRows = function () {
+			var self = this;
+			return this.$table.find("tr").filter(function () {
+				return $(this).closest("table").is(self.$table);
+			});
+		};
+
+		// used by sortable
+		Table.prototype.getBodyRows = function (tbody) {
+			return (tbody ? $(tbody) : this.$tbody).children().filter("tr");
+		};
+
+		Table.prototype.getHeaderCellIndex = function (cell) {
+			var lookup = this.headerMapping[0];
+			for (var colIndex = 0; colIndex < lookup.length; colIndex++) {
+				if (lookup[colIndex] === cell) {
+					return colIndex;
+				}
+			}
+
+			return -1;
+		};
+
+		Table.prototype._initCells = function () {
+			// re-establish original colspans
+			this.$table.find("[data-tablesaw-maxcolspan]").each(function () {
+				var $t = $(this);
+				$t.attr("colspan", $t.attr("data-tablesaw-maxcolspan"));
+			});
+
+			var $rows = this.getRows();
+			var columnLookup = [];
+
+			$rows.each(function (rowNumber) {
+				columnLookup[rowNumber] = [];
+			});
+
+			$rows.each(function (rowNumber) {
+				var coltally = 0;
+				var $t = $(this);
+				var children = $t.children();
+
+				children.each(function () {
+					var colspan = parseInt(this.getAttribute("data-tablesaw-maxcolspan") || this.getAttribute("colspan"), 10);
+					var rowspan = parseInt(this.getAttribute("rowspan"), 10);
+
+					// set in a previous rowspan
+					while (columnLookup[rowNumber][coltally]) {
+						coltally++;
+					}
+
+					columnLookup[rowNumber][coltally] = this;
+
+					// TODO? both colspan and rowspan
+					if (colspan) {
+						for (var k = 0; k < colspan - 1; k++) {
+							coltally++;
+							columnLookup[rowNumber][coltally] = this;
+						}
+					}
+					if (rowspan) {
+						for (var j = 1; j < rowspan; j++) {
+							columnLookup[rowNumber + j][coltally] = this;
+						}
+					}
+
+					coltally++;
+				});
+			});
+
+			var headerRowIndeces = this._getHeaderRowIndeces();
+			for (var colNumber = 0; colNumber < columnLookup[0].length; colNumber++) {
+				for (var headerIndex = 0, k = headerRowIndeces.length; headerIndex < k; headerIndex++) {
+					var headerCol = columnLookup[headerRowIndeces[headerIndex]][colNumber];
+
+					var rowNumber = headerRowIndeces[headerIndex];
+					var rowCell;
+
+					if (!headerCol.cells) {
+						headerCol.cells = [];
+					}
+
+					while (rowNumber < columnLookup.length) {
+						rowCell = columnLookup[rowNumber][colNumber];
+
+						if (headerCol !== rowCell) {
+							headerCol.cells.push(rowCell);
+						}
+
+						rowNumber++;
+					}
+				}
+			}
+
+			this.headerMapping = columnLookup;
+		};
+
+		Table.prototype.refresh = function () {
+			this._initCells();
+
+			this.$table.trigger(events.refresh, [this]);
+		};
+
+		Table.prototype._getToolbarAnchor = function () {
+			var $parent = this.$table.parent();
+			if ($parent.is(".tablesaw-overflow")) {
+				return $parent;
+			}
+			return this.$table;
+		};
+
+		Table.prototype._getToolbar = function ($anchor) {
+			if (!$anchor) {
+				$anchor = this._getToolbarAnchor();
+			}
+			return $anchor.prev().filter("." + classes.toolbar);
+		};
+
+		Table.prototype.createToolbar = function () {
+			// Insert the toolbar
+			// TODO move this into a separate component
+			var $anchor = this._getToolbarAnchor();
+			var $toolbar = this._getToolbar($anchor);
+			if (!$toolbar.length) {
+				$toolbar = $("<div>").addClass(classes.toolbar).insertBefore($anchor);
+			}
+			this.$toolbar = $toolbar;
+
+			if (this.mode) {
+				this.$toolbar.addClass("tablesaw-mode-" + this.mode);
+			}
+		};
+
+		Table.prototype.destroy = function () {
+			// Don’t remove the toolbar, just erase the classes on it.
+			// Some of the table features are not yet destroy-friendly.
+			this._getToolbar().each(function () {
+				this.className = this.className.replace(/\btablesaw-mode\-\w*\b/gi, "");
+			});
+
+			var tableId = this.$table.attr("id");
+			$(document).off("." + tableId);
+			$(window).off("." + tableId);
+
+			// other plugins
+			this.$table.trigger(events.destroy, [this]);
+
+			this.$table.removeData(pluginName);
+		};
+
+		// Collection method.
+		$.fn[pluginName] = function () {
+			return this.each(function () {
+				var $t = $(this);
+
+				if ($t.data(pluginName)) {
+					return;
+				}
+
+				new Table(this);
+			});
+		};
+
+		var $doc = $(document);
+		$doc.on("enhance.tablesaw", function (e) {
+			// Cut the mustard
+			if (Tablesaw.mustard) {
+				$(e.target).find(initSelector).filter(initFilterSelector)[pluginName]();
+			}
+		});
+
+		// Avoid a resize during scroll:
+		// Some Mobile devices trigger a resize during scroll (sometimes when
+		// doing elastic stretch at the end of the document or from the
+		// location bar hide)
+		var isScrolling = false;
+		var scrollTimeout;
+		$doc.on("scroll.tablesaw", function () {
+			isScrolling = true;
+
+			window.clearTimeout(scrollTimeout);
+			scrollTimeout = window.setTimeout(function () {
+				isScrolling = false;
+			}, 300); // must be greater than the resize timeout below
+		});
+
+		var resizeTimeout;
+		$(window).on("resize", function () {
+			if (!isScrolling) {
+				window.clearTimeout(resizeTimeout);
+				resizeTimeout = window.setTimeout(function () {
+					$doc.trigger(events.resize);
+				}, 150); // must be less than the scrolling timeout above.
+			}
+		});
+
+		Tablesaw.Table = Table;
+	})();
+
+	(function () {
+		var classes = {
+			stackTable: "tablesaw-stack",
+			cellLabels: "tablesaw-cell-label",
+			cellContentLabels: "tablesaw-cell-content"
+		};
+
+		var data = {
+			key: "tablesaw-stack"
+		};
+
+		var attrs = {
+			labelless: "data-tablesaw-no-labels",
+			hideempty: "data-tablesaw-hide-empty"
+		};
+
+		var Stack = function Stack(element, tablesaw) {
+			this.tablesaw = tablesaw;
+			this.$table = $(element);
+
+			this.labelless = this.$table.is("[" + attrs.labelless + "]");
+			this.hideempty = this.$table.is("[" + attrs.hideempty + "]");
+
+			this.$table.data(data.key, this);
+		};
+
+		Stack.prototype.init = function () {
+			this.$table.addClass(classes.stackTable);
+
+			if (this.labelless) {
+				return;
+			}
+
+			var self = this;
+
+			this.$table.find("th, td").filter(function () {
+				return !$(this).closest("thead").length;
+			}).filter(function () {
+				return !$(this).closest("tr").is("[" + attrs.labelless + "]") && (!self.hideempty || !!$(this).html());
+			}).each(function () {
+				var $newHeader = $(document.createElement("b")).addClass(classes.cellLabels);
+				var $cell = $(this);
+
+				$(self.tablesaw._findPrimaryHeadersForCell(this)).each(function (index) {
+					var $header = $(this.cloneNode(true));
+					// TODO decouple from sortable better
+					// Changed from .text() in https://github.com/filamentgroup/tablesaw/commit/b9c12a8f893ec192830ec3ba2d75f062642f935b
+					// to preserve structural html in headers, like <a>
+					var $sortableButton = $header.find(".tablesaw-sortable-btn");
+					$header.find(".tablesaw-sortable-arrow").remove();
+
+					// TODO decouple from checkall better
+					var $checkall = $header.find("[data-tablesaw-checkall]");
+					$checkall.closest("label").remove();
+					if ($checkall.length) {
+						$newHeader = $([]);
+						return;
+					}
+
+					if (index > 0) {
+						$newHeader.append(document.createTextNode(", "));
+					}
+
+					var parentNode = $sortableButton.length ? $sortableButton[0] : $header[0];
+					var el;
+					while (el = parentNode.firstChild) {
+						$newHeader[0].appendChild(el);
+					}
+				});
+
+				if ($newHeader.length && !$cell.find("." + classes.cellContentLabels).length) {
+					$cell.wrapInner("<span class='" + classes.cellContentLabels + "'></span>");
+				}
+
+				// Update if already exists.
+				var $label = $cell.find("." + classes.cellLabels);
+				if (!$label.length) {
+					$cell.prepend($newHeader);
+				} else {
+					// only if changed
+					$label.replaceWith($newHeader);
+				}
+			});
+		};
+
+		Stack.prototype.destroy = function () {
+			this.$table.removeClass(classes.stackTable);
+			this.$table.find("." + classes.cellLabels).remove();
+			this.$table.find("." + classes.cellContentLabels).each(function () {
+				$(this).replaceWith(this.childNodes);
+			});
+		};
+
+		// on tablecreate, init
+		$(document).on(Tablesaw.events.create, function (e, tablesaw) {
+			if (tablesaw.mode === "stack") {
+				var table = new Stack(tablesaw.table, tablesaw);
+				table.init();
+			}
+		}).on(Tablesaw.events.refresh, function (e, tablesaw) {
+			if (tablesaw.mode === "stack") {
+				$(tablesaw.table).data(data.key).init();
+			}
+		}).on(Tablesaw.events.destroy, function (e, tablesaw) {
+			if (tablesaw.mode === "stack") {
+				$(tablesaw.table).data(data.key).destroy();
+			}
+		});
+
+		Tablesaw.Stack = Stack;
+	})();
+
+	(function () {
+		var pluginName = "tablesawbtn",
+		    methods = {
+			_create: function _create() {
+				return $(this).each(function () {
+					$(this).trigger("beforecreate." + pluginName)[pluginName]("_init").trigger("create." + pluginName);
+				});
+			},
+			_init: function _init() {
+				var oEl = $(this),
+				    sel = this.getElementsByTagName("select")[0];
+
+				if (sel) {
+					// TODO next major version: remove .btn-select
+					$(this).addClass("btn-select tablesaw-btn-select")[pluginName]("_select", sel);
+				}
+				return oEl;
+			},
+			_select: function _select(sel) {
+				var update = function update(oEl, sel) {
+					var opts = $(sel).find("option");
+					var label = document.createElement("span");
+					var el;
+					var children;
+					var found = false;
+
+					label.setAttribute("aria-hidden", "true");
+					label.innerHTML = "&#160;";
+
+					opts.each(function () {
+						var opt = this;
+						if (opt.selected) {
+							label.innerHTML = opt.text;
+						}
+					});
+
+					children = oEl.childNodes;
+					if (opts.length > 0) {
+						for (var i = 0, l = children.length; i < l; i++) {
+							el = children[i];
+
+							if (el && el.nodeName.toUpperCase() === "SPAN") {
+								oEl.replaceChild(label, el);
+								found = true;
+							}
+						}
+
+						if (!found) {
+							oEl.insertBefore(label, oEl.firstChild);
+						}
+					}
+				};
+
+				update(this, sel);
+				// todo should this be tablesawrefresh?
+				$(this).on("change refresh", function () {
+					update(this, sel);
+				});
+			}
+		};
+
+		// Collection method.
+		$.fn[pluginName] = function (arrg, a, b, c) {
+			return this.each(function () {
+				// if it's a method
+				if (arrg && typeof arrg === "string") {
+					return $.fn[pluginName].prototype[arrg].call(this, a, b, c);
+				}
+
+				// don't re-init
+				if ($(this).data(pluginName + "active")) {
+					return $(this);
+				}
+
+				$(this).data(pluginName + "active", true);
+
+				$.fn[pluginName].prototype._create.call(this);
+			});
+		};
+
+		// add methods
+		$.extend($.fn[pluginName].prototype, methods);
+
+		// TODO OOP this and add to Tablesaw object
+	})();
+
+	(function () {
+		var data = {
+			key: "tablesaw-coltoggle"
+		};
+
+		var ColumnToggle = function ColumnToggle(element) {
+			this.$table = $(element);
+
+			if (!this.$table.length) {
+				return;
+			}
+
+			this.tablesaw = this.$table.data("tablesaw");
+
+			this.attributes = {
+				btnTarget: "data-tablesaw-columntoggle-btn-target",
+				set: "data-tablesaw-columntoggle-set"
+			};
+
+			this.classes = {
+				columnToggleTable: "tablesaw-columntoggle",
+				columnBtnContain: "tablesaw-columntoggle-btnwrap tablesaw-advance",
+				columnBtn: "tablesaw-columntoggle-btn tablesaw-nav-btn down",
+				popup: "tablesaw-columntoggle-popup",
+				priorityPrefix: "tablesaw-priority-"
+			};
+
+			this.set = [];
+			this.$headers = this.tablesaw._getPrimaryHeaderCells();
+
+			this.$table.data(data.key, this);
+		};
+
+		// Column Toggle Sets (one column chooser can control multiple tables)
+		ColumnToggle.prototype.initSet = function () {
+			var set = this.$table.attr(this.attributes.set);
+			if (set) {
+				// Should not include the current table
+				var table = this.$table[0];
+				this.set = $("table[" + this.attributes.set + "='" + set + "']").filter(function () {
+					return this !== table;
+				}).get();
+			}
+		};
+
+		ColumnToggle.prototype.init = function () {
+			if (!this.$table.length) {
+				return;
+			}
+
+			var tableId,
+			    id,
+			    $menuButton,
+			    $popup,
+			    $menu,
+			    $btnContain,
+			    self = this;
+
+			var cfg = this.tablesaw.getConfig({
+				getColumnToggleLabelTemplate: function getColumnToggleLabelTemplate(text) {
+					return "<label><input type='checkbox' checked>" + text + "</label>";
+				}
+			});
+
+			this.$table.addClass(this.classes.columnToggleTable);
+
+			tableId = this.$table.attr("id");
+			id = tableId + "-popup";
+			$btnContain = $("<div class='" + this.classes.columnBtnContain + "'></div>");
+			// TODO next major version: remove .btn
+			$menuButton = $("<a href='#" + id + "' class='btn tablesaw-btn btn-micro " + this.classes.columnBtn + "' data-popup-link>" + "<span>" + Tablesaw.i18n.columnToggleButton + "</span></a>");
+			$popup = $("<div class='" + this.classes.popup + "' id='" + id + "'></div>");
+			$menu = $("<div class='btn-group'></div>");
+
+			this.$popup = $popup;
+
+			var hasNonPersistentHeaders = false;
+			this.$headers.each(function () {
+				var $this = $(this),
+				    priority = $this.attr("data-tablesaw-priority"),
+				    $cells = self.tablesaw._$getCells(this);
+
+				if (priority && priority !== "persist") {
+					$cells.addClass(self.classes.priorityPrefix + priority);
+
+					$(cfg.getColumnToggleLabelTemplate($this.text())).appendTo($menu).find('input[type="checkbox"]').data("tablesaw-header", this);
+
+					hasNonPersistentHeaders = true;
+				}
+			});
+
+			if (!hasNonPersistentHeaders) {
+				$menu.append("<label>" + Tablesaw.i18n.columnToggleError + "</label>");
+			}
+
+			$menu.appendTo($popup);
+
+			function onToggleCheckboxChange(checkbox) {
+				var checked = checkbox.checked;
+
+				var header = self.getHeaderFromCheckbox(checkbox);
+				var $cells = self.tablesaw._$getCells(header);
+
+				$cells[!checked ? "addClass" : "removeClass"]("tablesaw-toggle-cellhidden");
+				$cells[checked ? "addClass" : "removeClass"]("tablesaw-toggle-cellvisible");
+
+				self.updateColspanCells(header, checked);
+
+				self.$table.trigger("tablesawcolumns");
+			}
+
+			// bind change event listeners to inputs - TODO: move to a private method?
+			$menu.find('input[type="checkbox"]').on("change", function (e) {
+				onToggleCheckboxChange(e.target);
+
+				if (self.set.length) {
+					var index;
+					$(self.$popup).find("input[type='checkbox']").each(function (j) {
+						if (this === e.target) {
+							index = j;
+							return false;
+						}
+					});
+
+					$(self.set).each(function () {
+						var checkbox = $(this).data(data.key).$popup.find("input[type='checkbox']").get(index);
+						if (checkbox) {
+							checkbox.checked = e.target.checked;
+							onToggleCheckboxChange(checkbox);
+						}
+					});
+				}
+			});
+
+			$menuButton.appendTo($btnContain);
+
+			// Use a different target than the toolbar
+			var $btnTarget = $(this.$table.attr(this.attributes.btnTarget));
+			$btnContain.appendTo($btnTarget.length ? $btnTarget : this.tablesaw.$toolbar);
+
+			function closePopup(event) {
+				// Click came from inside the popup, ignore.
+				if (event && $(event.target).closest("." + self.classes.popup).length) {
+					return;
+				}
+
+				$(document).off("click." + tableId);
+				$menuButton.removeClass("up").addClass("down");
+				$btnContain.removeClass("visible");
+			}
+
+			var closeTimeout;
+			function openPopup() {
+				$btnContain.addClass("visible");
+				$menuButton.removeClass("down").addClass("up");
+
+				$(document).off("click." + tableId, closePopup);
+
+				window.clearTimeout(closeTimeout);
+				closeTimeout = window.setTimeout(function () {
+					$(document).on("click." + tableId, closePopup);
+				}, 15);
+			}
+
+			$menuButton.on("click.tablesaw", function (event) {
+				event.preventDefault();
+
+				if (!$btnContain.is(".visible")) {
+					openPopup();
+				} else {
+					closePopup();
+				}
+			});
+
+			$popup.appendTo($btnContain);
+
+			this.$menu = $menu;
+
+			// Fix for iOS not rendering shadows correctly when using `-webkit-overflow-scrolling`
+			var $overflow = this.$table.closest(".tablesaw-overflow");
+			if ($overflow.css("-webkit-overflow-scrolling")) {
+				var timeout;
+				$overflow.on("scroll", function () {
+					var $div = $(this);
+					window.clearTimeout(timeout);
+					timeout = window.setTimeout(function () {
+						$div.css("-webkit-overflow-scrolling", "auto");
+						window.setTimeout(function () {
+							$div.css("-webkit-overflow-scrolling", "touch");
+						}, 0);
+					}, 100);
+				});
+			}
+
+			$(window).on(Tablesaw.events.resize + "." + tableId, function () {
+				self.refreshToggle();
+			});
+
+			this.initSet();
+			this.refreshToggle();
+		};
+
+		ColumnToggle.prototype.getHeaderFromCheckbox = function (checkbox) {
+			return $(checkbox).data("tablesaw-header");
+		};
+
+		ColumnToggle.prototype.refreshToggle = function () {
+			var self = this;
+			var invisibleColumns = 0;
+			this.$menu.find("input").each(function () {
+				var header = self.getHeaderFromCheckbox(this);
+				this.checked = self.tablesaw._$getCells(header).eq(0).css("display") === "table-cell";
+			});
+
+			this.updateColspanCells();
+		};
+
+		ColumnToggle.prototype.updateColspanCells = function (header, userAction) {
+			this.tablesaw.updateColspanCells("tablesaw-toggle-cellhidden", header, userAction);
+		};
+
+		ColumnToggle.prototype.destroy = function () {
+			this.$table.removeClass(this.classes.columnToggleTable);
+			this.$table.find("th, td").each(function () {
+				var $cell = $(this);
+				$cell.removeClass("tablesaw-toggle-cellhidden").removeClass("tablesaw-toggle-cellvisible");
+
+				this.className = this.className.replace(/\bui\-table\-priority\-\d\b/g, "");
+			});
+		};
+
+		// on tablecreate, init
+		$(document).on(Tablesaw.events.create, function (e, tablesaw) {
+			if (tablesaw.mode === "columntoggle") {
+				var table = new ColumnToggle(tablesaw.table);
+				table.init();
+			}
+		});
+
+		$(document).on(Tablesaw.events.destroy, function (e, tablesaw) {
+			if (tablesaw.mode === "columntoggle") {
+				$(tablesaw.table).data(data.key).destroy();
+			}
+		});
+
+		$(document).on(Tablesaw.events.refresh, function (e, tablesaw) {
+			if (tablesaw.mode === "columntoggle") {
+				$(tablesaw.table).data(data.key).refreshPriority();
+			}
+		});
+
+		Tablesaw.ColumnToggle = ColumnToggle;
+	})();
+
+	(function () {
+		function getSortValue(cell) {
+			var text = [];
+			$(cell.childNodes).each(function () {
+				var $el = $(this);
+				if ($el.is("input, select")) {
+					text.push($el.val());
+				} else if ($el.is(".tablesaw-cell-label")) {} else {
+					text.push(($el.text() || "").replace(/^\s+|\s+$/g, ""));
+				}
+			});
+
+			return text.join("");
+		}
+
+		var pluginName = "tablesaw-sortable",
+		    initSelector = "table[data-" + pluginName + "]",
+		    sortableSwitchSelector = "[data-" + pluginName + "-switch]",
+		    attrs = {
+			sortCol: "data-tablesaw-sortable-col",
+			defaultCol: "data-tablesaw-sortable-default-col",
+			numericCol: "data-tablesaw-sortable-numeric",
+			subRow: "data-tablesaw-subrow",
+			ignoreRow: "data-tablesaw-ignorerow"
+		},
+		    classes = {
+			head: pluginName + "-head",
+			ascend: pluginName + "-ascending",
+			descend: pluginName + "-descending",
+			switcher: pluginName + "-switch",
+			tableToolbar: "tablesaw-bar-section",
+			sortButton: pluginName + "-btn"
+		},
+		    methods = {
+			_create: function _create(o) {
+				return $(this).each(function () {
+					var init = $(this).data(pluginName + "-init");
+					if (init) {
+						return false;
+					}
+					$(this).data(pluginName + "-init", true).trigger("beforecreate." + pluginName)[pluginName]("_init", o).trigger("create." + pluginName);
+				});
+			},
+			_init: function _init() {
+				var el = $(this);
+				var tblsaw = el.data("tablesaw");
+				var heads;
+				var $switcher;
+
+				function addClassToHeads(h) {
+					$.each(h, function (i, v) {
+						$(v).addClass(classes.head);
+					});
+				}
+
+				function makeHeadsActionable(h, fn) {
+					$.each(h, function (i, col) {
+						var b = $("<button class='" + classes.sortButton + "'/>");
+						b.on("click", { col: col }, fn);
+						$(col).wrapInner(b).find("button").append("<span class='tablesaw-sortable-arrow'>");
+					});
+				}
+
+				function clearOthers(headcells) {
+					$.each(headcells, function (i, v) {
+						var col = $(v);
+						col.removeAttr(attrs.defaultCol);
+						col.removeClass(classes.ascend);
+						col.removeClass(classes.descend);
+					});
+				}
+
+				function headsOnAction(e) {
+					if ($(e.target).is("a[href]")) {
+						return;
+					}
+
+					e.stopPropagation();
+					var headCell = $(e.target).closest("[" + attrs.sortCol + "]"),
+					    v = e.data.col,
+					    newSortValue = heads.index(headCell[0]);
+
+					clearOthers(headCell.closest("thead").find("th").filter(function () {
+						return this !== headCell[0];
+					}));
+					if (headCell.is("." + classes.descend) || !headCell.is("." + classes.ascend)) {
+						el[pluginName]("sortBy", v, true);
+						newSortValue += "_asc";
+					} else {
+						el[pluginName]("sortBy", v);
+						newSortValue += "_desc";
+					}
+					if ($switcher) {
+						$switcher.find("select").val(newSortValue).trigger("refresh");
+					}
+
+					e.preventDefault();
+				}
+
+				function handleDefault(heads) {
+					$.each(heads, function (idx, el) {
+						var $el = $(el);
+						if ($el.is("[" + attrs.defaultCol + "]")) {
+							if (!$el.is("." + classes.descend)) {
+								$el.addClass(classes.ascend);
+							}
+						}
+					});
+				}
+
+				function addSwitcher(heads) {
+					$switcher = $("<div>").addClass(classes.switcher).addClass(classes.tableToolbar);
+
+					var html = ["<label>" + Tablesaw.i18n.sort + ":"];
+
+					// TODO next major version: remove .btn
+					html.push('<span class="btn tablesaw-btn"><select>');
+					heads.each(function (j) {
+						var $t = $(this);
+						var isDefaultCol = $t.is("[" + attrs.defaultCol + "]");
+						var isDescending = $t.is("." + classes.descend);
+
+						var hasNumericAttribute = $t.is("[" + attrs.numericCol + "]");
+						var numericCount = 0;
+						// Check only the first four rows to see if the column is numbers.
+						var numericCountMax = 5;
+
+						$(this.cells.slice(0, numericCountMax)).each(function () {
+							if (!isNaN(parseInt(getSortValue(this), 10))) {
+								numericCount++;
+							}
+						});
+						var isNumeric = numericCount === numericCountMax;
+						if (!hasNumericAttribute) {
+							$t.attr(attrs.numericCol, isNumeric ? "" : "false");
+						}
+
+						html.push("<option" + (isDefaultCol && !isDescending ? " selected" : "") + ' value="' + j + '_asc">' + $t.text() + " " + (isNumeric ? "&#x2191;" : "(A-Z)") + "</option>");
+						html.push("<option" + (isDefaultCol && isDescending ? " selected" : "") + ' value="' + j + '_desc">' + $t.text() + " " + (isNumeric ? "&#x2193;" : "(Z-A)") + "</option>");
+					});
+					html.push("</select></span></label>");
+
+					$switcher.html(html.join(""));
+
+					var $firstChild = tblsaw.$toolbar.children().eq(0);
+					if ($firstChild.length) {
+						$switcher.insertBefore($firstChild);
+					} else {
+						$switcher.appendTo(tblsaw.$toolbar);
+					}
+					$switcher.find(".tablesaw-btn").tablesawbtn();
+					$switcher.find("select").on("change", function () {
+						var val = $(this).val().split("_"),
+						    head = heads.eq(val[0]);
+
+						clearOthers(head.siblings());
+						el[pluginName]("sortBy", head.get(0), val[1] === "asc");
+					});
+				}
+
+				el.addClass(pluginName);
+
+				heads = el.children().filter("thead").find("th[" + attrs.sortCol + "]");
+
+				addClassToHeads(heads);
+				makeHeadsActionable(heads, headsOnAction);
+				handleDefault(heads);
+
+				if (el.is(sortableSwitchSelector)) {
+					addSwitcher(heads);
+				}
+			},
+			sortRows: function sortRows(rows, colNum, ascending, col, tbody) {
+				function convertCells(cellArr, belongingToTbody) {
+					var cells = [];
+					$.each(cellArr, function (i, cell) {
+						var row = cell.parentNode;
+						var $row = $(row);
+						// next row is a subrow
+						var subrows = [];
+						var $next = $row.next();
+						while ($next.is("[" + attrs.subRow + "]")) {
+							subrows.push($next[0]);
+							$next = $next.next();
+						}
+
+						var tbody = row.parentNode;
+
+						// current row is a subrow
+						if ($row.is("[" + attrs.subRow + "]")) {} else if (tbody === belongingToTbody) {
+							cells.push({
+								element: cell,
+								cell: getSortValue(cell),
+								row: row,
+								subrows: subrows.length ? subrows : null,
+								ignored: $row.is("[" + attrs.ignoreRow + "]")
+							});
+						}
+					});
+					return cells;
+				}
+
+				function getSortFxn(ascending, forceNumeric) {
+					var fn,
+					    regex = /[^\-\+\d\.]/g;
+					if (ascending) {
+						fn = function fn(a, b) {
+							if (a.ignored || b.ignored) {
+								return 0;
+							}
+							if (forceNumeric) {
+								return parseFloat(a.cell.replace(regex, "")) - parseFloat(b.cell.replace(regex, ""));
+							} else {
+								return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
+							}
+						};
+					} else {
+						fn = function fn(a, b) {
+							if (a.ignored || b.ignored) {
+								return 0;
+							}
+							if (forceNumeric) {
+								return parseFloat(b.cell.replace(regex, "")) - parseFloat(a.cell.replace(regex, ""));
+							} else {
+								return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
+							}
+						};
+					}
+					return fn;
+				}
+
+				function convertToRows(sorted) {
+					var newRows = [],
+					    i,
+					    l;
+					for (i = 0, l = sorted.length; i < l; i++) {
+						newRows.push(sorted[i].row);
+						if (sorted[i].subrows) {
+							newRows.push(sorted[i].subrows);
+						}
+					}
+					return newRows;
+				}
+
+				var fn;
+				var sorted;
+				var cells = convertCells(col.cells, tbody);
+
+				var customFn = $(col).data("tablesaw-sort");
+
+				fn = (customFn && typeof customFn === "function" ? customFn(ascending) : false) || getSortFxn(ascending, $(col).is("[" + attrs.numericCol + "]") && !$(col).is("[" + attrs.numericCol + '="false"]'));
+
+				sorted = cells.sort(fn);
+
+				rows = convertToRows(sorted);
+
+				return rows;
+			},
+			makeColDefault: function makeColDefault(col, a) {
+				var c = $(col);
+				c.attr(attrs.defaultCol, "true");
+				if (a) {
+					c.removeClass(classes.descend);
+					c.addClass(classes.ascend);
+				} else {
+					c.removeClass(classes.ascend);
+					c.addClass(classes.descend);
+				}
+			},
+			sortBy: function sortBy(col, ascending) {
+				var el = $(this);
+				var colNum;
+				var tbl = el.data("tablesaw");
+				tbl.$tbody.each(function () {
+					var tbody = this;
+					var $tbody = $(this);
+					var rows = tbl.getBodyRows(tbody);
+					var sortedRows;
+					var map = tbl.headerMapping[0];
+					var j, k;
+
+					// find the column number that we’re sorting
+					for (j = 0, k = map.length; j < k; j++) {
+						if (map[j] === col) {
+							colNum = j;
+							break;
+						}
+					}
+
+					sortedRows = el[pluginName]("sortRows", rows, colNum, ascending, col, tbody);
+
+					// replace Table rows
+					for (j = 0, k = sortedRows.length; j < k; j++) {
+						$tbody.append(sortedRows[j]);
+					}
+				});
+
+				el[pluginName]("makeColDefault", col, ascending);
+
+				el.trigger("tablesaw-sorted");
+			}
+		};
+
+		// Collection method.
+		$.fn[pluginName] = function (arrg) {
+			var args = Array.prototype.slice.call(arguments, 1),
+			    returnVal;
+
+			// if it's a method
+			if (arrg && typeof arrg === "string") {
+				returnVal = $.fn[pluginName].prototype[arrg].apply(this[0], args);
+				return typeof returnVal !== "undefined" ? returnVal : $(this);
+			}
+			// check init
+			if (!$(this).data(pluginName + "-active")) {
+				$(this).data(pluginName + "-active", true);
+				$.fn[pluginName].prototype._create.call(this, arrg);
+			}
+			return $(this);
+		};
+		// add methods
+		$.extend($.fn[pluginName].prototype, methods);
+
+		$(document).on(Tablesaw.events.create, function (e, Tablesaw) {
+			if (Tablesaw.$table.is(initSelector)) {
+				Tablesaw.$table[pluginName]();
+			}
+		});
+
+		// TODO OOP this and add to Tablesaw object
+	})();
+
+	(function () {
+		var classes = {
+			hideBtn: "disabled",
+			persistWidths: "tablesaw-fix-persist",
+			hiddenCol: "tablesaw-swipe-cellhidden",
+			persistCol: "tablesaw-swipe-cellpersist",
+			allColumnsVisible: "tablesaw-all-cols-visible"
+		};
+		var attrs = {
+			disableTouchEvents: "data-tablesaw-no-touch",
+			ignorerow: "data-tablesaw-ignorerow",
+			subrow: "data-tablesaw-subrow"
+		};
+
+		function createSwipeTable(tbl, $table) {
+			var tblsaw = $table.data("tablesaw");
+
+			var $btns = $("<div class='tablesaw-advance'></div>");
+			// TODO next major version: remove .btn
+			var $prevBtn = $("<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro left'>" + Tablesaw.i18n.swipePreviousColumn + "</a>").appendTo($btns);
+			// TODO next major version: remove .btn
+			var $nextBtn = $("<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro right'>" + Tablesaw.i18n.swipeNextColumn + "</a>").appendTo($btns);
+
+			var $headerCells = tbl._getPrimaryHeaderCells();
+			var $headerCellsNoPersist = $headerCells.not('[data-tablesaw-priority="persist"]');
+			var headerWidths = [];
+			var $head = $(document.head || "head");
+			var tableId = $table.attr("id");
+
+			if (!$headerCells.length) {
+				throw new Error("tablesaw swipe: no header cells found.");
+			}
+
+			$table.addClass("tablesaw-swipe");
+
+			function initMinHeaderWidths() {
+				$table.css({
+					width: "1px"
+				});
+
+				// remove any hidden columns
+				$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
+
+				headerWidths = [];
+				// Calculate initial widths
+				$headerCells.each(function () {
+					headerWidths.push(this.offsetWidth);
+				});
+
+				// reset props
+				$table.css({
+					width: ""
+				});
+			}
+
+			initMinHeaderWidths();
+
+			$btns.appendTo(tblsaw.$toolbar);
+
+			if (!tableId) {
+				tableId = "tableswipe-" + Math.round(Math.random() * 10000);
+				$table.attr("id", tableId);
+			}
+
+			function showColumn(headerCell) {
+				tblsaw._$getCells(headerCell).removeClass(classes.hiddenCol);
+			}
+
+			function hideColumn(headerCell) {
+				tblsaw._$getCells(headerCell).addClass(classes.hiddenCol);
+			}
+
+			function persistColumn(headerCell) {
+				tblsaw._$getCells(headerCell).addClass(classes.persistCol);
+			}
+
+			function isPersistent(headerCell) {
+				return $(headerCell).is('[data-tablesaw-priority="persist"]');
+			}
+
+			function unmaintainWidths() {
+				$table.removeClass(classes.persistWidths);
+				$("#" + tableId + "-persist").remove();
+			}
+
+			function maintainWidths() {
+				var prefix = "#" + tableId + ".tablesaw-swipe ",
+				    styles = [],
+				    tableWidth = $table.width(),
+				    hash = [],
+				    newHash;
+
+				// save persistent column widths (as long as they take up less than 75% of table width)
+				$headerCells.each(function (index) {
+					var width;
+					if (isPersistent(this)) {
+						width = this.offsetWidth;
+
+						if (width < tableWidth * 0.75) {
+							hash.push(index + "-" + width);
+							styles.push(prefix + " ." + classes.persistCol + ":nth-child(" + (index + 1) + ") { width: " + width + "px; }");
+						}
+					}
+				});
+				newHash = hash.join("_");
+
+				if (styles.length) {
+					$table.addClass(classes.persistWidths);
+					var $style = $("#" + tableId + "-persist");
+					// If style element not yet added OR if the widths have changed
+					if (!$style.length || $style.data("tablesaw-hash") !== newHash) {
+						// Remove existing
+						$style.remove();
+
+						$("<style>" + styles.join("\n") + "</style>").attr("id", tableId + "-persist").data("tablesaw-hash", newHash).appendTo($head);
+					}
+				}
+			}
+
+			function getNext() {
+				var next = [],
+				    checkFound;
+
+				$headerCellsNoPersist.each(function (i) {
+					var $t = $(this),
+					    isHidden = $t.css("display") === "none" || $t.is("." + classes.hiddenCol);
+
+					if (!isHidden && !checkFound) {
+						checkFound = true;
+						next[0] = i;
+					} else if (isHidden && checkFound) {
+						next[1] = i;
+
+						return false;
+					}
+				});
+
+				return next;
+			}
+
+			function getPrev() {
+				var next = getNext();
+				return [next[1] - 1, next[0] - 1];
+			}
+
+			function nextpair(fwd) {
+				return fwd ? getNext() : getPrev();
+			}
+
+			function canAdvance(pair) {
+				return pair[1] > -1 && pair[1] < $headerCellsNoPersist.length;
+			}
+
+			function matchesMedia() {
+				var matchMedia = $table.attr("data-tablesaw-swipe-media");
+				return !matchMedia || "matchMedia" in window && window.matchMedia(matchMedia).matches;
+			}
+
+			function fakeBreakpoints() {
+				if (!matchesMedia()) {
+					return;
+				}
+
+				var containerWidth = $table.parent().width(),
+				    persist = [],
+				    sum = 0,
+				    sums = [],
+				    visibleNonPersistantCount = $headerCells.length;
+
+				$headerCells.each(function (index) {
+					var $t = $(this),
+					    isPersist = $t.is('[data-tablesaw-priority="persist"]');
+
+					persist.push(isPersist);
+					sum += headerWidths[index];
+					sums.push(sum);
+
+					// is persistent or is hidden
+					if (isPersist || sum > containerWidth) {
+						visibleNonPersistantCount--;
+					}
+				});
+
+				// We need at least one column to swipe.
+				var needsNonPersistentColumn = visibleNonPersistantCount === 0;
+
+				$headerCells.each(function (index) {
+					if (sums[index] > containerWidth) {
+						hideColumn(this);
+					}
+				});
+
+				$headerCells.each(function (index) {
+					if (persist[index]) {
+						// for visual box-shadow
+						persistColumn(this);
+						return;
+					}
+
+					if (sums[index] <= containerWidth || needsNonPersistentColumn) {
+						needsNonPersistentColumn = false;
+						showColumn(this);
+						tblsaw.updateColspanCells(classes.hiddenCol, this, true);
+					}
+				});
+
+				unmaintainWidths();
+
+				$table.trigger("tablesawcolumns");
+			}
+
+			function advance(fwd) {
+				var pair = nextpair(fwd);
+				if (canAdvance(pair)) {
+					if (isNaN(pair[0])) {
+						if (fwd) {
+							pair[0] = 0;
+						} else {
+							pair[0] = $headerCellsNoPersist.length - 1;
+						}
+					}
+
+					// TODO just blindly hiding the previous column and showing the next column can result in
+					// column content overflow
+					maintainWidths();
+					hideColumn($headerCellsNoPersist.get(pair[0]));
+					tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
+
+					showColumn($headerCellsNoPersist.get(pair[1]));
+					tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[1]), true);
+
+					$table.trigger("tablesawcolumns");
+				}
+			}
+
+			$prevBtn.add($nextBtn).on("click", function (e) {
+				advance(!!$(e.target).closest($nextBtn).length);
+				e.preventDefault();
+			});
+
+			function getCoord(event, key) {
+				return (event.touches || event.originalEvent.touches)[0][key];
+			}
+
+			if (!$table.is("[" + attrs.disableTouchEvents + "]")) {
+				$table.on("touchstart.swipetoggle", function (e) {
+					var originX = getCoord(e, "pageX");
+					var originY = getCoord(e, "pageY");
+					var x;
+					var y;
+					var scrollTop = window.pageYOffset;
+
+					$(window).off(Tablesaw.events.resize, fakeBreakpoints);
+
+					$(this).on("touchmove.swipetoggle", function (e) {
+						x = getCoord(e, "pageX");
+						y = getCoord(e, "pageY");
+					}).on("touchend.swipetoggle", function () {
+						var cfg = tbl.getConfig({
+							swipeHorizontalThreshold: 30,
+							swipeVerticalThreshold: 30
+						});
+
+						// This config code is a little awkward because shoestring doesn’t support deep $.extend
+						// Trying to work around when devs only override one of (not both) horizontalThreshold or
+						// verticalThreshold in their TablesawConfig.
+						// @TODO major version bump: remove cfg.swipe, move to just use the swipePrefix keys
+						var verticalThreshold = cfg.swipe ? cfg.swipe.verticalThreshold : cfg.swipeVerticalThreshold;
+						var horizontalThreshold = cfg.swipe ? cfg.swipe.horizontalThreshold : cfg.swipeHorizontalThreshold;
+
+						var isPageScrolled = Math.abs(window.pageYOffset - scrollTop) >= verticalThreshold;
+						var isVerticalSwipe = Math.abs(y - originY) >= verticalThreshold;
+
+						if (!isVerticalSwipe && !isPageScrolled) {
+							if (x - originX < -1 * horizontalThreshold) {
+								advance(true);
+							}
+							if (x - originX > horizontalThreshold) {
+								advance(false);
+							}
+						}
+
+						window.setTimeout(function () {
+							$(window).on(Tablesaw.events.resize, fakeBreakpoints);
+						}, 300);
+
+						$(this).off("touchmove.swipetoggle touchend.swipetoggle");
+					});
+				});
+			}
+
+			$table.on("tablesawcolumns.swipetoggle", function () {
+				var canGoPrev = canAdvance(getPrev());
+				var canGoNext = canAdvance(getNext());
+				$prevBtn[canGoPrev ? "removeClass" : "addClass"](classes.hideBtn);
+				$nextBtn[canGoNext ? "removeClass" : "addClass"](classes.hideBtn);
+
+				tblsaw.$toolbar[!canGoPrev && !canGoNext ? "addClass" : "removeClass"](classes.allColumnsVisible);
+			}).on("tablesawnext.swipetoggle", function () {
+				advance(true);
+			}).on("tablesawprev.swipetoggle", function () {
+				advance(false);
+			}).on(Tablesaw.events.destroy + ".swipetoggle", function () {
+				var $t = $(this);
+
+				$t.removeClass("tablesaw-swipe");
+				tblsaw.$toolbar.find(".tablesaw-advance").remove();
+				$(window).off(Tablesaw.events.resize, fakeBreakpoints);
+
+				$t.off(".swipetoggle");
+			}).on(Tablesaw.events.refresh, function () {
+				unmaintainWidths();
+				initMinHeaderWidths();
+				fakeBreakpoints();
+			});
+
+			fakeBreakpoints();
+			$(window).on(Tablesaw.events.resize, fakeBreakpoints);
+		}
+
+		// on tablecreate, init
+		$(document).on(Tablesaw.events.create, function (e, tablesaw) {
+			if (tablesaw.mode === "swipe") {
+				createSwipeTable(tablesaw, tablesaw.$table);
+			}
+		});
+
+		// TODO OOP this and add to Tablesaw object
+	})();
+
+	(function () {
+		var MiniMap = {
+			attr: {
+				init: "data-tablesaw-minimap"
+			},
+			show: function show(table) {
+				var mq = table.getAttribute(MiniMap.attr.init);
+
+				if (mq === "") {
+					// value-less but exists
+					return true;
+				} else if (mq && "matchMedia" in window) {
+					// has a mq value
+					return window.matchMedia(mq).matches;
+				}
+
+				return false;
+			}
+		};
+
+		function createMiniMap($table) {
+			var tblsaw = $table.data("tablesaw");
+			var $btns = $('<div class="tablesaw-advance minimap">');
+			var $dotNav = $('<ul class="tablesaw-advance-dots">').appendTo($btns);
+			var hideDot = "tablesaw-advance-dots-hide";
+			var $headerCells = $table.data("tablesaw")._getPrimaryHeaderCells();
+
+			// populate dots
+			$headerCells.each(function () {
+				$dotNav.append("<li><i></i></li>");
+			});
+
+			$btns.appendTo(tblsaw.$toolbar);
+
+			function showHideNav() {
+				if (!MiniMap.show($table[0])) {
+					$btns.css("display", "none");
+					return;
+				}
+				$btns.css("display", "block");
+
+				// show/hide dots
+				var dots = $dotNav.find("li").removeClass(hideDot);
+				$table.find("thead th").each(function (i) {
+					if ($(this).css("display") === "none") {
+						dots.eq(i).addClass(hideDot);
+					}
+				});
+			}
+
+			// run on init and resize
+			showHideNav();
+			$(window).on(Tablesaw.events.resize, showHideNav);
+
+			$table.on("tablesawcolumns.minimap", function () {
+				showHideNav();
+			}).on(Tablesaw.events.destroy + ".minimap", function () {
+				var $t = $(this);
+
+				tblsaw.$toolbar.find(".tablesaw-advance").remove();
+				$(window).off(Tablesaw.events.resize, showHideNav);
+
+				$t.off(".minimap");
+			});
+		}
+
+		// on tablecreate, init
+		$(document).on(Tablesaw.events.create, function (e, tablesaw) {
+			if ((tablesaw.mode === "swipe" || tablesaw.mode === "columntoggle") && tablesaw.$table.is("[ " + MiniMap.attr.init + "]")) {
+				createMiniMap(tablesaw.$table);
+			}
+		});
+
+		// TODO OOP this better
+		Tablesaw.MiniMap = MiniMap;
+	})();
+
+	(function () {
+		var S = {
+			selectors: {
+				init: "table[data-tablesaw-mode-switch]"
+			},
+			attributes: {
+				excludeMode: "data-tablesaw-mode-exclude"
+			},
+			classes: {
+				main: "tablesaw-modeswitch",
+				toolbar: "tablesaw-bar-section"
+			},
+			modes: ["stack", "swipe", "columntoggle"],
+			init: function init(table) {
+				var $table = $(table);
+				var tblsaw = $table.data("tablesaw");
+				var ignoreMode = $table.attr(S.attributes.excludeMode);
+				var $toolbar = tblsaw.$toolbar;
+				var $switcher = $("<div>").addClass(S.classes.main + " " + S.classes.toolbar);
+
+				var html = ['<label><span class="abbreviated">' + Tablesaw.i18n.modeSwitchColumnsAbbreviated + '</span><span class="longform">' + Tablesaw.i18n.modeSwitchColumns + "</span>:"],
+				    dataMode = $table.attr("data-tablesaw-mode"),
+				    isSelected;
+
+				// TODO next major version: remove .btn
+				html.push('<span class="btn tablesaw-btn"><select>');
+				for (var j = 0, k = S.modes.length; j < k; j++) {
+					if (ignoreMode && ignoreMode.toLowerCase() === S.modes[j]) {
+						continue;
+					}
+
+					isSelected = dataMode === S.modes[j];
+
+					html.push("<option" + (isSelected ? " selected" : "") + ' value="' + S.modes[j] + '">' + Tablesaw.i18n.modes[j] + "</option>");
+				}
+				html.push("</select></span></label>");
+
+				$switcher.html(html.join(""));
+
+				var $otherToolbarItems = $toolbar.find(".tablesaw-advance").eq(0);
+				if ($otherToolbarItems.length) {
+					$switcher.insertBefore($otherToolbarItems);
+				} else {
+					$switcher.appendTo($toolbar);
+				}
+
+				$switcher.find(".tablesaw-btn").tablesawbtn();
+				$switcher.find("select").on("change", function (event) {
+					return S.onModeChange.call(table, event, $(this).val());
+				});
+			},
+			onModeChange: function onModeChange(event, val) {
+				var $table = $(this);
+				var tblsaw = $table.data("tablesaw");
+				var $switcher = tblsaw.$toolbar.find("." + S.classes.main);
+
+				$switcher.remove();
+				tblsaw.destroy();
+
+				$table.attr("data-tablesaw-mode", val);
+				$table.tablesaw();
+			}
+		};
+
+		$(document).on(Tablesaw.events.create, function (e, Tablesaw) {
+			if (Tablesaw.$table.is(S.selectors.init)) {
+				S.init(Tablesaw.table);
+			}
+		});
+
+		// TODO OOP this and add to Tablesaw object
+	})();
+
+	(function () {
+		var pluginName = "tablesawCheckAll";
+
+		function CheckAll(tablesaw) {
+			this.tablesaw = tablesaw;
+			this.$table = tablesaw.$table;
+
+			this.attr = "data-tablesaw-checkall";
+			this.checkAllSelector = "[" + this.attr + "]";
+			this.forceCheckedSelector = "[" + this.attr + "-checked]";
+			this.forceUncheckedSelector = "[" + this.attr + "-unchecked]";
+			this.checkboxSelector = 'input[type="checkbox"]';
+
+			this.$triggers = null;
+			this.$checkboxes = null;
+
+			if (this.$table.data(pluginName)) {
+				return;
+			}
+			this.$table.data(pluginName, this);
+			this.init();
+		}
+
+		CheckAll.prototype._filterCells = function ($checkboxes) {
+			return $checkboxes.filter(function () {
+				return !$(this).closest("tr").is("[data-tablesaw-subrow],[data-tablesaw-ignorerow]");
+			}).find(this.checkboxSelector).not(this.checkAllSelector);
+		};
+
+		// With buttons you can use a scoping selector like: data-tablesaw-checkall="#my-scoped-id input[type='checkbox']"
+		CheckAll.prototype.getCheckboxesForButton = function (button) {
+			return this._filterCells($($(button).attr(this.attr)));
+		};
+
+		CheckAll.prototype.getCheckboxesForCheckbox = function (checkbox) {
+			return this._filterCells($($(checkbox).closest("th")[0].cells));
+		};
+
+		CheckAll.prototype.init = function () {
+			var self = this;
+			this.$table.find(this.checkAllSelector).each(function () {
+				var $trigger = $(this);
+				if ($trigger.is(self.checkboxSelector)) {
+					self.addCheckboxEvents(this);
+				} else {
+					self.addButtonEvents(this);
+				}
+			});
+		};
+
+		CheckAll.prototype.addButtonEvents = function (trigger) {
+			var self = this;
+
+			// Update body checkboxes when header checkbox is changed
+			$(trigger).on("click", function (event) {
+				event.preventDefault();
+
+				var $checkboxes = self.getCheckboxesForButton(this);
+
+				var allChecked = true;
+				$checkboxes.each(function () {
+					if (!this.checked) {
+						allChecked = false;
+					}
+				});
+
+				var setChecked;
+				if ($(this).is(self.forceCheckedSelector)) {
+					setChecked = true;
+				} else if ($(this).is(self.forceUncheckedSelector)) {
+					setChecked = false;
+				} else {
+					setChecked = allChecked ? false : true;
+				}
+
+				$checkboxes.each(function () {
+					this.checked = setChecked;
+
+					$(this).trigger("change." + pluginName);
+				});
+			});
+		};
+
+		CheckAll.prototype.addCheckboxEvents = function (trigger) {
+			var self = this;
+
+			// Update body checkboxes when header checkbox is changed
+			$(trigger).on("change", function () {
+				var setChecked = this.checked;
+
+				self.getCheckboxesForCheckbox(this).each(function () {
+					this.checked = setChecked;
+				});
+			});
+
+			var $checkboxes = self.getCheckboxesForCheckbox(trigger);
+
+			// Update header checkbox when body checkboxes are changed
+			$checkboxes.on("change." + pluginName, function () {
+				var checkedCount = 0;
+				$checkboxes.each(function () {
+					if (this.checked) {
+						checkedCount++;
+					}
+				});
+
+				var allSelected = checkedCount === $checkboxes.length;
+
+				trigger.checked = allSelected;
+
+				// only indeterminate if some are selected (not all and not none)
+				trigger.indeterminate = checkedCount !== 0 && !allSelected;
+			});
+		};
+
+		// on tablecreate, init
+		$(document).on(Tablesaw.events.create, function (e, tablesaw) {
+			new CheckAll(tablesaw);
+		});
+
+		Tablesaw.CheckAll = CheckAll;
+	})();
+
+	return Tablesaw;
+});
+
+/***/ }),
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22407,10 +27697,40 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	);
 });
 ;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)(module)))
 
 /***/ }),
-/* 39 */
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _aos = __webpack_require__(21);
+
+var _aos2 = _interopRequireDefault(_aos);
+
+var _svgInjector = __webpack_require__(40);
+
+var _svgInjector2 = _interopRequireDefault(_svgInjector);
+
+var _slickCarousel = __webpack_require__(39);
+
+var _slickCarousel2 = _interopRequireDefault(_slickCarousel);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var deps = {
+  AOS: _aos2.default,
+  svgInjector: _svgInjector2.default,
+  slickCarousel: _slickCarousel2.default
+}; // custom dependencies
+
+
+module.exports = deps;
+
+/***/ }),
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(20);
@@ -22418,526 +27738,3 @@ module.exports = __webpack_require__(20);
 
 /***/ })
 /******/ ]);
-
-// end of app js //
-//start of icons js //
-
-(function() {
-	"use strict";
-		//console.log("Social Media Icons");
-
-		var iconSet = document.querySelectorAll(".socialIcons");
-
-
-
-		function logClicked (e) {
-			if (e.currentTarget.id === "facebook") {
-				window.open('https://www.facebook.com/markedwardlanderyou',"_blank");
-			}else if (e.currentTarget.id === "twitter") {
-				window.open('https://twitter.com/samurai71',"_blank");
-			}else if (e.currentTarget.id === "linkedin") {
-				window.open('https://www.linkedin.com/in/marklanderyou',"_blank");
-			}else if (e.currentTarget.id === "behance") {
-				window.open('https://www.behance.net/marklanderyou',"_blank");
-			}
-		}
-
-		function logLoaded(e) {
-			//console.log("svg loaded");
-			var targetSVG = e.currentTarget.contentDocument;
-			//console.log(targetSVG);
-			var socialIcon = targetSVG.querySelector(".mainIcon");
-			//console.log(socialIcon.id);
-			socialIcon.addEventListener("click", logClicked, false);
-		}
-
-		for(var i=0; i<iconSet.length; i++) {
-			iconSet[i].addEventListener("load", logLoaded, false);
-		}
-
-})();
-
-// end of icons js //
-
-// start of google js //
-(function() {
-	"use strict";
-		//console.log("Google Analytics - It Works");
-
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-83358975-1', 'auto');
-  ga('send', 'pageview');
-
-
-})();
-
-// end of google js //
-// start of slicknav //
-
-/*!
-    SlickNav Responsive Mobile Menu v1.0.1
-    (c) 2014 Josh Cope
-    licensed under MIT
-*/
-;(function ($, document, window) {
-    var
-    // default settings object.
-        defaults = {
-            label: '',
-            duplicate: true,
-            duration: 200,
-            easingOpen: 'swing',
-            easingClose: 'swing',
-            closedSymbol: '&#9658;',
-            openedSymbol: '&#9660;',
-            prependTo: '#mobileNav',
-            parentTag: 'a',
-            closeOnClick: false,
-            allowParentLinks: false,
-            nestedParentLinks: true,
-            showChildren: false,
-            init: function () {},
-            open: function () {},
-            close: function () {}
-        },
-        mobileMenu = 'slicknav',
-        prefix = 'slicknav';
-
-    function Plugin(element, options) {
-        this.element = element;
-
-        // jQuery has an extend method which merges the contents of two or
-        // more objects, storing the result in the first object. The first object
-        // is generally empty as we don't want to alter the default options for
-        // future instances of the plugin
-        this.settings = $.extend({}, defaults, options);
-
-        this._defaults = defaults;
-        this._name = mobileMenu;
-
-        this.init();
-    }
-
-    Plugin.prototype.init = function () {
-        var $this = this,
-            menu = $(this.element),
-            settings = this.settings,
-            iconClass,
-            menuBar;
-
-        // clone menu if needed
-        if (settings.duplicate) {
-            $this.mobileNav = menu.clone();
-            //remove ids from clone to prevent css issues
-            $this.mobileNav.removeAttr('id');
-            $this.mobileNav.find('*').each(function (i, e) {
-                $(e).removeAttr('id');
-            });
-        } else {
-            $this.mobileNav = menu;
-        }
-
-        // styling class for the button
-        iconClass = prefix + '_icon';
-
-        if (settings.label === '') {
-            iconClass += ' ' + prefix + '_no-text';
-        }
-
-        if (settings.parentTag == 'a') {
-            settings.parentTag = 'a href="#"';
-        }
-
-        // create menu bar
-        $this.mobileNav.attr('class', prefix + '_nav');
-        menuBar = $('<div class="' + prefix + '_menu"></div>');
-        $this.btn = $(
-            ['<' + settings.parentTag + ' aria-haspopup="true" tabindex="0" class="' + prefix + '_btn ' + prefix + '_collapsed">',
-                '<span class="' + prefix + '_menutxt">' + settings.label + '</span>',
-                '<span class="' + iconClass + '">',
-                    '<span class="' + prefix + '_icon-bar"></span>',
-                    '<span class="' + prefix + '_icon-bar"></span>',
-                    '<span class="' + prefix + '_icon-bar"></span>',
-                '</span>',
-            '</' + settings.parentTag + '>'
-            ].join('')
-        );
-        $(menuBar).append($this.btn);
-        $(settings.prependTo).prepend(menuBar);
-        menuBar.append($this.mobileNav);
-
-        // iterate over structure adding additional structure
-        var items = $this.mobileNav.find('li');
-        $(items).each(function () {
-            var item = $(this),
-                data = {};
-            data.children = item.children('ul').attr('role', 'menu');
-            item.data('menu', data);
-
-            // if a list item has a nested menu
-            if (data.children.length > 0) {
-
-                // select all text before the child menu
-                // check for anchors
-
-                var a = item.contents(),
-                    containsAnchor = false;
-                    nodes = [];
-
-                $(a).each(function () {
-                    if (!$(this).is('ul')) {
-                        nodes.push(this);
-                    } else {
-                        return false;
-                    }
-
-                    if($(this).is("a")) {
-                        containsAnchor = true;
-                    }
-                });
-
-                var wrapElement = $(
-                    '<' + settings.parentTag + ' role="menuitem" aria-haspopup="true" tabindex="-1" class="' + prefix + '_item"/>'
-                );
-
-                // wrap item text with tag and add classes unless we are separating parent links
-                if ((!settings.allowParentLinks || settings.nestedParentLinks) || !containsAnchor) {
-                    var $wrap = $(nodes).wrapAll(wrapElement).parent();
-                    $wrap.addClass(prefix+'_row');
-                } else
-                    $(nodes).wrapAll('<span class="'+prefix+'_parent-link '+prefix+'_row"/>').parent();
-
-                item.addClass(prefix+'_collapsed');
-                item.addClass(prefix+'_parent');
-
-                // create parent arrow. wrap with link if parent links and separating
-                var arrowElement = $('<span class="'+prefix+'_arrow">'+settings.closedSymbol+'</span>');
-
-                if (settings.allowParentLinks && !settings.nestedParentLinks && containsAnchor)
-                    arrowElement = arrowElement.wrap(wrapElement).parent();
-
-                //append arrow
-                $(nodes).last().after(arrowElement);
-
-
-            } else if ( item.children().length === 0) {
-                 item.addClass(prefix+'_txtnode');
-            }
-
-            // accessibility for links
-            item.children('a').attr('role', 'menuitem').click(function(event){
-                //Ensure that it's not a parent
-                if (settings.closeOnClick && !$(event.target).parent().closest('li').hasClass(prefix+'_parent')) {
-                        //Emulate menu close if set
-                        $($this.btn).click();
-                    }
-            });
-
-            //also close on click if parent links are set
-            if (settings.closeOnClick && settings.allowParentLinks) {
-                item.children('a').children('a').click(function (event) {
-                    //Emulate menu close
-                    $($this.btn).click();
-                });
-
-                item.find('.'+prefix+'_parent-link a:not(.'+prefix+'_item)').click(function(event){
-                    //Emulate menu close
-                        $($this.btn).click();
-                });
-            }
-        });
-
-        // structure is in place, now hide appropriate items
-        $(items).each(function () {
-            var data = $(this).data('menu');
-            if (!settings.showChildren){
-                $this._visibilityToggle(data.children, null, false, null, true);
-            }
-        });
-
-        // finally toggle entire menu
-        $this._visibilityToggle($this.mobileNav, null, false, 'init', true);
-
-        // accessibility for menu button
-        $this.mobileNav.attr('role','menu');
-
-        // outline prevention when using mouse
-        $(document).mousedown(function(){
-            $this._outlines(false);
-        });
-
-        $(document).keyup(function(){
-            $this._outlines(true);
-        });
-
-        // menu button click
-        $($this.btn).click(function (e) {
-            e.preventDefault();
-            $this._menuToggle();
-        });
-
-        // click on menu parent
-        $this.mobileNav.on('click', '.' + prefix + '_item', function (e) {
-            e.preventDefault();
-            $this._itemClick($(this));
-        });
-
-        // check for enter key on menu button and menu parents
-        $($this.btn).keydown(function (e) {
-            var ev = e || event;
-            if(ev.keyCode == 13) {
-                e.preventDefault();
-                $this._menuToggle();
-            }
-        });
-
-        $this.mobileNav.on('keydown', '.'+prefix+'_item', function(e) {
-            var ev = e || event;
-            if(ev.keyCode == 13) {
-                e.preventDefault();
-                $this._itemClick($(e.target));
-            }
-        });
-
-        // allow links clickable within parent tags if set
-        if (settings.allowParentLinks && settings.nestedParentLinks) {
-            $('.'+prefix+'_item a').click(function(e){
-                    e.stopImmediatePropagation();
-            });
-        }
-    };
-
-    //toggle menu
-    Plugin.prototype._menuToggle = function (el) {
-        var $this = this;
-        var btn = $this.btn;
-        var mobileNav = $this.mobileNav;
-
-        if (btn.hasClass(prefix+'_collapsed')) {
-            btn.removeClass(prefix+'_collapsed');
-            btn.addClass(prefix+'_open');
-        } else {
-            btn.removeClass(prefix+'_open');
-            btn.addClass(prefix+'_collapsed');
-        }
-        btn.addClass(prefix+'_animating');
-        $this._visibilityToggle(mobileNav, btn.parent(), true, btn);
-    };
-
-    // toggle clicked items
-    Plugin.prototype._itemClick = function (el) {
-        var $this = this;
-        var settings = $this.settings;
-        var data = el.data('menu');
-        if (!data) {
-            data = {};
-            data.arrow = el.children('.'+prefix+'_arrow');
-            data.ul = el.next('ul');
-            data.parent = el.parent();
-            //Separated parent link structure
-            if (data.parent.hasClass(prefix+'_parent-link')) {
-                data.parent = el.parent().parent();
-                data.ul = el.parent().next('ul');
-            }
-            el.data('menu', data);
-        }
-        if (data.parent.hasClass(prefix+'_collapsed')) {
-            data.arrow.html(settings.openedSymbol);
-            data.parent.removeClass(prefix+'_collapsed');
-            data.parent.addClass(prefix+'_open');
-            data.parent.addClass(prefix+'_animating');
-            $this._visibilityToggle(data.ul, data.parent, true, el);
-        } else {
-            data.arrow.html(settings.closedSymbol);
-            data.parent.addClass(prefix+'_collapsed');
-            data.parent.removeClass(prefix+'_open');
-            data.parent.addClass(prefix+'_animating');
-            $this._visibilityToggle(data.ul, data.parent, true, el);
-        }
-    };
-
-    // toggle actual visibility and accessibility tags
-    Plugin.prototype._visibilityToggle = function(el, parent, animate, trigger, init) {
-        var $this = this;
-        var settings = $this.settings;
-        var items = $this._getActionItems(el);
-        var duration = 0;
-        if (animate) {
-            duration = settings.duration;
-        }
-
-        if (el.hasClass(prefix+'_hidden')) {
-            el.removeClass(prefix+'_hidden');
-            el.slideDown(duration, settings.easingOpen, function(){
-
-                $(trigger).removeClass(prefix+'_animating');
-                $(parent).removeClass(prefix+'_animating');
-
-                //Fire open callback
-                if (!init) {
-                    settings.open(trigger);
-                }
-            });
-            el.attr('aria-hidden','false');
-            items.attr('tabindex', '0');
-            $this._setVisAttr(el, false);
-        } else {
-            el.addClass(prefix+'_hidden');
-            el.slideUp(duration, this.settings.easingClose, function() {
-                el.attr('aria-hidden','true');
-                items.attr('tabindex', '-1');
-                $this._setVisAttr(el, true);
-                el.hide(); //jQuery 1.7 bug fix
-
-                $(trigger).removeClass(prefix+'_animating');
-                $(parent).removeClass(prefix+'_animating');
-
-                //Fire init or close callback
-                if (!init){
-                    settings.close(trigger);
-                }
-                else if (trigger == 'init'){
-                    settings.init();
-                }
-            });
-        }
-    };
-
-    // set attributes of element and children based on visibility
-    Plugin.prototype._setVisAttr = function(el, hidden) {
-        var $this = this;
-
-        // select all parents that aren't hidden
-        var nonHidden = el.children('li').children('ul').not('.'+prefix+'_hidden');
-
-        // iterate over all items setting appropriate tags
-        if (!hidden) {
-            nonHidden.each(function(){
-                var ul = $(this);
-                ul.attr('aria-hidden','false');
-                var items = $this._getActionItems(ul);
-                items.attr('tabindex', '0');
-                $this._setVisAttr(ul, hidden);
-            });
-        } else {
-            nonHidden.each(function(){
-                var ul = $(this);
-                ul.attr('aria-hidden','true');
-                var items = $this._getActionItems(ul);
-                items.attr('tabindex', '-1');
-                $this._setVisAttr(ul, hidden);
-            });
-        }
-    };
-
-    // get all 1st level items that are clickable
-    Plugin.prototype._getActionItems = function(el) {
-        var data = el.data("menu");
-        if (!data) {
-            data = {};
-            var items = el.children('li');
-            var anchors = items.find('a');
-            data.links = anchors.add(items.find('.'+prefix+'_item'));
-            el.data('menu', data);
-        }
-        return data.links;
-    };
-
-    Plugin.prototype._outlines = function(state) {
-        if (!state) {
-            $('.'+prefix+'_item, .'+prefix+'_btn').css('outline','none');
-        } else {
-            $('.'+prefix+'_item, .'+prefix+'_btn').css('outline','');
-        }
-    };
-
-    Plugin.prototype.toggle = function(){
-        var $this = this;
-        $this._menuToggle();
-    };
-
-    Plugin.prototype.open = function(){
-        var $this = this;
-        if ($this.btn.hasClass(prefix+'_collapsed')) {
-            $this._menuToggle();
-        }
-    };
-
-    Plugin.prototype.close = function(){
-        var $this = this;
-        if ($this.btn.hasClass(prefix+'_open')) {
-            $this._menuToggle();
-        }
-    };
-
-    $.fn[mobileMenu] = function ( options ) {
-        var args = arguments;
-
-        // Is the first parameter an object (options), or was omitted, instantiate a new instance
-        if (options === undefined || typeof options === 'object') {
-            return this.each(function () {
-
-                // Only allow the plugin to be instantiated once due to methods
-                if (!$.data(this, 'plugin_' + mobileMenu)) {
-
-                    // if it has no instance, create a new one, pass options to our plugin constructor,
-                    // and store the plugin instance in the elements jQuery data object.
-                    $.data(this, 'plugin_' + mobileMenu, new Plugin( this, options ));
-                }
-            });
-
-        // If is a string and doesn't start with an underscore or 'init' function, treat this as a call to a public method.
-        } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
-
-            // Cache the method call to make it possible to return a value
-            var returns;
-
-            this.each(function () {
-                var instance = $.data(this, 'plugin_' + mobileMenu);
-
-                // Tests that there's already a plugin-instance and checks that the requested public method exists
-                if (instance instanceof Plugin && typeof instance[options] === 'function') {
-
-                    // Call the method of our plugin instance, and pass it the supplied arguments.
-                    returns = instance[options].apply( instance, Array.prototype.slice.call( args, 1 ) );
-                }
-            });
-
-            // If the earlier cached method gives a value back return the value, otherwise return this to preserve chainability.
-            return returns !== undefined ? returns : this;
-        }
-    };
-}(jQuery, document, window));
-
-//end of slicknav js //
-// start of weather //
-
-"use strict";
-//console.log("Weather Javascipt Loaded");
-
-var _plm = _plm || [];
-_plm.push(['_btn', 83114]);
-_plm.push(['_loc','caon0383']);
-_plm.push(['location', document.location.host ]);
- (function(d,e,i) {
-if (d.getElementById(i)) return;
-var px = d.createElement(e);
-px.type = 'text/javascript';
-px.async = true;
-px.id = i;
-px.src = ('https:' == d.location.protocol ? 'https:' : 'http:') + '//widget.twnmm.com/js/btn/pelm.js?orig=en_ca';
-var s = d.getElementsByTagName('script')[0];
-
-var py = d.createElement('link');
-py.rel = 'stylesheet';
-py.href = ('https:' == d.location.protocol ? 'https:' : 'http:') + '//widget.twnmm.com/styles/btn/styles.css';
-
-s.parentNode.insertBefore(px, s);
-s.parentNode.insertBefore(py, s);
-})(document, 'script', 'plmxbtn');
-
-//end of weather js //

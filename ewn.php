@@ -1,5 +1,7 @@
 <?php
     $pageTitle = "Energy Works Naturally";
+    $pageDesc = "Mark Landeryou Artisan is an web designer/developer, graphic designer and digital artist, based out of Sarnia Ontario serving Sarnia and London areas";
+    $pageKeywords = "Mark Landeryou Artisan Sarnia London Canada Graphic Designer Web Designer Web developer Digital Artist";
     include "includes/header.php";
  ?>
  <div class="work-feature-block row">
@@ -18,7 +20,7 @@
          <h2 class="work-feature-block-header">Web Site Link</h2>
         <p>Check out the web site here: <a href="http://energyworksnaturally.com" target="_blank">Energy Works Naturally</a></p>
       </div>
-       
+
      </div>
 
      <div class="port-btns row align-center">

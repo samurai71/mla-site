@@ -1,15 +1,17 @@
-<?php 
+<?php
     $pageTitle = "Contact Us";
+    $pageDesc = "Mark Landeryou Artisan is an web designer/developer, graphic designer and digital artist, based out of Sarnia Ontario serving Sarnia and London areas";
+    $pageKeywords = "Mark Landeryou Artisan Sarnia London Canada Graphic Designer Web Designer Web developer Digital Artist";
     include "includes/header.php";
  ?>
  <div class="grid-x grid-margin-x content-wrap">
          <div class="large-12 cell">
            <h2>Services</h2>
-           
+
          <p>Mark Landeryou offers a variety of services, you can hire him to create your web site. Commission him to create a digital illustration and much more. Please feel free to contact me, by visiting the contact page.</p>
       <div class="row small-up-1 medium-up-4">
                      <div class="column flex-container">
-                     
+
                        <div class="card">
                          <img src="img/thumbs/GDR_thumb.png" alt="Web Design & Development">
                          <div class="card-section">
@@ -20,10 +22,10 @@
                            </div>
                          </div>
                        </div>
-                    
+
                      </div>
                      <div class="column flex-container">
-                 
+
                        <div class="card">
                          <img src="img/MLA-Logo-Outlined.png" alt="Design & Branding">
                          <div class="card-section">
@@ -34,7 +36,7 @@
                            </div>
                          </div>
                        </div>
-                     
+
                      </div>
                  <div class="column flex-container">
                        <div class="card">
@@ -61,12 +63,12 @@
                            </div>
                          </div>
                  </div>
-     
+
          </div>
-         
+
        </div>
-     
-    <?php 
+
+    <?php
            include "includes/socialmedia.php";
            include "includes/footer.php";
 ?>

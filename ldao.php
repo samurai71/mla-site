@@ -1,5 +1,7 @@
-<?php 
+<?php
     $pageTitle = "LDAO";
+    $pageDesc = "Mark Landeryou Artisan is an web designer/developer, graphic designer and digital artist, based out of Sarnia Ontario serving Sarnia and London areas";
+    $pageKeywords = "Mark Landeryou Artisan Sarnia London Canada Graphic Designer Web Designer Web developer Digital Artist";
     include "includes/header.php";
  ?>
  	<div class="work-feature-block row">
@@ -17,16 +19,16 @@
         </ul>
       </div>
     </div>
-    
+
     <div class="port-btns row align-center">
       <a href="portfolio.php" class="button"><i class="fa fa-home" aria-hidden="true"> Back to Portfolio</i></a>
       </div>
-    
+
       <div class="lightbox-target" id="ldoa">
          <img src="img/LDALC.png" alt="LDAO Web site">
          <a class="lightbox-close" href="ldao.php"></a>
       </div>
- <?php 
+ <?php
         include "includes/socialmedia.php";
         include "includes/footer.php";
  ?>

@@ -1,5 +1,7 @@
-<?php 
+<?php
     $pageTitle = "Ketchup Bottle";
+    $pageDesc = "Mark Landeryou Artisan is an web designer/developer, graphic designer and digital artist, based out of Sarnia Ontario serving Sarnia and London areas";
+    $pageKeywords = "Mark Landeryou Artisan Sarnia London Canada Graphic Designer Web Designer Web developer Digital Artist";
     include "includes/header.php";
  ?>
 	<div class="work-feature-block row">
@@ -15,16 +17,16 @@
 	        </ul>
 	      </div>
 	    </div>
-	    
+
 	    <div class="port-btns row align-center">
 	      <a href="portfolio.php" class="button"><i class="fa fa-home" aria-hidden="true"> Back to Portfolio</i></a>
 	      </div>
-	    
+
 	        <div class="lightbox-target" id="ketchup">
 	         <img src="img/ketchupbottle.jpg" alt="Ketchup bottle created in Photoshop">
 	         <a class="lightbox-close" href="ketchup.php"></a>
 	      </div>
- <?php 
+ <?php
         include "includes/socialmedia.php";
         include "includes/footer.php";
  ?>

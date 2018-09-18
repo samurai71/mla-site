@@ -1,5 +1,7 @@
-<?php 
+<?php
     $pageTitle = "About";
+    $pageDesc = "Mark Landeryou Artisan is an web designer/developer, graphic designer and digital artist, based out of Sarnia Ontario serving Sarnia and London areas";
+    $pageKeywords = "Mark Landeryou Artisan Sarnia London Canada Graphic Designer Web Designer Web developer Digital Artist";
   include "includes/header.php";
    // include "includes/nav.php";
  ?>
@@ -10,19 +12,19 @@
           <h2>About</h2>
           <img src="img/marklanderyou.png" alt="Mark Landeryou Photo" title="Mark Landeryou" class="float-left photo">
           <h4>I'm Mark Landeryou, and I'm an Digital Artisan.</h4>
-    
+
           <p>Specializing in<span class="bold"> Web design and development</span>, graphic design, digital illustration and painting, Photoshop work. <br>Mark Landeryou is an Artisan from <span class="bold">London, Ontario Canada, as well as Sarnia-Lambton Area</span>. He brings a lot of different experiences to his craft, he utilizes many different mediums for his creations. Mark is also an experienced web developer. So if you need a design or web site created he is your man.</p>
-    
+
           <p>The reason for the three coloured circles in the logo is to symbolize: Mind, body and Spirit. The significance of the three colours used is we as humans see in red, blue and green. Mark Landeryou tries to incorporate Mind, body and Spirit into his creations whether it be a web design or digital painting or illustration.</p>
-    
+
           <p>To see <a href="resume/index.html" target="_blank">Mark Landeryou's Resume</a>.</p>
-    
-    
+
+
         </div>
-        
+
       </div>
     </section>
-    
+
       <section class="content-wrap">
       <h2 class="hidden">Video</h2>
       <div class="responsive-embed widescreen">
@@ -33,7 +35,7 @@
       </video>
     </div>
     </section>
-    
+
       <div class="grid-x grid-margin-x content-wrap">
       <div class="large-6 cell">
       <h2>Recent Work</h2></div>
@@ -66,8 +68,8 @@
         </nav>
       </div>
       </div>
-    
-      
+
+
       </div>
       <section class="grid-x grid-margin-x content-wrap">
       <div class="large-12 cell">
@@ -79,9 +81,3 @@
    include "includes/socialmedia.php";
    include "includes/footer.php";
    ?>
-      
-    
-    
-    
-    
-    
