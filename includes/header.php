@@ -8,7 +8,9 @@
     <meta name="keywords" content="<?php echo($pageKeywords); ?>">
      <meta name="author" content="Mark Landeryou">
     <title><?php echo($pageTitle); ?> | Mark Landeryou Artisan, London Ontario Canada</title>
-    <link rel="stylesheet" href="css/styles.min.css">
+    <!-- <link rel="stylesheet" href="css/styles.min.css"> -->
+    <link rel="stylesheet" href="css/app.min.css">
+    <link rel="stylesheet" href="css/slicknav.min.css">
     <link rel="stylesheet" href="https://cdn.plyr.io/2.0.18/plyr.css">
 
     <script src="https://use.fontawesome.com/264e791b25.js"></script>
@@ -35,11 +37,11 @@
         <div class="title-bar-title">Menu</div>
       </div>
 
-      <div class="top-bar" id="responsive-menu">
-        <div class="top-bar-left">
+      <div class="top-bar show-for-large" id="responsive-menu">
+        <div class="top-bar-left show-for-large">
         <a href="index.php"><img src="img/MLA-Logo-Outlined.svg" alt="Mark Landeryou Artisan Logo"  class="logo"></a>
         </div>
-        <div class="top-bar-right">
+        <div class="top-bar-right show-for-large">
           <ul class="dropdown menu" data-dropdown-menu>
             <li><a href="index.php">About</a></li>
             <li><a href="portfolio.php">Portfolio</a></li>
@@ -53,7 +55,7 @@
       <nav class="hide-for-medium-up" id="mobileNav">
             <h2 class="hidden">Mobile Navigation Menu</h2>
               <!-- <img src="img/MLA-Logo-Outlined.svg" alt="Mark Landeryou Artisan Logo"> -->
-              <ul id="menu">
+              <ul class="hidden" id="menu">
               <li><a href="index.php">About</a></li>
               <li><a href="portfolio.php">Portfolio</a></li>
               <li><a href="services.php">Services</a></li>
