@@ -19,8 +19,13 @@
               </div>
 
     </footer>
+    <script src="js/app.min.js"></script>
+    <script src="js/foundation-slicknav.min.js"></script>
+    <script src="js/google.min.js" async></script>
     <script src="https://cdn.plyr.io/2.0.18/plyr.js"></script>
     <script src="js/jquery.min.js"></script>
-    <script src="js/script.min.js"></script>
+    <script src="js/jquery.slicknav.min.js"></script>
+    <script src="js/weather.min.js"></script>
+    <!-- <script src="js/script.min.js"></script> -->
   </body>
 </html>
